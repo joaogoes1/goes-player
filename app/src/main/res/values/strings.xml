@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Góes Player</string>
+    <string name="search_hint">Digite aqui</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_reproduction">ReproductionActivity</string>
+
+    <string name="menu_configuracao">Configurações</string>
+    <string name="menu_infos">Infos</string>
+    <string name="menu_pesquisa">Pesquisa</string>
+    <string name="nenhum_resultado_encontrado">Nenhum Resultado encontrado</string>
+    <string name="erro_playlist">Erro ao criar playlist</string>
+    <string name="playlist_concluido">Playlist criada com sucesso</string>
+    <string name="criar_playlist_edittext">Digite um nome</string>
+    <string name="deletar_playlist">Deletar playlist</string>
+    <string name="menu_exibir_letras">Exibir Letras</string>
+</resources>
