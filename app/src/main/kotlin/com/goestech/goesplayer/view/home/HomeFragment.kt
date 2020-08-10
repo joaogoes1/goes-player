@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.goestech.goesplayer.R
 import com.goestech.goesplayer.databinding.HomeFragmentBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
 
@@ -26,5 +29,20 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         homeFragmentViewPagerAdapter = HomeFragmentViewPagerAdapter(this)
         viewPager.adapter = homeFragmentViewPagerAdapter
+        val tabLayout = binding.tabLayout
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            val icon = when (position) {
+                0 -> R.drawable.ic_home
+                1 -> R.drawable.ic_playlist
+                2 -> R.drawable.ic_music
+                3 -> R.drawable.ic_artist
+                4 -> R.drawable.ic_album
+                5 -> R.drawable.ic_genre
+                6 -> R.drawable.ic_folder
+                7 -> R.drawable.ic_profile
+                else -> R.drawable.ic_home
+            }
+            tab.icon = ContextCompat.getDrawable(requireContext(), icon)
+        }.attach()
     }
 }
