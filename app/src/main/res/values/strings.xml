@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Góes Player</string>
+    <string name="album_fragment_title">Albuns</string>
+    <string name="artist_fragment_title">Artistas</string>
+    <string name="folder_fragment_title">Diretórios</string>
+    <string name="gender_fragment_title">Gêneros</string>
+    <string name="music_fragment_title">Musicas</string>
+    <string name="playlist_fragment_title">Playlists</string>
 </resources>
