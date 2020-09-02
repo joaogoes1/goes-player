@@ -13,13 +13,17 @@ import kotlinx.coroutines.withContext
 private const val unknown: String = "<unknown>"
 private const val VOLUME_NAME: String = "external"
 
+interface MusicStorageDataSource {
+    suspend fun searchAllMusics(): List<MusicEntity>
+}
 
-class MusicStorageService(
-    private val contentResolver: ContentResolver,
+class MusicStorageDataSourceImpl(
     private val context: Context
-) {
+) : MusicStorageDataSource {
 
-    suspend fun searchAllMusics(): List<MusicEntity> = withContext(Dispatchers.IO) {
+    private val contentResolver: ContentResolver = context.contentResolver
+
+    override suspend fun searchAllMusics(): List<MusicEntity> = withContext(Dispatchers.IO) {
         val musicList: MutableList<MusicEntity> = mutableListOf()
         val musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val cursor = contentResolver.query(musicUri, null, null, null, null)
