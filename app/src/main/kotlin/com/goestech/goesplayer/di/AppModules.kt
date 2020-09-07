@@ -2,8 +2,8 @@ package com.goestech.goesplayer.di
 
 import com.goestech.goesplayer.bussiness.interactor.MusicInteractorImpl
 import com.goestech.goesplayer.bussiness.interactor.MusicInteractor
-import com.goestech.goesplayer.data.datasource.music.MusicDataSource
 import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSource
+import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSourceImpl
 import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSource
 import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSourceImpl
 import com.goestech.goesplayer.data.repository.music.MusicRepository
@@ -27,7 +27,7 @@ val repositoryModule = module {
 
 val dataSourceModule = module {
     single<MusicStorageDataSource> { MusicStorageDataSourceImpl(androidContext()) }
-    single<MusicDataSource> { MusicLocalDataSource() }
+    single<MusicLocalDataSource> { MusicLocalDataSourceImpl() }
 }
 
 val appModules = listOf(

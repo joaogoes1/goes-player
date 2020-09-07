@@ -10,8 +10,9 @@ import com.goestech.goesplayer.data.entity.MusicEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-private const val unknown: String = "<unknown>"
+private const val UNKNOWN: String = "<unknown>"
 private const val VOLUME_NAME: String = "external"
+private const val ALBUM_ART_URI: String = "content://media/external/audio/albumart"
 
 interface MusicStorageDataSource {
     suspend fun searchAllMusics(): List<MusicEntity>
@@ -33,6 +34,7 @@ class MusicStorageDataSourceImpl(
                 val idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID)
                 val nameColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
                 val artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                val albumIdColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
 
                 do {
                     val id = musicCursor.getLong(idColumn)
@@ -40,6 +42,7 @@ class MusicStorageDataSourceImpl(
                     val title = musicCursor.getString(titleColumn)
                     val artist = musicCursor.getString(artistColumn)
                     val uri = ContentUris.withAppendedId(musicUri, id)
+                    val albumId: Long = musicCursor.getLong(albumIdColumn)
 
                     musicList.add(
                         MusicEntity(
@@ -47,9 +50,10 @@ class MusicStorageDataSourceImpl(
                             displayName = name,
                             title = title,
                             artist = artist,
+                            albumImageUri = getAlbumArt(albumId),
                             album = getAlbumName(uri),
                             genre = getGenreName(id.toInt()),
-                            filePath = uri.path ?: unknown
+                            filePath = uri.path ?: UNKNOWN
                         )
                     )
                 } while (musicCursor.moveToNext())
@@ -59,19 +63,18 @@ class MusicStorageDataSourceImpl(
         return@withContext musicList
     }
 
-    private fun getGenreName(id: Int): String {
-        var genre = unknown
+    private fun getGenreName(id: Int): String? {
+        var genre: String? = null
         val genreUri = MediaStore.Audio.Genres.getContentUriForAudioId(VOLUME_NAME, id)
         val genreCursor = contentResolver.query(genreUri, arrayOf(MediaStore.Audio.Genres.NAME), null, null, null)
         if (genreCursor?.moveToFirst() == true) {
             genre = genreCursor.getString(genreCursor.getColumnIndex(MediaStore.Audio.Genres.NAME))
-                ?: unknown
         }
         genreCursor?.close()
         return genre
     }
 
-    private fun getAlbumName(uri: Uri): String {
+    private fun getAlbumName(uri: Uri): String? {
         return try {
             val media = MediaMetadataRetriever()
             media.setDataSource(context, uri)
@@ -79,7 +82,12 @@ class MusicStorageDataSourceImpl(
             media.release()
             album
         } catch (e: Exception) {
-            unknown
+            null
         }
+    }
+
+    private fun getAlbumArt(albumId: Long): String? {
+        val sArtworkUri = Uri.parse(ALBUM_ART_URI)
+        return ContentUris.withAppendedId(sArtworkUri, albumId).toString()
     }
 }
