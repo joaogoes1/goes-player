@@ -1,11 +1,10 @@
 package com.goestech.goesplayer.data.datasource.music
 
-import com.goestech.goesplayer.bussiness.model.MusicModel
-import com.goestech.goesplayer.data.entity.MusicEntity
+import com.goestech.goesplayer.data.entity.Music
 
 interface MusicLocalDataSource {
 
-    suspend fun getAllMusics(): List<MusicModel>
+    suspend fun getAllMusics(): List<Music>
 
-    suspend fun saveMusics(musics: List<MusicEntity>)
+    suspend fun saveMusics(musics: List<Music>)
 }

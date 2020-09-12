@@ -6,7 +6,9 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import com.goestech.goesplayer.data.entity.MusicEntity
+import android.util.Log
+import androidx.core.net.toFile
+import com.goestech.goesplayer.data.entity.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -15,7 +17,7 @@ private const val VOLUME_NAME: String = "external"
 private const val ALBUM_ART_URI: String = "content://media/external/audio/albumart"
 
 interface MusicStorageDataSource {
-    suspend fun searchAllMusics(): List<MusicEntity>
+    suspend fun searchAllMusics(): List<Music>
 }
 
 class MusicStorageDataSourceImpl(
@@ -24,8 +26,8 @@ class MusicStorageDataSourceImpl(
 
     private val contentResolver: ContentResolver = context.contentResolver
 
-    override suspend fun searchAllMusics(): List<MusicEntity> = withContext(Dispatchers.IO) {
-        val musicList: MutableList<MusicEntity> = mutableListOf()
+    override suspend fun searchAllMusics(): List<Music> = withContext(Dispatchers.IO) {
+        val musicList: MutableList<Music> = mutableListOf()
         val musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val cursor = contentResolver.query(musicUri, null, null, null, null)
         cursor?.let { musicCursor ->
@@ -45,15 +47,16 @@ class MusicStorageDataSourceImpl(
                     val albumId: Long = musicCursor.getLong(albumIdColumn)
 
                     musicList.add(
-                        MusicEntity(
+                        Music(
                             id = id,
                             displayName = name,
                             title = title,
                             artist = artist,
-                            albumImageUri = getAlbumArt(albumId),
+                            albumArtUri = getAlbumArt(albumId),
                             album = getAlbumName(uri),
                             genre = getGenreName(id.toInt()),
-                            filePath = uri.path ?: UNKNOWN
+                            filePath = uri.path ?: UNKNOWN,
+                            fileName = uri.toFile().name
                         )
                     )
                 } while (musicCursor.moveToNext())
@@ -82,6 +85,7 @@ class MusicStorageDataSourceImpl(
             media.release()
             album
         } catch (e: Exception) {
+            Log.e("LOADING MUSIC ERROR", "Faild to load album: ${uri.path}")
             null
         }
     }

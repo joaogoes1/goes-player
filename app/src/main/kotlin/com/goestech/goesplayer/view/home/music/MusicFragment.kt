@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.goestech.goesplayer.bussiness.model.MusicModel
+import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.databinding.MusicFragmentBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -34,7 +34,7 @@ class MusicFragment : Fragment(), MusicFragmentListener {
         binding = null
     }
 
-    override fun playMusic(music: MusicModel) {
+    override fun playMusic(music: Music) {
         viewModel.playMusic(music)
     }
 }

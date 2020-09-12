@@ -1,12 +1,12 @@
 package com.goestech.goesplayer.data.repository.music
 
-import com.goestech.goesplayer.bussiness.model.MusicModel
 import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSource
 import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSource
+import com.goestech.goesplayer.data.entity.Music
 
 interface MusicRepository {
     suspend fun loadMusicsFromDeviceStorage()
-    suspend fun getAllMusics(): List<MusicModel>
+    suspend fun getAllMusics(): List<Music>
 }
 
 class MusicRepositoryImpl(
@@ -18,6 +18,5 @@ class MusicRepositoryImpl(
         musicLocalDataSource.saveMusics(musicList)
     }
 
-    override suspend fun getAllMusics(): List<MusicModel> =
-        musicLocalDataSource.getAllMusics()
+    override suspend fun getAllMusics(): List<Music> = musicLocalDataSource.getAllMusics()
 }

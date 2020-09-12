@@ -3,23 +3,23 @@ package com.goestech.goesplayer.view.home.music
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goestech.goesplayer.bussiness.interactor.MusicInteractor
-import com.goestech.goesplayer.bussiness.model.MusicModel
+import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.repository.music.MusicRepository
 import kotlinx.coroutines.launch
 
 class MusicViewModel(
-    private val musicInteractor: MusicInteractor
+    private val musicRepository: MusicRepository
 ) : ViewModel() {
-    val musics = MutableLiveData<List<MusicModel>>()
+    val musics = MutableLiveData<List<Music>>()
 
     fun loadMusics() {
         viewModelScope.launch {
-            val musicList = musicInteractor.getAllMusics()
+            val musicList = musicRepository.getAllMusics()
             musics.postValue(musicList)
         }
     }
 
-    fun playMusic(music: MusicModel) {
+    fun playMusic(music: Music) {
         TODO("Not yet implemented")
     }
 }

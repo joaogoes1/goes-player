@@ -33,8 +33,8 @@ class HomeFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val icon = when (position) {
                 0 -> R.drawable.ic_home
-                1 -> R.drawable.ic_playlist
-                2 -> R.drawable.ic_music
+                1 -> R.drawable.ic_music
+                2 -> R.drawable.ic_playlist
                 3 -> R.drawable.ic_artist
                 4 -> R.drawable.ic_album
                 5 -> R.drawable.ic_genre

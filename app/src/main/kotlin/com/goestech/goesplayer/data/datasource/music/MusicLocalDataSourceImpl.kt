@@ -1,14 +1,18 @@
 package com.goestech.goesplayer.data.datasource.music
 
-import com.goestech.goesplayer.bussiness.model.MusicModel
-import com.goestech.goesplayer.data.entity.MusicEntity
+import com.goestech.goesplayer.data.database.AppDatabase
+import com.goestech.goesplayer.data.entity.Music
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class MusicLocalDataSourceImpl : MusicLocalDataSource {
-    override suspend fun getAllMusics(): List<MusicModel> {
-        TODO("Not yet implemented")
+class MusicLocalDataSourceImpl(
+    private val database: AppDatabase
+) : MusicLocalDataSource {
+    override suspend fun getAllMusics(): List<Music> = withContext(Dispatchers.IO) {
+        database.musicDao().getAllMusics()
     }
 
-    override suspend fun saveMusics(musics: List<MusicEntity>) {
-
+    override suspend fun saveMusics(musics: List<Music>) = withContext(Dispatchers.IO) {
+        database.musicDao().insertAll(*musics.toTypedArray())
     }
 }
