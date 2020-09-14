@@ -15,4 +15,8 @@ class MusicLocalDataSourceImpl(
     override suspend fun saveMusics(musics: List<Music>) = withContext(Dispatchers.IO) {
         musicDao.insertAll(*musics.toTypedArray())
     }
+
+    override suspend fun getAllArtists(): List<String> = withContext(Dispatchers.IO) {
+        musicDao.getAllArtists()
+    }
 }

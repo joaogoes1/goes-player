@@ -9,6 +9,7 @@ import com.goestech.goesplayer.data.entity.Music
 interface MusicRepository {
     suspend fun loadMusicsFromDeviceStorage(): Result<Unit, SearchMusicError>
     suspend fun getAllMusics(): List<Music>
+    suspend fun getAllArtists(): List<String>
 }
 
 class MusicRepositoryImpl(
@@ -22,7 +23,7 @@ class MusicRepositoryImpl(
                 musicLocalDataSource.saveMusics(it)
             }
 
-    override suspend fun getAllMusics(): List<Music> {
-        return musicLocalDataSource.getAllMusics()
-    }
+    override suspend fun getAllMusics(): List<Music> = musicLocalDataSource.getAllMusics()
+
+    override suspend fun getAllArtists(): List<String> = musicLocalDataSource.getAllArtists()
 }

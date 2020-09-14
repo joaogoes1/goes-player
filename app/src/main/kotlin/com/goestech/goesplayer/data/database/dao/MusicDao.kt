@@ -13,4 +13,7 @@ interface MusicDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg musics: Music)
+
+    @Query("SELECT artist FROM music GROUP BY artist")
+    fun getAllArtists(): List<String>
 }

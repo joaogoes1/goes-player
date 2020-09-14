@@ -15,7 +15,7 @@ class MusicFragmentAdapter(
     private val listener: MusicFragmentListener
 ) : ListAdapter<Music, MusicFragmentAdapterViewHolder>(MusicDiffUtil) {
 
-    class MusicFragmentAdapterViewHolder(val binding: MusicListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class MusicFragmentAdapterViewHolder(val binding: MusicListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicFragmentAdapterViewHolder {
         val inflater = LayoutInflater.from(parent.context)

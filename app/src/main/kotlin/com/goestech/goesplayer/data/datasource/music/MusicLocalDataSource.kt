@@ -7,4 +7,6 @@ interface MusicLocalDataSource {
     suspend fun getAllMusics(): List<Music>
 
     suspend fun saveMusics(musics: List<Music>)
+
+    suspend fun getAllArtists(): List<String>
 }

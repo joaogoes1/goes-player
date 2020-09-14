@@ -9,6 +9,7 @@ import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSource
 import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSourceImpl
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import com.goestech.goesplayer.data.repository.music.MusicRepositoryImpl
+import com.goestech.goesplayer.view.home.artist.ArtistViewModel
 import com.goestech.goesplayer.view.home.music.MusicViewModel
 import com.goestech.goesplayer.view.splash.SplashViewModel
 import org.koin.android.ext.koin.androidContext
@@ -18,6 +19,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { SplashViewModel(get()) }
     viewModel { MusicViewModel(get()) }
+    viewModel { ArtistViewModel(get()) }
 }
 
 val repositoryModule = module {
