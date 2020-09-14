@@ -2,6 +2,7 @@ package com.goestech.goesplayer.di
 
 import androidx.room.Room
 import com.goestech.goesplayer.data.database.AppDatabase
+import com.goestech.goesplayer.data.database.dao.MusicDao
 import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSource
 import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSourceImpl
 import com.goestech.goesplayer.data.datasource.music.MusicStorageDataSource
@@ -32,9 +33,11 @@ val databaseModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             androidContext(),
-            AppDatabase::class.java, "AppDatabase"
+            AppDatabase::class.java,
+            "AppDatabase"
         ).build()
     }
+    single<MusicDao> { get<AppDatabase>().musicDao() }
 }
 
 val appModules = listOf(

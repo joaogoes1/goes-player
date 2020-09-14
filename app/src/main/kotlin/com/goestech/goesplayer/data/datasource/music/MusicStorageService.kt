@@ -11,22 +11,29 @@ import androidx.core.net.toFile
 import com.goestech.goesplayer.data.entity.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.goestech.goesplayer.data.Result
 
 private const val UNKNOWN: String = "<unknown>"
 private const val VOLUME_NAME: String = "external"
 private const val ALBUM_ART_URI: String = "content://media/external/audio/albumart"
 
 interface MusicStorageDataSource {
-    suspend fun searchAllMusics(): List<Music>
+    suspend fun searchAllMusics(): Result<List<Music>, SearchMusicError>
+}
+
+sealed class SearchMusicError {
+    object PermissionDeniedError : SearchMusicError()
+    object UnknownError : SearchMusicError()
 }
 
 class MusicStorageDataSourceImpl(
     private val context: Context
 ) : MusicStorageDataSource {
 
-    private val contentResolver: ContentResolver = context.contentResolver
+    private val contentResolver: ContentResolver
+        get() = context.contentResolver
 
-    override suspend fun searchAllMusics(): List<Music> = withContext(Dispatchers.IO) {
+    override suspend fun searchAllMusics(): Result<List<Music>, SearchMusicError> = withContext(Dispatchers.IO) {
         val musicList: MutableList<Music> = mutableListOf()
         val musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val cursor = contentResolver.query(musicUri, null, null, null, null)
@@ -50,20 +57,20 @@ class MusicStorageDataSourceImpl(
                         Music(
                             id = id,
                             displayName = name,
-                            title = title,
+                            title = title,  
                             artist = artist,
                             albumArtUri = getAlbumArt(albumId),
                             album = getAlbumName(uri),
                             genre = getGenreName(id.toInt()),
                             filePath = uri.path ?: UNKNOWN,
-                            fileName = uri.toFile().name
+                            fileName = uri.path?.substringAfterLast("/") ?: ""
                         )
                     )
                 } while (musicCursor.moveToNext())
             }
         }
         cursor?.close()
-        return@withContext musicList
+        return@withContext Result.Success(musicList)
     }
 
     private fun getGenreName(id: Int): String? {

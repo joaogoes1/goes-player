@@ -7,16 +7,18 @@ import com.goestech.goesplayer.data.repository.music.MusicRepository
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
-    private val musicmusicRepository: MusicRepository
+    private val musicRepository: MusicRepository
 ) : ViewModel() {
     val status = MutableLiveData(InitializationStatus.UNINITIALIZED)
 
     fun initApp() {
         status.postValue(InitializationStatus.INITIALIZING)
         viewModelScope.launch {
-            musicmusicRepository.loadMusicsFromDeviceStorage()
-                .run {
+            musicRepository.loadMusicsFromDeviceStorage()
+                .onSuccess {
                     status.postValue(InitializationStatus.READY)
+                }.onError {
+
                 }
         }
     }
