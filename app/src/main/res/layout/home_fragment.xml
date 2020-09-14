@@ -33,6 +33,6 @@
             android:src="@drawable/ic_shuffle"
             android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/tab_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

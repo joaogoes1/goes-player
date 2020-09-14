@@ -8,7 +8,6 @@ import com.goestech.goesplayer.view.home.folder.FolderFragment
 import com.goestech.goesplayer.view.home.gender.GenderFragment
 import com.goestech.goesplayer.view.home.music.MusicFragment
 import com.goestech.goesplayer.view.home.playlist.PlaylistFragment
-import com.goestech.goesplayer.view.home.profile.ProfileFragment
 import com.goestech.goesplayer.view.home.welcome.WelcomeFragment
 
 class HomeFragmentViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -24,7 +23,6 @@ class HomeFragmentViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fr
             4 -> AlbumFragment()
             5 -> GenderFragment()
             6 -> FolderFragment()
-            7 -> ProfileFragment()
             else -> WelcomeFragment()
         }
 }

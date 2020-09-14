@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
                 4 -> R.drawable.ic_album
                 5 -> R.drawable.ic_genre
                 6 -> R.drawable.ic_folder
-                7 -> R.drawable.ic_profile
                 else -> R.drawable.ic_home
             }
             tab.icon = ContextCompat.getDrawable(requireContext(), icon)
