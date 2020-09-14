@@ -22,5 +22,7 @@ class MusicRepositoryImpl(
                 musicLocalDataSource.saveMusics(it)
             }
 
-    override suspend fun getAllMusics(): List<Music> = musicLocalDataSource.getAllMusics()
+    override suspend fun getAllMusics(): List<Music> {
+        return musicLocalDataSource.getAllMusics()
+    }
 }

@@ -17,6 +17,7 @@ class MusicFragment : Fragment(), MusicFragmentListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = MusicFragmentBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
             musicFragmentList.adapter = adapter
         }
         return binding?.root

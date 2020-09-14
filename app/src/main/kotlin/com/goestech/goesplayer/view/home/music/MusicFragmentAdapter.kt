@@ -27,11 +27,17 @@ class MusicFragmentAdapter(
         holder.binding.apply {
             musicListItemName.text = music.displayName ?: music.title ?: music.fileName
             musicListItemArtist.text = music.artist ?: "Unknown"
-            Glide
-                .with(musicListItemImage)
-                .load(Uri.parse(music.albumArtUri))
-                .placeholder(R.drawable.album_placeholder)
             musicListItemLayout.setOnClickListener { listener.playMusic(music) }
+            loadImage(albumArtUri = music.albumArtUri)
         }
+    }
+
+    private fun MusicListItemBinding.loadImage(albumArtUri: String?){
+        Glide
+            .with(root.context)
+            .load(Uri.parse(albumArtUri))
+            .placeholder(R.drawable.album_placeholder)
+            .error(R.drawable.album_placeholder)
+            .into(musicListItemImage)
     }
 }
