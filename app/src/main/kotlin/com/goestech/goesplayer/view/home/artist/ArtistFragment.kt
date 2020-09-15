@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.databinding.ArtistFragmentBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -26,7 +25,7 @@ class ArtistFragment : Fragment(), ArtistFragmentListener {
         viewModel.artists.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
-        viewModel.loadArtist()
+        viewModel.loadArtists()
     }
 
     override fun onDestroyView() {
@@ -35,6 +34,6 @@ class ArtistFragment : Fragment(), ArtistFragmentListener {
     }
 
     override fun openArtist(artist: String) {
-        TODO("Not yet implemented")
+        // TODO("Implement this")
     }
 }

@@ -11,7 +11,7 @@ class ArtistViewModel(
 ) : ViewModel() {
     val artists: MutableLiveData<List<String>> = MutableLiveData(emptyList())
 
-    fun loadArtist() {
+    fun loadArtists() {
         viewModelScope.launch {
             val artistsList = repository.getAllArtists()
             artists.postValue(artistsList)
