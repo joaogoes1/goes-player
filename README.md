@@ -8,4 +8,4 @@ This project I started to develop when I was starting to study programming, afte
 The object of this app is study more about Android Framework and and go beyond what I learned in the course.
 
 Because of that, this code haven't any good pratices and has a lot of problems.
-I stopped to develop it for some years and today I'm refactoring on `app-rewrite` branch.
+I stopped to develop it for some years but today I'm refactoring on `app-rewrite` branch.
