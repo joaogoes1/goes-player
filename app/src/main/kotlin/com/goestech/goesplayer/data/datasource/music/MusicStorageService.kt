@@ -22,7 +22,6 @@ interface MusicStorageDataSource {
 }
 
 sealed class SearchMusicError {
-    object PermissionDeniedError : SearchMusicError()
     object UnknownError : SearchMusicError()
 }
 

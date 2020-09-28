@@ -6,4 +6,8 @@
     <string name="gender_fragment_title">Gêneros</string>
     <string name="music_fragment_title">Musicas</string>
     <string name="playlist_fragment_title">Playlists</string>
+    <string name="player_fragment_previous_button_content_description">Aperte uma vez para voltar ao inicio da música, duas para voltar a faixa anterior</string>
+    <string name="player_fragment_next_button_content_description">Próxima música</string>
+    <string name="player_fragment_shuffle_content_description">Aleatorio</string>
+    <string name="player_fragment_repeat_button_content_description">Repetir</string>
 </resources>
