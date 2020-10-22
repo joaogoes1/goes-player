@@ -9,8 +9,6 @@ import androidx.media.MediaBrowserServiceCompat
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
-import com.goestech.goesplayer.view.player.Player
-import com.goestech.goesplayer.view.player.PlayerSessionCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel

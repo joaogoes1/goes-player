@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.player
+package com.goestech.goesplayer.player
 
 import android.support.v4.media.MediaMetadataCompat
 

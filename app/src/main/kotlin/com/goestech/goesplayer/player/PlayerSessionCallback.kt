@@ -1,15 +1,12 @@
-package com.goestech.goesplayer.view.player
+package com.goestech.goesplayer.player
 
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
+import android.support.v4.media.session.PlaybackStateCompat
 import com.goestech.goesplayer.data.repository.music.MusicRepository
-import com.goestech.goesplayer.player.createMediaMetadataCompat
-import com.goestech.goesplayer.player.toMediaItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class PlayerSessionCallback(
@@ -17,7 +14,7 @@ class PlayerSessionCallback(
     private val player: Player,
     private val musicRepository: MusicRepository
 ) : MediaSessionCompat.Callback(), CoroutineScope by CoroutineScope(Dispatchers.Default) {
-    
+
     private val playlist = mutableListOf<MediaSessionCompat.QueueItem>()
     private val reproductionOrder = mutableListOf<Int>()
     private var position = 0
@@ -86,7 +83,7 @@ class PlayerSessionCallback(
 
     override fun onSetShuffleMode(shuffleMode: Int) {
         TODO("Terminar de implementar isso")
-        if (shuffleMode == SHUFFLE_MODE_NONE) {
+        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             reproductionOrder.shuffle()
         } else {
             reproductionOrder.sort()
