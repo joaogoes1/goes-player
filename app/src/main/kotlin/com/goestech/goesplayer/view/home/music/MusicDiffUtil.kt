@@ -5,7 +5,7 @@ import com.goestech.goesplayer.data.entity.Music
 
 object MusicDiffUtil : DiffUtil.ItemCallback<Music>() {
     override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean =
-        oldItem.id == newItem.id
+        oldItem.musicId == newItem.musicId
 
     override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean =
         oldItem == newItem

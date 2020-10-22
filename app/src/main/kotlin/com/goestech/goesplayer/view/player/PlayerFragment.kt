@@ -1,5 +1,7 @@
 package com.goestech.goesplayer.view.player
 
-class PlayerFragment : BasePlayerFragment() {
+import androidx.fragment.app.Fragment
+
+class PlayerFragment : Fragment() {
 
 }

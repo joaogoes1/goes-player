@@ -6,6 +6,8 @@ import com.goestech.goesplayer.data.entity.Music
 
 interface MusicRepository {
     suspend fun loadMusicsFromDeviceStorage(): Result<Unit, SearchMusicError>
+    suspend fun getMusic(musicId: Long): Music
     suspend fun getAllMusics(): List<Music>
     suspend fun getAllArtists(): List<String>
+    suspend fun playMusic(selectedMusic: Music, playlist: List<Music>): Result<Unit, SearchMusicError>
 }

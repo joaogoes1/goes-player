@@ -97,7 +97,6 @@
             android:layout_marginBottom="4dp"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@id/player_fragment_progress_bar"
-            app:layout_constraintEndStart_toStartOf="@id/player_fragment_progress_bar"
             app:layout_constraintStart_toStartOf="@id/player_fragment_progress_bar"
             tools:text="00:00" />
 

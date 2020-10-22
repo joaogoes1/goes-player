@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
+import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
 import kotlinx.coroutines.launch
 
 class MusicViewModel(
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
+    private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
     val musics = MutableLiveData<List<Music>>()
 
@@ -20,6 +22,8 @@ class MusicViewModel(
     }
 
     fun playMusic(music: Music) {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            musicRepository.playMusic(music, musics.value ?: emptyList())
+        }
     }
 }

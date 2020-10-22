@@ -7,7 +7,6 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import androidx.core.net.toFile
 import com.goestech.goesplayer.data.entity.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,7 +16,7 @@ private const val UNKNOWN: String = "<unknown>"
 private const val VOLUME_NAME: String = "external"
 private const val ALBUM_ART_URI: String = "content://media/external/audio/albumart"
 
-interface MusicStorageDataSource {
+interface DeviceStorageDataSource {
     suspend fun searchAllMusics(): Result<List<Music>, SearchMusicError>
 }
 
@@ -25,9 +24,9 @@ sealed class SearchMusicError {
     object UnknownError : SearchMusicError()
 }
 
-class MusicStorageDataSourceImpl(
+class DeviceStorageDataSourceImpl(
     private val context: Context
-) : MusicStorageDataSource {
+) : DeviceStorageDataSource {
 
     private val contentResolver: ContentResolver
         get() = context.contentResolver
@@ -54,7 +53,7 @@ class MusicStorageDataSourceImpl(
 
                     musicList.add(
                         Music(
-                            id = id,
+                            musicId = id,
                             displayName = name,
                             title = title,  
                             artist = artist,
