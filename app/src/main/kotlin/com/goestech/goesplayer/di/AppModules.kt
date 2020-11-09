@@ -14,6 +14,8 @@ import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
 import com.goestech.goesplayer.data.repository.playlist.PlaylistRepositoryImpl
 import com.goestech.goesplayer.view.home.artist.ArtistViewModel
 import com.goestech.goesplayer.view.home.music.MusicViewModel
+import com.goestech.goesplayer.view.player.MediaPlayerClient
+import com.goestech.goesplayer.view.player.screen.PlayerFragmentViewModel
 import com.goestech.goesplayer.view.splash.SplashViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
@@ -21,11 +23,13 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { SplashViewModel(get()) }
-    viewModel { MusicViewModel(get(), get()) }
+    viewModel { MusicViewModel(get(), get(), get()) }
     viewModel { ArtistViewModel(get()) }
+    viewModel { PlayerFragmentViewModel(get()) }
 }
 
 val repositoryModule = module {
+    factory { MediaPlayerClient(androidContext()) }
     factory<MusicRepository> { MusicRepositoryImpl(get(), get(), get()) }
     factory<PlaylistRepository> { PlaylistRepositoryImpl(get()) }
 }

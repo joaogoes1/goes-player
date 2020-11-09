@@ -25,10 +25,6 @@ class MusicRepositoryImpl(
 
     override suspend fun getAllArtists(): List<String> = musicLocalDataSource.getAllArtists()
 
-    override suspend fun playMusic(selectedMusic: Music, playlist: List<Music>): Result<Unit, SearchMusicError> {
-        playlistLocalDataSource.saveCurrentPlaylist(playlist)
-        TODO("IMPLEMENT THIS")
-//        playerCallback.onPlayFromMediaId(selectedMusic.musicId.toString(), null)
-        return Result.Success(Unit)
-    }
+    override suspend fun playMusic(selectedMusic: Music, playlist: List<Music>): Result<Unit, SearchMusicError> =
+        Result.Success(playlistLocalDataSource.saveCurrentPlaylist(playlist))
 }

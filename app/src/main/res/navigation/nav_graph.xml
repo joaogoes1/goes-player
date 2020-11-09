@@ -5,6 +5,11 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
+    <action
+        android:id="@+id/open_player_fragment"
+        app:destination="@id/playerFragment">
+    </action>
+
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.goestech.goesplayer.view.splash.SplashFragment"
@@ -19,4 +24,10 @@
         android:name="com.goestech.goesplayer.view.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/home_fragment" />
+
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.goestech.goesplayer.view.player.screen.PlayerFragment"
+        android:label="PlayerFragment"
+        tools:layout="@layout/player_fragment" />
 </navigation>

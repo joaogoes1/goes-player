@@ -51,6 +51,9 @@ class DeviceStorageDataSourceImpl(
                     val uri = ContentUris.withAppendedId(musicUri, id)
                     val albumId: Long = musicCursor.getLong(albumIdColumn)
 
+                    val path = musicCursor.getString(musicCursor
+                        .getColumnIndex(MediaStore.Audio.Media.DATA))
+
                     musicList.add(
                         Music(
                             musicId = id,
@@ -60,8 +63,9 @@ class DeviceStorageDataSourceImpl(
                             albumArtUri = getAlbumArt(albumId),
                             album = getAlbumName(uri),
                             genre = getGenreName(id.toInt()),
-                            filePath = uri.path ?: UNKNOWN,
-                            fileName = uri.path?.substringAfterLast("/") ?: ""
+                            uri = uri.toString(),
+                            filePath = path ?: UNKNOWN,
+                            fileName = path?.substringAfterLast("/") ?: UNKNOWN
                         )
                     )
                 } while (musicCursor.moveToNext())

@@ -1,9 +1,11 @@
 package com.goestech.goesplayer.player
 
+import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,18 @@ class PlayerSessionCallback(
     private val playlist = mutableListOf<MediaSessionCompat.QueueItem>()
     private val reproductionOrder = mutableListOf<Int>()
     private var position = 0
+    private var mediaId: String? = null
     private var preparedMedia: MediaMetadataCompat? = null
+
+    fun setPlaylist(newPlaylist: List<Music>) {
+        val queue = newPlaylist.map {
+            val media = it.toMediaItem()
+            MediaSessionCompat.QueueItem(media.description, media.description.hashCode().toLong())
+        }
+        playlist.clear()
+        playlist.addAll(queue)
+        mediaSession.setQueue(playlist)
+    }
 
     override fun onAddQueueItem(description: MediaDescriptionCompat?) {
         playlist.add(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
@@ -33,19 +46,13 @@ class PlayerSessionCallback(
     }
 
     override fun onPrepare() {
-        if (position < 0 && playlist.isEmpty()) {
-            return
-        }
-
-        val mediaId = playlist.getOrNull(position)?.description?.mediaId
         mediaId?.let {
             launch(coroutineContext) {
-                 preparedMedia = musicRepository.getMusic(mediaId.toLongOrNull() ?: 0).createMediaMetadataCompat()
-            }
-            mediaSession.setMetadata(preparedMedia)
-
-            if (!mediaSession.isActive) {
-                mediaSession.isActive = true
+                preparedMedia = musicRepository.getMusic(mediaId?.toLongOrNull() ?: 0).createMediaMetadataCompat()
+                mediaSession.setMetadata(preparedMedia)
+                if (!mediaSession.isActive) {
+                    mediaSession.isActive = true
+                }
             }
         }
     }
@@ -66,7 +73,7 @@ class PlayerSessionCallback(
     }
 
     override fun onSkipToNext() {
-        position = ++position % playlist.size
+        position = if (position < playlist.size) position++ else 0
         preparedMedia = null
         onPlay()
     }
@@ -78,7 +85,12 @@ class PlayerSessionCallback(
     }
 
     override fun onSeekTo(pos: Long) {
-        player.seekTo(pos)
+        player.seekTo(pos.toInt())
+    }
+
+    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
+        this.mediaId = mediaId
+        onPrepare()
     }
 
     override fun onSetShuffleMode(shuffleMode: Int) {

@@ -1,5 +1,6 @@
 package com.goestech.goesplayer.data.datasource.playlist
 
+import com.goestech.goesplayer.data.database.dao.CURRENT_PLAYLIST_NAME
 import com.goestech.goesplayer.data.database.dao.PlaylistDao
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.data.entity.PlaylistMusicCrossRef
@@ -11,7 +12,7 @@ class PlaylistLocalDataSourceImpl(
 ) : PlaylistLocalDataSource {
     override suspend fun saveCurrentPlaylist(musicList: List<Music>) = withContext(Dispatchers.IO) {
         playlistDao.saveCurrentPlaylist(emptyList())
-        val currentPlaylist = playlistDao.getPlaylistWithMusics("currentPlaylist")
+        val currentPlaylist = playlistDao.getPlaylistWithMusics(CURRENT_PLAYLIST_NAME)
         val currentPlaylistMusicCrossRef = playlistDao.getPlaylistMusicCrossRef(currentPlaylist.playlist.playlistId)
         playlistDao.deleteCurrentPlaylistMusics(currentPlaylistMusicCrossRef)
         playlistDao.saveCurrentPlaylist(

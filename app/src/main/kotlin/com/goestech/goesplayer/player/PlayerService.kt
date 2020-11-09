@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 private const val MY_MEDIA_ROOT_ID = "goes-player-session"
+val METADATA_KEY_PATH: String  = "android.media.metadata.PATH"
+
 
 class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
@@ -23,14 +25,23 @@ class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineSc
     private lateinit var player: Player
     private val playlistRepository: PlaylistRepository by inject()
     private val musicRepository: MusicRepository by inject()
-    private val sessionCallback = PlayerSessionCallback(mediaSession, player, musicRepository)
+    private lateinit var sessionCallback: PlayerSessionCallback
+    private val currentPlaylist = mutableListOf<Music>()
 
     override fun onCreate() {
         super.onCreate()
+        player = CustomPlayer(applicationContext)
         mediaSession = MediaSessionCompat(applicationContext, MY_MEDIA_ROOT_ID)
+        sessionCallback = PlayerSessionCallback(mediaSession, player, musicRepository)
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
         mediaSession.setCallback(sessionCallback)
         sessionToken = mediaSession.sessionToken
+//        launch {
+//            playlistRepository.getCurrentPlaylist().apply {
+//                currentPlaylist.addAll(this)
+//                sessionCallback.setPlaylist(this)
+//            }
+//        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -50,12 +61,22 @@ class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineSc
         BrowserRoot(MY_MEDIA_ROOT_ID, null)
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-        launch(coroutineContext) {
-            result.sendResult(playlistRepository.getCurrentPlaylist().map { it.toMediaItem() }.toMutableList())
-        }
+        result.sendResult(currentPlaylist.map { it.toMediaItem() }.toMutableList())
     }
-
 }
+
+fun MediaMetadataCompat.toMusic() = Music(
+    musicId = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID).toLong(),
+    displayName = getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE),
+    title = getString(MediaMetadataCompat.METADATA_KEY_TITLE),
+    artist = getString(MediaMetadataCompat.METADATA_KEY_ARTIST),
+    album = getString(MediaMetadataCompat.METADATA_KEY_ALBUM),
+    albumArtUri = getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI),
+    genre = getString(MediaMetadataCompat.METADATA_KEY_GENRE),
+    uri = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI),
+    filePath = getString(METADATA_KEY_PATH),
+    fileName = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).substringAfterLast('/')
+)
 
 fun Music.toMediaItem() =
     MediaBrowserCompat.MediaItem(
@@ -65,13 +86,13 @@ fun Music.toMediaItem() =
 
 fun Music.createMediaMetadataCompat(): MediaMetadataCompat = MediaMetadataCompat.Builder()
     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicId.toString())
+    .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, displayName)
     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
-//    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
-//        TimeUnit.MILLISECONDS.convert(duration, durationUnit))
     .putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri)
     .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, albumArtUri)
     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
-    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, filePath)
+    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, uri)
+    .putString(METADATA_KEY_PATH, filePath)
     .build()

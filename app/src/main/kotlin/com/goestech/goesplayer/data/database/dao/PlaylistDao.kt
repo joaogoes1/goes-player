@@ -5,6 +5,8 @@ import com.goestech.goesplayer.data.entity.Playlist
 import com.goestech.goesplayer.data.entity.PlaylistMusicCrossRef
 import com.goestech.goesplayer.data.entity.PlaylistWithMusics
 
+const val CURRENT_PLAYLIST_NAME = "currentPlaylist"
+
 @Dao
 interface PlaylistDao {
 
@@ -20,7 +22,7 @@ interface PlaylistDao {
     fun getPlaylistWithMusics(playlistName: String): PlaylistWithMusics
 
     @Transaction
-    @Query("SELECT * FROM playlist WHERE name = 'currentPlaylist' LIMIT 1")
+    @Query("SELECT * FROM playlist WHERE name = '$CURRENT_PLAYLIST_NAME' LIMIT 1")
     fun getCurrentPlaylistWithMusics(): PlaylistWithMusics
 
     @Transaction

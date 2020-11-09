@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.databinding.MusicFragmentBinding
+import com.goestech.goesplayer.view.MainActivity
+import com.goestech.goesplayer.view.player.screen.PlayerFragmentDirections
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MusicFragment : Fragment(), MusicFragmentListener {
@@ -36,6 +39,9 @@ class MusicFragment : Fragment(), MusicFragmentListener {
     }
 
     override fun playMusic(music: Music) {
-        viewModel.playMusic(music)
+        (requireActivity() as MainActivity).playMedia(music)
+        findNavController().navigate(
+            PlayerFragmentDirections.openPlayerFragment()
+        )
     }
 }
