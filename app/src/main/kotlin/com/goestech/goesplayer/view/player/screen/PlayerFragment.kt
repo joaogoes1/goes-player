@@ -14,9 +14,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
 
-    private val activity: MainActivity
-        get() = requireActivity() as MainActivity
-//    private val viewModel: PlayerFragmentViewModel by viewModel()
+    private val viewModel: PlayerFragmentViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return PlayerFragmentBinding.inflate(inflater, container, false).apply {
@@ -24,17 +22,26 @@ class PlayerFragment : Fragment() {
         }.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onStop()
+    }
 
     private fun initializeButtons(binding: PlayerFragmentBinding) {
         with(binding) {
             playerFragmentPlayButton.setOnClickListener {
-                activity.playOrPause()
+                viewModel.playOrPause()
             }
             playerFragmentNextButton.setOnClickListener {
-                activity.skipToNext()
+                viewModel.skipToNext()
             }
             playerFragmentPreviousButton.setOnClickListener {
-                activity.skipToPrevious()
+                viewModel.skipToPrevious()
             }
             playerFragmentTotalTime.text = "IMPLEMENTA ISSO IRMÃO"
 //            activity.transportControls?.currentTime.observe(viewLifecycleOwner, Observer {

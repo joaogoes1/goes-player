@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/private/var/folders/qk/d7637p4916sb4qqxkk4nw7w80000gp/T/AppTranslocation/E14297EF-2CA2-413B-A848-4914981A8E8C/d/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/play_arrow/baseline_play_arrow_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/pause/baseline_pause_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -34,7 +34,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_baseline_play_arrow_24" />
+                            <entry key="outputName" value="ic_pause_white" />
                           </map>
                         </option>
                       </PersistentState>
