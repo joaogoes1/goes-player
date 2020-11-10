@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.time.Duration
 
 @Entity
 @Parcelize
@@ -15,6 +16,7 @@ data class Music(
     val album: String?,
     val albumArtUri: String?,
     val genre: String?,
+    val duration: Long,
     val uri: String,
     val filePath: String,
     val fileName: String

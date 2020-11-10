@@ -1,18 +1,21 @@
 package com.goestech.goesplayer.view.player.screen
 
-import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.view.player.MediaPlayerClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.newCoroutineContext
 import java.sql.Timestamp
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class PlayerFragmentViewModel(
     private val mediaPlayerClient: MediaPlayerClient
 ) : ViewModel() {
-
-    val currentTime: MutableLiveData<Timestamp> = MutableLiveData()
-    val music: MutableLiveData<Music> = MutableLiveData()
+    val music: LiveData<Music> = mediaPlayerClient.musicFlow.asLiveData(viewModelScope.coroutineContext)
+    val position: LiveData<Long> = mediaPlayerClient.positionFlow.asLiveData(viewModelScope.coroutineContext)
 
     fun onStart() {
         mediaPlayerClient.onStart()
@@ -31,10 +34,6 @@ class PlayerFragmentViewModel(
     }
 
     fun playOrPause() {
-        if (mediaPlayerClient.isPlaying) {
-            mediaPlayerClient.pause()
-        } else {
-            mediaPlayerClient.play()
-        }
+        mediaPlayerClient.playOrPause()
     }
 }

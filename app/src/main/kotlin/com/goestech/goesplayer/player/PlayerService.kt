@@ -73,6 +73,7 @@ fun MediaMetadataCompat.toMusic() = Music(
     album = getString(MediaMetadataCompat.METADATA_KEY_ALBUM),
     albumArtUri = getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI),
     genre = getString(MediaMetadataCompat.METADATA_KEY_GENRE),
+    duration = getLong(MediaMetadataCompat.METADATA_KEY_DURATION),
     uri = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI),
     filePath = getString(METADATA_KEY_PATH),
     fileName = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).substringAfterLast('/')
@@ -93,6 +94,7 @@ fun Music.createMediaMetadataCompat(): MediaMetadataCompat = MediaMetadataCompat
     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri)
     .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, albumArtUri)
     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, uri)
     .putString(METADATA_KEY_PATH, filePath)
     .build()

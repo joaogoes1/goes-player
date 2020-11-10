@@ -7,13 +7,21 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.lifecycle.viewModelScope
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.player.PlayerService
 import com.goestech.goesplayer.player.toMusic
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MediaPlayerClient(
     private val context: Context
-) {
+) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
     private val callbackList: MutableList<MediaControllerCompat.Callback> = mutableListOf()
     private val mediaBrowserConnectionCallback: MediaBrowserConnectionCallback = MediaBrowserConnectionCallback()
     private val mediaControllerCallback: MediaControllerCallback = MediaControllerCallback()
@@ -24,6 +32,10 @@ class MediaPlayerClient(
         get() = mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING
     val music: Music?
         get() = mediaController?.metadata?.toMusic()
+    private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
+    val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
+    private val positionChannel = ConflatedBroadcastChannel<Long>()
+    val positionFlow: Flow<Long> = positionChannel.asFlow()
 
     fun playMusic(musicId: String) {
         mediaController?.transportControls?.playFromMediaId(musicId, null)
@@ -37,6 +49,13 @@ class MediaPlayerClient(
                 mediaBrowserConnectionCallback,
                 null)
             mediaBrowser?.connect()
+            launch(newCoroutineContext(Dispatchers.Default)) {
+                while (true) {
+                    positionChannel.send(mediaController?.playbackState?.position ?: 0L)
+                    val waitTime: Long = 1000.times(mediaController?.playbackState?.playbackSpeed ?: 1f).toLong()
+                    delay(waitTime)
+                }
+            }
         }
     }
 
@@ -123,6 +142,9 @@ class MediaPlayerClient(
                     callback.onMetadataChanged(metadata)
                 }
             })
+            launch {
+                _musicFlow.send(metadata)
+            }
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
@@ -153,5 +175,13 @@ class MediaPlayerClient(
 
     fun pause() {
         mediaController?.transportControls?.pause()
+    }
+
+    fun playOrPause() {
+        if (mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+            pause()
+        } else {
+            play()
+        }
     }
 }

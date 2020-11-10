@@ -7,10 +7,10 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import com.goestech.goesplayer.data.Result
 import com.goestech.goesplayer.data.entity.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.goestech.goesplayer.data.Result
 
 private const val UNKNOWN: String = "<unknown>"
 private const val VOLUME_NAME: String = "external"
@@ -23,11 +23,11 @@ interface DeviceStorageDataSource {
 sealed class SearchMusicError {
     object UnknownError : SearchMusicError()
 }
-
 class DeviceStorageDataSourceImpl(
     private val context: Context
 ) : DeviceStorageDataSource {
 
+    private val mediaMetadataRetriever = MediaMetadataRetriever()
     private val contentResolver: ContentResolver
         get() = context.contentResolver
 
@@ -58,11 +58,12 @@ class DeviceStorageDataSourceImpl(
                         Music(
                             musicId = id,
                             displayName = name,
-                            title = title,  
+                            title = title,
                             artist = artist,
                             albumArtUri = getAlbumArt(albumId),
                             album = getAlbumName(uri),
                             genre = getGenreName(id.toInt()),
+                            duration = getDuration(uri),
                             uri = uri.toString(),
                             filePath = path ?: UNKNOWN,
                             fileName = path?.substringAfterLast("/") ?: UNKNOWN
@@ -72,6 +73,7 @@ class DeviceStorageDataSourceImpl(
             }
         }
         cursor?.close()
+        mediaMetadataRetriever.release()
         return@withContext Result.Success(musicList)
     }
 
@@ -88,19 +90,29 @@ class DeviceStorageDataSourceImpl(
 
     private fun getAlbumName(uri: Uri): String? {
         return try {
-            val media = MediaMetadataRetriever()
-            media.setDataSource(context, uri)
-            val album = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-            media.release()
+            mediaMetadataRetriever.setDataSource(context, uri)
+            val album = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+            mediaMetadataRetriever.release()
             album
         } catch (e: Exception) {
-            Log.e("LOADING MUSIC ERROR", "Faild to load album: ${uri.path}")
+            Log.e("LOAD ING MUSIC ERROR", "Failed to load album: ${uri.path}")
             null
         }
     }
+
+    private fun getDuration(uri: Uri): Long = try {
+        mediaMetadataRetriever.setDataSource(context, uri)
+        val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        durationStr.toLong()
+    } catch (e: Exception) {
+        Log.e("LOAD ING MUSIC ERROR", "Failed to load duration: ${uri}")
+        0L
+    }
+
 
     private fun getAlbumArt(albumId: Long): String? {
         val sArtworkUri = Uri.parse(ALBUM_ART_URI)
         return ContentUris.withAppendedId(sArtworkUri, albumId).toString()
     }
 }
+
