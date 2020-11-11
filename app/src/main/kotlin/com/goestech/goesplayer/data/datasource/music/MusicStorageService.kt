@@ -92,7 +92,6 @@ class DeviceStorageDataSourceImpl(
         return try {
             mediaMetadataRetriever.setDataSource(context, uri)
             val album = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-            mediaMetadataRetriever.release()
             album
         } catch (e: Exception) {
             Log.e("LOAD ING MUSIC ERROR", "Failed to load album: ${uri.path}")
@@ -105,10 +104,9 @@ class DeviceStorageDataSourceImpl(
         val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
         durationStr.toLong()
     } catch (e: Exception) {
-        Log.e("LOAD ING MUSIC ERROR", "Failed to load duration: ${uri}")
+        Log.e("LOAD ING MUSIC ERROR", "Failed to load duration: $uri")
         0L
     }
-
 
     private fun getAlbumArt(albumId: Long): String? {
         val sArtworkUri = Uri.parse(ALBUM_ART_URI)
