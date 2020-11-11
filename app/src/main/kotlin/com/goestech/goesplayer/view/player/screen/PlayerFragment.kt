@@ -8,18 +8,14 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.goestech.goesplayer.R
-import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.databinding.PlayerFragmentBinding
-import com.goestech.goesplayer.view.MainActivity
+import com.goestech.goesplayer.utils.extensions.formatToDigitalClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.util.*
+
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -30,6 +26,7 @@ class PlayerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return PlayerFragmentBinding.inflate(inflater, container, false).apply {
             initializeButtons(this)
+            observeViewModel(this)
         }.root
     }
 
@@ -54,11 +51,26 @@ class PlayerFragment : Fragment() {
             playerFragmentPreviousButton.setOnClickListener {
                 viewModel.skipToPrevious()
             }
+            playerFragmentProgressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    if (fromUser) viewModel.seekTo(progress * 1000)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+        }
+    }
+
+    private fun observeViewModel(binding: PlayerFragmentBinding) {
+        binding.apply {
             viewModel.music.observe(viewLifecycleOwner, Observer {
                 playerFragmentArtistName.text = it.artist
                 playerFragmentMusicName.text = it.title ?: it.displayName ?: it.fileName
-                playerFragmentTotalTime.text = it.duration.toMinutesAndSecondsText()
-                    Glide
+                playerFragmentTotalTime.text = it.duration.formatToDigitalClock()
+                playerFragmentProgressBar.max = it.duration.toInt() / 1000
+                Glide
                     .with(root.context)
                     .load(Uri.parse(it.albumArtUri))
                     .placeholder(R.drawable.album_placeholder)
@@ -66,52 +78,23 @@ class PlayerFragment : Fragment() {
                     .into(playerFragmentAlbumImage)
             })
             viewModel.position.observe(viewLifecycleOwner, {
-                playerFragmentCurrentTime.text = it.toString()
-                playerFragmentProgressBar.progress = it.toInt()
+                playerFragmentCurrentTime.text = it.formatToDigitalClock()
+                setSeekBarProgress(playerFragmentProgressBar, it.toInt())
             })
-            playerFragmentProgressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-
-                    }
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                }
-                /*
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        currentTimeText.setText(gerarTempo(progress * 1000));
-                    } else {
-                        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-                        Date date = new Date(progress * 1000);
-                        currentTimeText.setText(sdf.format(date));
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    int pos = seekBar.getProgress() * 1000;
-                    musicSrv.seekTo(pos);
-                    SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-                    Date date = new Date(musicSrv.mediaPlayer.getCurrentPosition());
-                    currentTimeText.setText(sdf.format(date));
-                }
-                 */
+            viewModel.isPlaying.observe(viewLifecycleOwner, {
+                val newImage = if (it)
+                    R.drawable.ic_pause_black
+                else
+                    R.drawable.ic_play_black
+                playerFragmentPlayButton.setImageResource(newImage)
             })
-            // Implementar Progress bar
         }
     }
 
-    private fun Long.toMinutesAndSecondsText(): String {
-        val sdf = SimpleDateFormat("mm:ss")
-        val date = Date(this * 1000)
-        return sdf.format(date)
+    private fun setSeekBarProgress(seekBar: SeekBar, progress: Int) {
+        seekBar.progress = progress / 1000
     }
+
+    private fun getSeekBarProgress(seekBar: SeekBar?): Int =
+        seekBar?.progress ?: 0 * 1000
 }

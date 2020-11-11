@@ -16,13 +16,12 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 private const val MY_MEDIA_ROOT_ID = "goes-player-session"
-val METADATA_KEY_PATH: String  = "android.media.metadata.PATH"
+const val METADATA_KEY_PATH: String  = "android.media.metadata.PATH"
 
 
 class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     private lateinit var mediaSession: MediaSessionCompat
-    private lateinit var player: Player
     private val playlistRepository: PlaylistRepository by inject()
     private val musicRepository: MusicRepository by inject()
     private lateinit var sessionCallback: PlayerSessionCallback
@@ -30,9 +29,8 @@ class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineSc
 
     override fun onCreate() {
         super.onCreate()
-        player = CustomPlayer(applicationContext)
         mediaSession = MediaSessionCompat(applicationContext, MY_MEDIA_ROOT_ID)
-        sessionCallback = PlayerSessionCallback(mediaSession, player, musicRepository)
+        sessionCallback = PlayerSessionCallback(mediaSession, musicRepository)
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
         mediaSession.setCallback(sessionCallback)
         sessionToken = mediaSession.sessionToken
@@ -53,9 +51,11 @@ class PlayerService : MediaBrowserServiceCompat(), CoroutineScope by CoroutineSc
         super.onDestroy()
         coroutineContext.cancel()
 //        mMediaNotificationManager.onDestroy()
-        player.stop()
+        sessionCallback.onStop()
         mediaSession.release()
     }
+
+
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? =
         BrowserRoot(MY_MEDIA_ROOT_ID, null)

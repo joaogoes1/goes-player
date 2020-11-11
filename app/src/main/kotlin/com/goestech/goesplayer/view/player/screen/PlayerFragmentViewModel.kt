@@ -16,6 +16,7 @@ class PlayerFragmentViewModel(
 ) : ViewModel() {
     val music: LiveData<Music> = mediaPlayerClient.musicFlow.asLiveData(viewModelScope.coroutineContext)
     val position: LiveData<Long> = mediaPlayerClient.positionFlow.asLiveData(viewModelScope.coroutineContext)
+    val isPlaying: LiveData<Boolean> = mediaPlayerClient.isPlayingFlow.asLiveData(viewModelScope.coroutineContext)
 
     fun onStart() {
         mediaPlayerClient.onStart()
@@ -35,5 +36,9 @@ class PlayerFragmentViewModel(
 
     fun playOrPause() {
         mediaPlayerClient.playOrPause()
+    }
+
+    fun seekTo(progress: Int) {
+        mediaPlayerClient.seekTo(progress.toLong())
     }
 }

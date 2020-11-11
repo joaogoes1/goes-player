@@ -7,7 +7,6 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.viewModelScope
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.player.PlayerService
 import com.goestech.goesplayer.player.toMusic
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.map
 class MediaPlayerClient(
     private val context: Context
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
-    private val callbackList: MutableList<MediaControllerCompat.Callback> = mutableListOf()
     private val mediaBrowserConnectionCallback: MediaBrowserConnectionCallback = MediaBrowserConnectionCallback()
     private val mediaControllerCallback: MediaControllerCallback = MediaControllerCallback()
     private val mediaBrowserSubscriptionCallback: MediaBrowserSubscriptionCallback = MediaBrowserSubscriptionCallback()
@@ -34,8 +32,11 @@ class MediaPlayerClient(
         get() = mediaController?.metadata?.toMusic()
     private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
     val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
+    // TODO: Unificar position e isPlaying num objeto de PlaybackState
     private val positionChannel = ConflatedBroadcastChannel<Long>()
     val positionFlow: Flow<Long> = positionChannel.asFlow()
+    private val isPlayingChannel = ConflatedBroadcastChannel<Boolean>()
+    val isPlayingFlow: Flow<Boolean> = isPlayingChannel.asFlow()
 
     fun playMusic(musicId: String) {
         mediaController?.transportControls?.playFromMediaId(musicId, null)
@@ -49,13 +50,6 @@ class MediaPlayerClient(
                 mediaBrowserConnectionCallback,
                 null)
             mediaBrowser?.connect()
-            launch(newCoroutineContext(Dispatchers.Default)) {
-                while (true) {
-                    positionChannel.send(mediaController?.playbackState?.position ?: 0L)
-                    val waitTime: Long = 1000.times(mediaController?.playbackState?.playbackSpeed ?: 1f).toLong()
-                    delay(waitTime)
-                }
-            }
         }
     }
 
@@ -68,42 +62,6 @@ class MediaPlayerClient(
             mediaBrowser?.disconnect()
             mediaBrowser = null
         }
-        resetState()
-    }
-
-    private fun resetState() {
-        performOnAllCallbacks(object : CallbackCommand {
-            override fun perform(callback: MediaControllerCompat.Callback) {
-                callback.onPlaybackStateChanged(null)
-            }
-        })
-    }
-
-    fun registerCallback(callback: MediaControllerCompat.Callback) {
-        callbackList.add(callback)
-
-        mediaController?.let { mMediaController ->
-            val metadata = mMediaController.metadata
-            if (metadata != null) {
-                callback.onMetadataChanged(metadata)
-            }
-            val playbackState = mMediaController.playbackState
-            if (playbackState != null) {
-                callback.onPlaybackStateChanged(playbackState)
-            }
-        }
-
-    }
-
-    private fun performOnAllCallbacks(command: CallbackCommand) {
-        for (callback in callbackList) {
-            command.perform(callback)
-        }
-    }
-
-
-    private interface CallbackCommand {
-        fun perform(callback: MediaControllerCompat.Callback)
     }
 
     private inner class MediaBrowserConnectionCallback : MediaBrowserCompat.ConnectionCallback() {
@@ -127,8 +85,10 @@ class MediaPlayerClient(
     }
 
     inner class MediaBrowserSubscriptionCallback : MediaBrowserCompat.SubscriptionCallback() {
-        override fun onChildrenLoaded(parentId: String,
-                                      children: List<MediaBrowserCompat.MediaItem>) {
+        override fun onChildrenLoaded(
+            parentId: String,
+            children: List<MediaBrowserCompat.MediaItem>
+        ) {
             for (mediaItem in children)
                 mediaController?.addQueueItem(mediaItem.description)
             mediaController?.transportControls?.prepare()
@@ -137,26 +97,19 @@ class MediaPlayerClient(
 
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
         override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            performOnAllCallbacks(object : CallbackCommand {
-                override fun perform(callback: MediaControllerCompat.Callback) {
-                    callback.onMetadataChanged(metadata)
-                }
-            })
             launch {
                 _musicFlow.send(metadata)
             }
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-            performOnAllCallbacks(object : CallbackCommand {
-                override fun perform(callback: MediaControllerCompat.Callback) {
-                    callback.onPlaybackStateChanged(state)
-                }
-            })
+            launch {
+                positionChannel.send(state?.position ?: 0L)
+                isPlayingChannel.send(state?.state == PlaybackStateCompat.STATE_PLAYING)
+            }
         }
 
         override fun onSessionDestroyed() {
-            resetState()
             onPlaybackStateChanged(null)
         }
     }
@@ -183,5 +136,9 @@ class MediaPlayerClient(
         } else {
             play()
         }
+    }
+
+    fun seekTo(progress: Long) {
+        mediaController?.transportControls?.seekTo(progress)
     }
 }

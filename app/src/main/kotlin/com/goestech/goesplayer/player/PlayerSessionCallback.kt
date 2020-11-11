@@ -1,25 +1,35 @@
 package com.goestech.goesplayer.player
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.goestech.goesplayer.data.entity.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.FileNotFoundException
+
+private const val PLAYER_ERROR_TAG = "GOES PLAYER-MEDIAPLAYER"
 
 class PlayerSessionCallback(
     private val mediaSession: MediaSessionCompat,
-    private val player: Player,
     private val musicRepository: MusicRepository
-) : MediaSessionCompat.Callback(), CoroutineScope by CoroutineScope(Dispatchers.Default) {
+) : MediaSessionCompat.Callback(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
+    private val player = MediaPlayer().apply {
+        setOnPreparedListener(this@PlayerSessionCallback)
+        setOnErrorListener(this@PlayerSessionCallback)
+    }
     private val playlist = mutableListOf<MediaSessionCompat.QueueItem>()
     private val reproductionOrder = mutableListOf<Int>()
-    private var position = 0
+    private var playlistPosition = 0
     private var mediaId: String? = null
     private var preparedMedia: MediaMetadataCompat? = null
 
@@ -35,57 +45,77 @@ class PlayerSessionCallback(
 
     override fun onAddQueueItem(description: MediaDescriptionCompat?) {
         playlist.add(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
-        position = if (position == -1) 0 else position
+        playlistPosition = if (playlistPosition == -1) 0 else playlistPosition
         mediaSession.setQueue(playlist)
     }
 
     override fun onRemoveQueueItem(description: MediaDescriptionCompat?) {
         playlist.remove(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
-        position = if (playlist.isEmpty()) -1 else position
+        playlistPosition = if (playlist.isEmpty()) -1 else playlistPosition
         mediaSession.setQueue(playlist)
     }
 
     override fun onPrepare() {
         mediaId?.let {
             launch(coroutineContext) {
-                preparedMedia = musicRepository.getMusic(mediaId?.toLongOrNull() ?: 0).createMediaMetadataCompat()
+                preparedMedia = musicRepository.getMusic(mediaId?.toLongOrNull()
+                    ?: 0).createMediaMetadataCompat()
                 mediaSession.setMetadata(preparedMedia)
                 if (!mediaSession.isActive) {
                     mediaSession.isActive = true
                 }
+                onPlay()
             }
         }
     }
 
     override fun onPlay() {
-        preparedMedia?.let {
-            player.playFromMedia(it)
+        preparedMedia?.let { music ->
+            player.reset()
+            try {
+                val uri = Uri.parse(music.getString(METADATA_KEY_PATH))
+                    ?: throw FileNotFoundException(music.getString(music.toString()))
+                player.setDataSource(uri.path)
+                player.prepareAsync()
+            } catch (e: Exception) {
+                Log.e(PLAYER_ERROR_TAG, "Error on playFromMedia:\n\t" + e.message)
+            }
         } ?: onPrepare()
     }
 
     override fun onPause() {
         player.pause()
+        mediaSession.setPlaybackState(
+            PlaybackStateCompat
+                .Builder()
+                .setState(PlaybackStateCompat.STATE_PAUSED, player.currentPosition.toLong(), 1.toFloat())
+                .build()
+        )
     }
 
     override fun onStop() {
         player.stop()
+        player.release()
         mediaSession.isActive = false
     }
 
     override fun onSkipToNext() {
-        position = if (position < playlist.size) position++ else 0
+        playlistPosition = if (playlistPosition < playlist.size) playlistPosition++ else 0
         preparedMedia = null
         onPlay()
     }
 
     override fun onSkipToPrevious() {
-        position = if (position > 0) position - 1 else playlist.size - 1
+        playlistPosition = if (playlistPosition > 0) playlistPosition - 1 else playlist.size - 1
         preparedMedia = null
         onPlay()
     }
 
     override fun onSeekTo(pos: Long) {
         player.seekTo(pos.toInt())
+        player.setOnSeekCompleteListener {
+            it?.start()
+        }
     }
 
     override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
@@ -100,5 +130,52 @@ class PlayerSessionCallback(
         } else {
             reproductionOrder.sort()
         }
+    }
+
+    override fun onPrepared(mp: MediaPlayer?) {
+        player.start()
+        mediaSession.setPlaybackState(
+            PlaybackStateCompat
+                .Builder()
+                .setState(PlaybackStateCompat.STATE_PLAYING, player.currentPosition.toLong(), 1.toFloat())
+                .build()
+        )
+        launch(Dispatchers.Default) {
+            while (true) {
+                if (player.isPlaying) {
+                    updateCurrentPosition()
+                    val waitTime: Long = 1000//.times(mediaController?.playbackState?.playbackSpeed ?: 1f).toLong()
+                    delay(waitTime)
+                }
+            }
+        }
+    }
+
+    private fun updateCurrentPosition() {
+        val position = player.currentPosition.toLong()
+        val range = 1.toFloat()
+        val state = if (player.isPlaying)
+            PlaybackStateCompat.STATE_PLAYING
+        else
+            PlaybackStateCompat.STATE_PLAYING
+
+        mediaSession.setPlaybackState(
+            PlaybackStateCompat
+                .Builder()
+                .setState(state, position, range)
+                .build()
+        )
+    }
+
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        Log.e(PLAYER_ERROR_TAG, "What: $what\nExtra: $extra\n")
+        mp?.reset()
+        mediaSession.setPlaybackState(
+            PlaybackStateCompat
+                .Builder()
+                .setState(PlaybackStateCompat.STATE_ERROR, 0L, 0f)
+                .build()
+        )
+        return true
     }
 }
