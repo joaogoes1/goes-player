@@ -1,22 +1,25 @@
 package com.goestech.goesplayer.view.player.screen
 
 import androidx.lifecycle.*
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.Result
+import com.goestech.goesplayer.data.model.Lyrics
+import com.goestech.goesplayer.data.model.Music
+import com.goestech.goesplayer.data.repository.lyrics.LyricsRepository
 import com.goestech.goesplayer.view.player.MediaPlayerClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.newCoroutineContext
-import java.sql.Timestamp
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @FlowPreview
 class PlayerFragmentViewModel(
+    private val lyricsRepository: LyricsRepository,
     private val mediaPlayerClient: MediaPlayerClient
 ) : ViewModel() {
     val music: LiveData<Music> = mediaPlayerClient.musicFlow.asLiveData(viewModelScope.coroutineContext)
     val position: LiveData<Long> = mediaPlayerClient.positionFlow.asLiveData(viewModelScope.coroutineContext)
     val isPlaying: LiveData<Boolean> = mediaPlayerClient.isPlayingFlow.asLiveData(viewModelScope.coroutineContext)
+    val lyrics =  MutableLiveData<Lyrics?>(null)
 
     fun onStart() {
         mediaPlayerClient.onStart()
@@ -40,5 +43,19 @@ class PlayerFragmentViewModel(
 
     fun seekTo(progress: Int) {
         mediaPlayerClient.seekTo(progress.toLong())
+    }
+
+    fun loadLyrics() {
+        viewModelScope.launch {
+            val music = music.value ?: return@launch
+            val musicName = music.title ?: music.displayName ?: music.fileName.substringBeforeLast(".")
+            val artist = music.artist ?: return@launch
+
+            val lyricsResult = when (val result = lyricsRepository.getLyrics(musicName, artist)) {
+                is Result.Success -> result.value
+                else -> null
+            }
+            lyrics.postValue(lyricsResult)
+        }
     }
 }

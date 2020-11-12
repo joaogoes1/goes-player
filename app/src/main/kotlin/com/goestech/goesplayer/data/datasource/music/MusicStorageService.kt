@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import com.goestech.goesplayer.data.Result
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

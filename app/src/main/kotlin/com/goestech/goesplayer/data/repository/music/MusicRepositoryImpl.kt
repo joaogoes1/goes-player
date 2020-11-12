@@ -5,7 +5,7 @@ import com.goestech.goesplayer.data.datasource.music.MusicLocalDataSource
 import com.goestech.goesplayer.data.datasource.music.DeviceStorageDataSource
 import com.goestech.goesplayer.data.datasource.music.SearchMusicError
 import com.goestech.goesplayer.data.datasource.playlist.PlaylistLocalDataSource
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 
 class MusicRepositoryImpl(
     private val deviceStorageDataSource: DeviceStorageDataSource,

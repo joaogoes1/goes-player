@@ -8,7 +8,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -142,7 +142,11 @@ class PlayerSessionCallback(
         )
         launch(Dispatchers.Default) {
             while (true) {
-                if (player.isPlaying) {
+                val isPlaying = try {
+                    player.isPlaying
+                } catch (e: Exception) { false }
+
+                if (isPlaying) {
                     updateCurrentPosition()
                     val waitTime: Long = 1000//.times(mediaController?.playbackState?.playbackSpeed ?: 1f).toLong()
                     delay(waitTime)

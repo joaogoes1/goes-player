@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.goestech.goesplayer.R
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import com.goestech.goesplayer.databinding.MusicListItemBinding
 import com.goestech.goesplayer.view.home.music.MusicFragmentAdapter.MusicFragmentAdapterViewHolder
 

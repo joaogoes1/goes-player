@@ -7,7 +7,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import com.goestech.goesplayer.player.PlayerService
 import com.goestech.goesplayer.player.toMusic
 import kotlinx.coroutines.*

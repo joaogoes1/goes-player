@@ -6,13 +6,12 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 private const val MY_MEDIA_ROOT_ID = "goes-player-session"

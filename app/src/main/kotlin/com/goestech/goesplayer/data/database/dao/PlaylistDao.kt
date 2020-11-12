@@ -1,9 +1,9 @@
 package com.goestech.goesplayer.data.database.dao
 
 import androidx.room.*
-import com.goestech.goesplayer.data.entity.Playlist
-import com.goestech.goesplayer.data.entity.PlaylistMusicCrossRef
-import com.goestech.goesplayer.data.entity.PlaylistWithMusics
+import com.goestech.goesplayer.data.model.Playlist
+import com.goestech.goesplayer.data.model.PlaylistMusicCrossRef
+import com.goestech.goesplayer.data.model.PlaylistWithMusics
 
 const val CURRENT_PLAYLIST_NAME = "currentPlaylist"
 

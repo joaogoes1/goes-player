@@ -1,7 +1,7 @@
 package com.goestech.goesplayer.data.datasource.music
 
 import com.goestech.goesplayer.data.database.dao.MusicDao
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

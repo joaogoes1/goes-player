@@ -3,7 +3,7 @@ package com.goestech.goesplayer.view.home.music
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 import com.goestech.goesplayer.data.repository.music.MusicRepository
 import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
 import com.goestech.goesplayer.view.player.MediaPlayerClient

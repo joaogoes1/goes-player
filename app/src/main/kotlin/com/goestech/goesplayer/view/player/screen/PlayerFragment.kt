@@ -60,12 +60,23 @@ class PlayerFragment : Fragment() {
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             })
+            playerFragmentAlbumImage.setOnClickListener {
+                if (playerFragmentAlbumImage.visibility == View.VISIBLE) {
+                    val lyrics = viewModel.lyrics.value?.music?.text
+                    lyrics?.let {
+                        playerFragmentLyricsText.text = it
+                        playerFragmentAlbumImage.visibility = View.GONE
+                        playerFragmentLyricsScroll.visibility = View.VISIBLE
+                    }
+                }
+            }
         }
     }
 
     private fun observeViewModel(binding: PlayerFragmentBinding) {
         binding.apply {
             viewModel.music.observe(viewLifecycleOwner, Observer {
+                viewModel.loadLyrics()
                 playerFragmentArtistName.text = it.artist
                 playerFragmentMusicName.text = it.title ?: it.displayName ?: it.fileName
                 playerFragmentTotalTime.text = it.duration.formatToDigitalClock()

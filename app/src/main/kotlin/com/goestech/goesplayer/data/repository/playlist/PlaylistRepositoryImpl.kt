@@ -1,7 +1,7 @@
 package com.goestech.goesplayer.data.repository.playlist
 
 import com.goestech.goesplayer.data.datasource.playlist.PlaylistLocalDataSource
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 
 class PlaylistRepositoryImpl(
     private val playlistLocalDataSource: PlaylistLocalDataSource

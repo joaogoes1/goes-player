@@ -1,6 +1,6 @@
 package com.goestech.goesplayer.data.datasource.playlist
 
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 
 interface PlaylistLocalDataSource {
     suspend fun saveCurrentPlaylist(musicList: List<Music>)

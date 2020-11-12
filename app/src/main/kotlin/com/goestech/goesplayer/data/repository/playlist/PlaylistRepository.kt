@@ -1,6 +1,6 @@
 package com.goestech.goesplayer.data.repository.playlist
 
-import com.goestech.goesplayer.data.entity.Music
+import com.goestech.goesplayer.data.model.Music
 
 interface PlaylistRepository {
     suspend fun saveCurrentPlaylist(musics: List<Music>)

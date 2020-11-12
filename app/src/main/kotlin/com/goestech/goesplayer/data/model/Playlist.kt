@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.data.entity
+package com.goestech.goesplayer.data.model
 
 import androidx.room.*
 

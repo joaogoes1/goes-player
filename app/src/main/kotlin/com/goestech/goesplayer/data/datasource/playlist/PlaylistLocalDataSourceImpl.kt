@@ -2,8 +2,8 @@ package com.goestech.goesplayer.data.datasource.playlist
 
 import com.goestech.goesplayer.data.database.dao.CURRENT_PLAYLIST_NAME
 import com.goestech.goesplayer.data.database.dao.PlaylistDao
-import com.goestech.goesplayer.data.entity.Music
-import com.goestech.goesplayer.data.entity.PlaylistMusicCrossRef
+import com.goestech.goesplayer.data.model.Music
+import com.goestech.goesplayer.data.model.PlaylistMusicCrossRef
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
