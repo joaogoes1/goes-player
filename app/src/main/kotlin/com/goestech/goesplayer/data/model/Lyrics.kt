@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class Lyrics(
     val type: String,
     @field:Json(name = "art") val artist: Artist?,
-    @field:Json(name = "mus") val music: Music?
+    @field:Json(name = "mus") val music: List<Music>?
 ) {
     @JsonClass(generateAdapter = true)
     data class Artist(

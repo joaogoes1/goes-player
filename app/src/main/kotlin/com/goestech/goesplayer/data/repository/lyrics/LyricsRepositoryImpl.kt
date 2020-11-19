@@ -6,8 +6,8 @@ import com.goestech.goesplayer.data.datasource.lyrics.LyricsRemoteDataSource
 import com.goestech.goesplayer.data.model.Lyrics
 
 class LyricsRepositoryImpl(
-    private val lyricsRemoteDataSourceImpl: LyricsRemoteDataSource
+    private val lyricsRemoteDataSource: LyricsRemoteDataSource
 ) : LyricsRepository {
     override suspend fun getLyrics(music: String, artist: String): Result<Lyrics, LyricsError> =
-        lyricsRemoteDataSourceImpl.getLyrics(music, artist)
+        lyricsRemoteDataSource.getLyrics(music, artist)
 }

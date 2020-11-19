@@ -30,9 +30,9 @@
             android:layout_marginHorizontal="16dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/player_fragment_album_image"
-            app:layout_constraintTop_toTopOf="@id/player_fragment_album_image"
-            app:layout_constraintStart_toStartOf="@id/player_fragment_album_image"
             app:layout_constraintEnd_toEndOf="@id/player_fragment_album_image"
+            app:layout_constraintStart_toStartOf="@id/player_fragment_album_image"
+            app:layout_constraintTop_toTopOf="@id/player_fragment_album_image"
             tools:visibility="gone">
 
             <TextView
@@ -50,9 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/player_fragment_artist_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/player_fragment_artist_name"
             tools:text="NOME DA MUSICA" />
 
         <TextView
@@ -61,9 +61,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="36dp"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/player_fragment_progress_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/player_fragment_progress_bar"
             tools:text="NOME DO CANTOR" />
 
         <TextView
@@ -92,9 +92,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toTopOf="@id/player_fragment_play_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/player_fragment_play_button" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/player_fragment_previous_button"
@@ -116,9 +116,9 @@
             android:background="@drawable/player_fragment_play_background"
             android:padding="20dp"
             android:src="@drawable/ic_pause_black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="ContentDescription" />
 
         <ImageButton

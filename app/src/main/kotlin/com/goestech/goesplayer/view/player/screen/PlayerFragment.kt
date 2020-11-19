@@ -2,6 +2,7 @@ package com.goestech.goesplayer.view.player.screen
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,10 +63,10 @@ class PlayerFragment : Fragment() {
             })
             playerFragmentAlbumImage.setOnClickListener {
                 if (playerFragmentAlbumImage.visibility == View.VISIBLE) {
-                    val lyrics = viewModel.lyrics.value?.music?.text
+                    val lyrics = viewModel.lyrics.value?.music?.get(0)?.text
                     lyrics?.let {
                         playerFragmentLyricsText.text = it
-                        playerFragmentAlbumImage.visibility = View.GONE
+                        playerFragmentAlbumImage.visibility = View.INVISIBLE
                         playerFragmentLyricsScroll.visibility = View.VISIBLE
                     }
                 }
