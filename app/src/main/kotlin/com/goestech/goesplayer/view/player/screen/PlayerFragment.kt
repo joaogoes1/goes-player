@@ -69,6 +69,9 @@ class PlayerFragment : Fragment() {
                         playerFragmentAlbumImage.visibility = View.INVISIBLE
                         playerFragmentLyricsScroll.visibility = View.VISIBLE
                     }
+                } else {
+                    playerFragmentAlbumImage.visibility = View.VISIBLE
+                    playerFragmentLyricsScroll.visibility = View.INVISIBLE
                 }
             }
         }
