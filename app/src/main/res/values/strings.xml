@@ -2,7 +2,7 @@
     <string name="app_name">Góes Player</string>
     <string name="album_fragment_title">Albuns</string>
     <string name="artist_fragment_title">Artistas</string>
-    <string name="folder_fragment_title">Diretórios</string>
+    <string name="folder_fragment_title">Pastas</string>
     <string name="gender_fragment_title">Gêneros</string>
     <string name="music_fragment_title">Musicas</string>
     <string name="playlist_fragment_title">Playlists</string>
@@ -10,4 +10,5 @@
     <string name="player_fragment_next_button_content_description">Próxima música</string>
     <string name="player_fragment_shuffle_content_description">Aleatorio</string>
     <string name="player_fragment_repeat_button_content_description">Repetir</string>
+    <string name="home_fragment_shuffle_button_content_description">Reproduzir aleatório</string>
 </resources>

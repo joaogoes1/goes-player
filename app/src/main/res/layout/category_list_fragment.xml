@@ -8,11 +8,10 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/gender_fragment_title"
+            android:id="@+id/category_list_fragment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/gender_fragment_title"
             android:textColor="@color/white"
             android:maxLines="1"
             android:textSize="24sp"
@@ -21,17 +20,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Artista"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/gender_fragment_list"
+            android:id="@+id/category_list_fragment_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gender_fragment_title"
+            app:layout_constraintTop_toBottomOf="@id/category_list_fragment_title"
             tools:listitem="@layout/simple_list_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
