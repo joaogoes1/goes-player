@@ -12,7 +12,9 @@ import org.koin.core.parameter.parametersOf
 
 class CategoryListFragment : Fragment() {
 
-    private val categoryListType: CategoryListType by lazy { arguments?.get("type") as? CategoryListType ?: throw IllegalArgumentException("CategoryType not found") }
+    private val categoryListType: CategoryListType by lazy {
+        arguments?.get("type") as? CategoryListType ?: throw IllegalArgumentException("CategoryType not found")
+    }
     private val viewModel: CategoryListViewModel by viewModel(parameters = { parametersOf(categoryListType) })
     private val adapter: CategoryListAdapter = CategoryListAdapter()
 

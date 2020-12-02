@@ -11,4 +11,10 @@ interface MusicLocalDataSource {
     suspend fun saveMusics(musics: List<Music>)
 
     suspend fun getAllArtists(): List<String>
+
+    suspend fun getAllAlbums(): List<String>
+
+    suspend fun getAllFolders(): List<String>
+
+    suspend fun getAllGenres(): List<String>
 }

@@ -12,4 +12,7 @@ class PlaylistRepositoryImpl(
 
     override suspend fun getCurrentPlaylist(): List<Music> =
         playlistLocalDataSource.getCurrentPlaylist()
+
+    override suspend fun getAllPlaylists(): List<String> =
+        playlistLocalDataSource.getAllPlaylists()
 }

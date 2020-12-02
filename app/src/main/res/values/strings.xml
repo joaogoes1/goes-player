@@ -3,7 +3,7 @@
     <string name="album_fragment_title">Albuns</string>
     <string name="artist_fragment_title">Artistas</string>
     <string name="folder_fragment_title">Pastas</string>
-    <string name="gender_fragment_title">Gêneros</string>
+    <string name="genre_fragment_title">Gêneros</string>
     <string name="music_fragment_title">Musicas</string>
     <string name="playlist_fragment_title">Playlists</string>
     <string name="player_fragment_previous_button_content_description">Aperte uma vez para voltar ao inicio da música, duas para voltar a faixa anterior</string>

@@ -28,4 +28,10 @@ class PlaylistLocalDataSourceImpl(
     override suspend fun getCurrentPlaylist(): List<Music> = withContext(Dispatchers.IO) {
         playlistDao.getCurrentPlaylistWithMusics().musics
     }
+
+    override suspend fun getAllPlaylists(): List<String> = withContext(Dispatchers.IO) {
+        playlistDao.getAllPlaylists().map {
+            it.name
+        }
+    }
 }

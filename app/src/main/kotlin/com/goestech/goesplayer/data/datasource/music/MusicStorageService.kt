@@ -102,7 +102,7 @@ class DeviceStorageDataSourceImpl(
     private fun getDuration(uri: Uri): Long = try {
         mediaMetadataRetriever.setDataSource(context, uri)
         val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        durationStr.toLong()
+        durationStr?.toLong() ?: 0L
     } catch (e: Exception) {
         Log.e("LOAD ING MUSIC ERROR", "Failed to load duration: $uri")
         0L

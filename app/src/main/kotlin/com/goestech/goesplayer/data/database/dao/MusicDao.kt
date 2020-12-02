@@ -19,4 +19,13 @@ interface MusicDao {
 
     @Query("SELECT artist FROM music GROUP BY artist")
     fun getAllArtists(): List<String>
+
+    @Query("SELECT album FROM music GROUP BY album")
+    fun getAllAlbums(): List<String?>
+
+    @Query("SELECT filePath FROM music GROUP BY filePath")
+    fun getAllFolders(): List<String?>
+
+    @Query("SELECT genre FROM music GROUP BY genre")
+    fun getAllGenres(): List<String?>
 }

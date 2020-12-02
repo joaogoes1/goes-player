@@ -25,6 +25,12 @@ class MusicRepositoryImpl(
 
     override suspend fun getAllArtists(): List<String> = musicLocalDataSource.getAllArtists()
 
+    override suspend fun getAllAlbums(): List<String> = musicLocalDataSource.getAllAlbums()
+
+    override suspend fun getAllFolders(): List<String> = musicLocalDataSource.getAllFolders()
+
+    override suspend fun getAllGenres(): List<String> = musicLocalDataSource.getAllGenres()
+
     override suspend fun playMusic(selectedMusic: Music, playlist: List<Music>): Result<Unit, SearchMusicError> =
         Result.Success(playlistLocalDataSource.saveCurrentPlaylist(playlist))
 }

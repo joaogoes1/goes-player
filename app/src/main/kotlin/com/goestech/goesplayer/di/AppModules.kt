@@ -52,11 +52,11 @@ val viewModelModule = module {
 }
 
 val actionsModule = module {
-    factory<CategoryListViewModelActions>(named(PLAYLIST)) { PlaylistListActions() }
+    factory<CategoryListViewModelActions>(named(PLAYLIST)) { PlaylistListActions(get()) }
     factory<CategoryListViewModelActions>(named(ARTIST)) { ArtistListActions(get()) }
-    factory<CategoryListViewModelActions>(named(ALBUM)) { AlbumListActions() }
-    factory<CategoryListViewModelActions>(named(GENDER)) { GenderListActions() }
-    factory<CategoryListViewModelActions>(named(FOLDER)) { FolderListActions() }
+    factory<CategoryListViewModelActions>(named(ALBUM)) { AlbumListActions(get()) }
+    factory<CategoryListViewModelActions>(named(GENDER)) { GenreListActions(get()) }
+    factory<CategoryListViewModelActions>(named(FOLDER)) { FolderListActions(get()) }
 }
 
 val repositoryModule = module {

@@ -23,4 +23,20 @@ class MusicLocalDataSourceImpl(
     override suspend fun getAllArtists(): List<String> = withContext(Dispatchers.IO) {
         musicDao.getAllArtists()
     }
+
+    override suspend fun getAllAlbums(): List<String> = withContext(Dispatchers.IO) {
+        musicDao.getAllAlbums().mapNotNull { it }
+    }
+
+    override suspend fun getAllFolders(): List<String> = withContext(Dispatchers.IO) {
+        // TODO: Fix this
+        musicDao.getAllFolders().mapNotNull {
+            it?.substringBeforeLast("/")
+            it?.substringAfterLast("/")
+        }
+    }
+
+    override suspend fun getAllGenres(): List<String> = withContext(Dispatchers.IO) {
+        musicDao.getAllGenres().mapNotNull { it }
+    }
 }
