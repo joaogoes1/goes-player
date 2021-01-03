@@ -13,7 +13,7 @@ class CategoryListViewModel(
 
     fun loadList() {
         viewModelScope.launch {
-            actions.loadList(list)
+            list.postValue(actions.loadList())
         }
     }
 }

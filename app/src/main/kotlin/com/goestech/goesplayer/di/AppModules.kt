@@ -36,9 +36,11 @@ import org.koin.core.qualifier.QualifierValue
 import org.koin.core.qualifier.named
 import org.koin.core.qualifier.qualifier
 import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.lang.IllegalStateException
 
 private const val VAGALUME_BASE_PATH = "https://api.vagalume.com.br/"
 
@@ -46,17 +48,19 @@ val viewModelModule = module {
     viewModel { SplashViewModel(get()) }
     viewModel { MusicViewModel(get(), get(), get()) }
     viewModel { (type: CategoryListType) ->
-        CategoryListViewModel(get(qualifier = named(type)))
+        val action = getAll<CategoryListViewModelActions>().find { it.type == type }
+            ?: throw IllegalStateException("$type not found")
+        CategoryListViewModel(actions = action)
     }
     viewModel { PlayerFragmentViewModel(get(), get()) }
 }
 
 val actionsModule = module {
-    factory<CategoryListViewModelActions>(named(PLAYLIST)) { PlaylistListActions(get()) }
-    factory<CategoryListViewModelActions>(named(ARTIST)) { ArtistListActions(get()) }
-    factory<CategoryListViewModelActions>(named(ALBUM)) { AlbumListActions(get()) }
-    factory<CategoryListViewModelActions>(named(GENDER)) { GenreListActions(get()) }
-    factory<CategoryListViewModelActions>(named(FOLDER)) { FolderListActions(get()) }
+    factory { PlaylistListActions(get()) } bind CategoryListViewModelActions::class
+    factory { ArtistListActions(get()) } bind CategoryListViewModelActions::class
+    factory { AlbumListActions(get()) } bind CategoryListViewModelActions::class
+    factory { GenreListActions(get()) } bind CategoryListViewModelActions::class
+    factory { FolderListActions(get()) } bind CategoryListViewModelActions::class
 }
 
 val repositoryModule = module {

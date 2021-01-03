@@ -57,7 +57,7 @@ class PlayerSessionCallback(
 
     override fun onPrepare() {
         mediaId?.let {
-            launch(coroutineContext) {
+            launch {
                 preparedMedia = musicRepository.getMusic(mediaId?.toLongOrNull()
                     ?: 0).createMediaMetadataCompat()
                 mediaSession.setMetadata(preparedMedia)

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class MusicViewModel(
     private val musicRepository: MusicRepository,
     private val playlistRepository: PlaylistRepository,
-    private val musicConnection: MediaPlayerClient
+    private val mediaPlayerClient: MediaPlayerClient
 ) : ViewModel() {
     val musics = MutableLiveData<List<Music>>()
 
@@ -27,6 +27,6 @@ class MusicViewModel(
 //        viewModelScope.launch {
 //            playlistRepository.saveCurrentPlaylist(musics.value ?: emptyList())
 //        }
-        musicConnection.playMusic(music.musicId.toString())
+        mediaPlayerClient.playMusic(music.musicId.toString())
     }
 }
