@@ -1,7 +1,7 @@
 package com.goestech.goesplayer.view.home.music
 
 import androidx.recyclerview.widget.DiffUtil
-import com.goestech.goesplayer.data.model.Music
+import com.goesplayer.music.data.model.Music
 
 object MusicDiffUtil : DiffUtil.ItemCallback<Music>() {
     override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean =

@@ -10,9 +10,9 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.goestech.goesplayer.R
-import com.goestech.goesplayer.data.model.Music
+import com.goesplayer.music.data.model.Music
+import com.goesplayer.player.PlayerService
 import com.goestech.goesplayer.databinding.HomeActivityBinding
-import com.goestech.goesplayer.player.PlayerService
 
 class MainActivity : AppCompatActivity() {
 

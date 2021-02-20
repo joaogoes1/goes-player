@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.goestech.goesplayer.data.model.Music
+import com.goesplayer.music.data.model.Music
 import com.goestech.goesplayer.databinding.MusicFragmentBinding
 import com.goestech.goesplayer.view.MainActivity
 import com.goestech.goesplayer.view.player.screen.PlayerFragmentDirections

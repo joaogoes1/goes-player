@@ -1,6 +1,8 @@
 package com.goestech.goesplayer.view.home
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.goestech.goesplayer.view.home.categorylist.CategoryListFragment
 import com.goestech.goesplayer.view.home.categorylist.CategoryListType
@@ -20,6 +22,6 @@ class HomeFragmentViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fr
             4 -> CategoryListFragment.newInstance(CategoryListType.ALBUM)
             5 -> CategoryListFragment.newInstance(CategoryListType.GENDER)
             6 -> CategoryListFragment.newInstance(CategoryListType.FOLDER)
-            else -> WelcomeFragment()
+            else -> throw IllegalStateException("Invalid position")
         }
 }

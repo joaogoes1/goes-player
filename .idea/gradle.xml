@@ -11,6 +11,16 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/commons" />
+            <option value="$PROJECT_DIR$/lyrics" />
+            <option value="$PROJECT_DIR$/lyrics/internal" />
+            <option value="$PROJECT_DIR$/lyrics/public" />
+            <option value="$PROJECT_DIR$/music" />
+            <option value="$PROJECT_DIR$/music/internal" />
+            <option value="$PROJECT_DIR$/music/public" />
+            <option value="$PROJECT_DIR$/player" />
+            <option value="$PROJECT_DIR$/player/internal" />
+            <option value="$PROJECT_DIR$/player/public" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

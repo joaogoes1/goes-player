@@ -7,14 +7,18 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import com.goestech.goesplayer.data.model.Music
-import com.goestech.goesplayer.player.PlayerService
-import com.goestech.goesplayer.player.toMusic
-import kotlinx.coroutines.*
+import com.goesplayer.music.data.model.Music
+import com.goesplayer.player.PlayerService
+import com.goesplayer.player.toMusic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -32,6 +36,7 @@ class MediaPlayerClient(
         get() = mediaController?.metadata?.toMusic()
     private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
     val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
+
     // TODO: Unificar position e isPlaying num objeto de PlaybackState
     private val positionChannel = ConflatedBroadcastChannel<Long>()
     val positionFlow: Flow<Long> = positionChannel.asFlow()

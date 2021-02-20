@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="goes-player.app" target="1.8" />
+      <module name="goes-player.lyrics.internal" target="1.8" />
+      <module name="goes-player.music.internal" target="1.8" />
+      <module name="goes-player.player.internal" target="1.8" />
+      <module name="goes-player.playlist.internal" target="1.8" />
+      <module name="goes-player.playlist.public" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

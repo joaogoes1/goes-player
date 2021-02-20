@@ -1,1 +1,13 @@
-include ':app'
+include(
+    ':app',
+    ':commons',
+    ':music',
+    ':music:public',
+    ':music:internal',
+    ':lyrics',
+    ':lyrics:public',
+    ':lyrics:internal',
+    ':player',
+    ':player:public',
+    ':player:internal',
+)

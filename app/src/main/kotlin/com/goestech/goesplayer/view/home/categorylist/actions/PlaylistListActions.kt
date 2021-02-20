@@ -1,6 +1,6 @@
 package com.goestech.goesplayer.view.home.categorylist.actions
 
-import com.goestech.goesplayer.data.repository.playlist.PlaylistRepository
+import com.goesplayer.music.data.repository.playlist.PlaylistRepository
 import com.goestech.goesplayer.view.home.categorylist.CategoryListType
 
 class PlaylistListActions(

@@ -2,7 +2,6 @@ package com.goestech.goesplayer.view.player.screen
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,9 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.goesplayer.commons.extensions.formatToDigitalClock
 import com.goestech.goesplayer.R
 import com.goestech.goesplayer.databinding.PlayerFragmentBinding
-import com.goestech.goesplayer.utils.extensions.formatToDigitalClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -63,7 +62,7 @@ class PlayerFragment : Fragment() {
             })
             playerFragmentAlbumImage.setOnClickListener {
                 if (playerFragmentAlbumImage.visibility == View.VISIBLE) {
-                    val lyrics = viewModel.lyrics.value?.music?.get(0)?.text
+                    val lyrics = viewModel.lyrics.value?.text
                     lyrics?.let {
                         playerFragmentLyricsText.text = it
                         playerFragmentAlbumImage.visibility = View.INVISIBLE
@@ -92,11 +91,11 @@ class PlayerFragment : Fragment() {
                     .error(R.drawable.album_placeholder)
                     .into(playerFragmentAlbumImage)
             })
-            viewModel.position.observe(viewLifecycleOwner, {
+            viewModel.position.observe(viewLifecycleOwner, Observer {
                 playerFragmentCurrentTime.text = it.formatToDigitalClock()
                 setSeekBarProgress(playerFragmentProgressBar, it.toInt())
             })
-            viewModel.isPlaying.observe(viewLifecycleOwner, {
+            viewModel.isPlaying.observe(viewLifecycleOwner, Observer {
                 val newImage = if (it)
                     R.drawable.ic_pause_black
                 else

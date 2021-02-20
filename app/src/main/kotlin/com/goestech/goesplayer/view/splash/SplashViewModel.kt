@@ -3,7 +3,7 @@ package com.goestech.goesplayer.view.splash
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goestech.goesplayer.data.repository.music.MusicRepository
+import com.goesplayer.music.data.repository.music.MusicRepository
 import kotlinx.coroutines.launch
 
 class SplashViewModel(

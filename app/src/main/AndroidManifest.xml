@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".player.PlayerService">
+        <service android:name="com.goesplayer.player.PlayerService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserServiceCompat" />
             </intent-filter>
