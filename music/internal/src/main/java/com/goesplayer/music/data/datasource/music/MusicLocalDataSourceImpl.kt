@@ -5,29 +5,29 @@ import com.goesplayer.music.data.SearchMusicError
 import com.goesplayer.music.data.entity.music.MusicEntity
 import com.goesplayer.music.data.model.Music
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MusicLocalDataSourceImpl(
-//    private val realm: Realm
-) : MusicLocalDataSource {
+class MusicLocalDataSourceImpl : MusicLocalDataSource {
 
     override suspend fun getAllMusics(): List<Music> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).findAll().map { it.toModel() }
+        val result = realm
+            .where(MusicEntity::class.java)
+            .findAll()
+            .map { it.toModel() }
         realm.close()
         result
     }
 
     override suspend fun getMusic(musicId: Long): Result<Music, SearchMusicError> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).equalTo("musicId", musicId).findFirst()?.toModel()
+        val result = realm
+            .where(MusicEntity::class.java)
+            .equalTo("musicId", musicId)
+            .findFirst()
+            ?.toModel()
         realm.close()
         if (result != null) {
             Result.Success(result)
@@ -36,8 +36,6 @@ class MusicLocalDataSourceImpl(
     }
 
     override suspend fun saveMusics(musics: List<Music>): Unit = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { realm ->
             val realmList = RealmList<MusicEntity>()
@@ -48,28 +46,31 @@ class MusicLocalDataSourceImpl(
     }
 
     override suspend fun getAllArtists(): List<String> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).findAll().mapNotNull { it.artist }
+        val result = realm
+            .where(MusicEntity::class.java)
+            .findAll()
+            .mapNotNull { it.artist }
         realm.close()
         result
     }
 
     override suspend fun getAllAlbums(): List<String> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).findAll().mapNotNull { it.album }
+        val result = realm
+            .where(MusicEntity::class.java)
+            .findAll()
+            .mapNotNull { it.album }
         realm.close()
         result
     }
 
     override suspend fun getAllFolders(): List<String> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).distinct("filePath").findAll()
+        val result = realm
+            .where(MusicEntity::class.java)
+            .distinct("filePath")
+            .findAll()
             .mapNotNull {
                 it?.filePath?.replace("/${it.fileName}", "")
             }.map {
@@ -80,10 +81,11 @@ class MusicLocalDataSourceImpl(
     }
 
     override suspend fun getAllGenres(): List<String> = withContext(Dispatchers.IO) {
-        val config = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(config)
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(MusicEntity::class.java).findAll().mapNotNull { it.genre }
+        val result = realm
+            .where(MusicEntity::class.java)
+            .findAll()
+            .mapNotNull { it.genre }
         realm.close()
         result
     }

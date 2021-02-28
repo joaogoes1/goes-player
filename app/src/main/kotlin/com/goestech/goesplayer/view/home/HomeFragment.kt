@@ -29,8 +29,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         homeFragmentViewPagerAdapter = HomeFragmentViewPagerAdapter(this)
         viewPager.adapter = homeFragmentViewPagerAdapter
-        val tabLayout = binding.tabLayout
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(binding.tabLayout, viewPager) { tab, position ->
             val icon = when (position) {
                 0 -> R.drawable.ic_home
                 1 -> R.drawable.ic_music

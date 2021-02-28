@@ -6,6 +6,7 @@
       <module name="goes-player.lyrics.internal" target="1.8" />
       <module name="goes-player.music.internal" target="1.8" />
       <module name="goes-player.player.internal" target="1.8" />
+      <module name="goes-player.player.public" target="1.8" />
       <module name="goes-player.playlist.internal" target="1.8" />
       <module name="goes-player.playlist.public" target="1.8" />
     </bytecodeTargetLevel>

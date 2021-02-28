@@ -12,11 +12,10 @@ import com.goestech.goesplayer.view.home.categorylist.actions.FolderListActions
 import com.goestech.goesplayer.view.home.categorylist.actions.GenreListActions
 import com.goestech.goesplayer.view.home.categorylist.actions.PlaylistListActions
 import com.goestech.goesplayer.view.home.music.MusicViewModel
-import com.goestech.goesplayer.view.player.MediaPlayerClient
+import com.goesplayer.player.client.MediaPlayerClientImpl
+import com.goesplayer.player.di.playerModules
 import com.goestech.goesplayer.view.player.screen.PlayerFragmentViewModel
 import com.goestech.goesplayer.view.splash.SplashViewModel
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.koin.androidContext
@@ -49,13 +48,14 @@ val actionsModule = module {
 @ExperimentalCoroutinesApi
 @FlowPreview
 val repositoryModule = module {
-    factory { MediaPlayerClient(androidContext()) }
+    factory { MediaPlayerClientImpl(androidContext()) }
 }
 
 @ExperimentalCoroutinesApi
 @FlowPreview
 val appModules = listOf(
     musicModule,
+    playerModules,
     lyricsModule,
     retrofitModule,
     repositoryModule,

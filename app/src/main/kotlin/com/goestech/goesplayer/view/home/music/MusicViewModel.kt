@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.goesplayer.music.data.model.Music
 import com.goesplayer.music.data.repository.music.MusicRepository
 import com.goesplayer.music.data.repository.playlist.PlaylistRepository
-import com.goestech.goesplayer.view.player.MediaPlayerClient
+import com.goesplayer.player.client.MediaPlayerClient
 import kotlinx.coroutines.launch
 
 class MusicViewModel(

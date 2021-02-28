@@ -20,6 +20,23 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="musicFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-6" />
+                            <option name="y" value="-316" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="open_player_fragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="playerFragment">
                     <value>
                       <LayoutPositions>

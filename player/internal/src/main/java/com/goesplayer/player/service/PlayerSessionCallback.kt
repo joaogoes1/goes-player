@@ -1,4 +1,4 @@
-package com.goesplayer.player
+package com.goesplayer.player.service
 
 import android.media.MediaPlayer
 import android.net.Uri

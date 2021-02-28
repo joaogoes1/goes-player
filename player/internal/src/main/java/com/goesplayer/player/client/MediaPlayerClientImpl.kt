@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.player
+package com.goesplayer.player.client
 
 import android.content.ComponentName
 import android.content.Context
@@ -8,8 +8,8 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.goesplayer.music.data.model.Music
-import com.goesplayer.player.PlayerService
-import com.goesplayer.player.toMusic
+import com.goesplayer.player.service.PlayerService
+import com.goesplayer.player.service.toMusic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,17 +22,17 @@ import kotlinx.coroutines.launch
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class MediaPlayerClient(
+class MediaPlayerClientImpl(
     private val context: Context
-) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
+) : MediaPlayerClient, CoroutineScope by CoroutineScope(Dispatchers.Main) {
     private val mediaBrowserConnectionCallback: MediaBrowserConnectionCallback = MediaBrowserConnectionCallback()
     private val mediaControllerCallback: MediaControllerCallback = MediaControllerCallback()
     private val mediaBrowserSubscriptionCallback: MediaBrowserSubscriptionCallback = MediaBrowserSubscriptionCallback()
     private var mediaBrowser: MediaBrowserCompat? = null
     private var mediaController: MediaControllerCompat? = null
-    val isPlaying: Boolean
+    override val isPlaying: Boolean
         get() = mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING
-    val music: Music?
+    override val currentMusic: Music?
         get() = mediaController?.metadata?.toMusic()
     private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
     val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
