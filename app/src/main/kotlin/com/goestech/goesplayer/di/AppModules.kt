@@ -3,6 +3,7 @@ package com.goestech.goesplayer.di
 import com.goesplayer.lyrics.di.lyricsModule
 import com.goesplayer.lyrics.di.retrofitModule
 import com.goesplayer.music.di.musicModule
+import com.goesplayer.player.client.MediaPlayerClient
 import com.goestech.goesplayer.view.home.categorylist.CategoryListType
 import com.goestech.goesplayer.view.home.categorylist.CategoryListViewModel
 import com.goestech.goesplayer.view.home.categorylist.actions.AlbumListActions

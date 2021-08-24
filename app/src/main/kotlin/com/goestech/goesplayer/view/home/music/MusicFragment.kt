@@ -39,7 +39,7 @@ class MusicFragment : Fragment(), MusicFragmentListener {
     }
 
     override fun playMusic(music: Music) {
-        (requireActivity() as MainActivity).playMedia(music)
+        viewModel.playMusic(music)
         findNavController().navigate(
             PlayerFragmentDirections.openPlayerFragment()
         )

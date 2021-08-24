@@ -3,6 +3,7 @@ package com.goestech.goesplayer.view.player.screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.goesplayer.commons.data.Result
 import com.goesplayer.music.data.model.Music

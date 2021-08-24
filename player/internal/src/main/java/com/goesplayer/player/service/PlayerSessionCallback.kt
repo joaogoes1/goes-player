@@ -8,8 +8,14 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.media.session.MediaButtonReceiver
 import com.goesplayer.music.data.model.Music
 import com.goesplayer.music.data.repository.music.MusicRepository
+import com.goesplayer.player.R
+import com.goesplayer.player.mapper.createMediaMetadataCompat
+import com.goesplayer.player.mapper.toMediaItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,10 +23,12 @@ import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 
 private const val PLAYER_ERROR_TAG = "GOES PLAYER-MEDIAPLAYER"
+private const val NOTIFICATION_ID = 23456789
 
 class PlayerSessionCallback(
+    private val service: PlayerService,
     private val mediaSession: MediaSessionCompat,
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
 ) : MediaSessionCompat.Callback(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     private val player = MediaPlayer().apply {
@@ -134,6 +142,70 @@ class PlayerSessionCallback(
     }
 
     override fun onPrepared(mp: MediaPlayer?) {
+        // Given a media session and its context (usually the component containing the session)
+        // Create a NotificationCompat.Builder
+
+        // Get the session's metadata
+        val controller = mediaSession.controller
+        val mediaMetadata = controller.metadata
+        val description = mediaMetadata.description
+
+        val builder = NotificationCompat.Builder(service.applicationContext, NOTIFICATION_ID.toString()).apply {
+            // Add the metadata for the currently playing track
+            setContentTitle(description.title)
+            setContentText(description.subtitle)
+            setSubText(description.description)
+            setLargeIcon(description.iconBitmap)
+
+            // Enable launching the player by clicking the notification
+            setContentIntent(controller.sessionActivity)
+
+            // Stop the service when the notification is swiped away
+            setDeleteIntent(
+                MediaButtonReceiver.buildMediaButtonPendingIntent(
+                    service.applicationContext,
+                    PlaybackStateCompat.ACTION_STOP
+                )
+            )
+
+            // Make the transport controls visible on the lockscreen
+            setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+            // Add an app icon and set its accent color
+            // Be careful about the color
+            setSmallIcon(R.drawable.ic_pause_white)
+            color = ContextCompat.getColor(service.applicationContext, R.color.design_default_color_primary_dark)
+
+            // Add a pause button
+            addAction(
+                NotificationCompat.Action(
+                    R.drawable.ic_pause_white,
+                    "Pausar",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(
+                        service.applicationContext,
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE
+                    )
+                )
+            )
+
+            // Take advantage of MediaStyle features
+            setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(mediaSession.sessionToken)
+                .setShowActionsInCompactView(0)
+
+                // Add a cancel button
+                .setShowCancelButton(true)
+                .setCancelButtonIntent(
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(
+                        service.applicationContext,
+                        PlaybackStateCompat.ACTION_STOP
+                    )
+                )
+            )
+        }
+
+        // Display the notification and place the service in the foreground
+        service.startForeground(NOTIFICATION_ID, builder.build())
         player.start()
         mediaSession.setPlaybackState(
             PlaybackStateCompat

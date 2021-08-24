@@ -7,9 +7,10 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.goesplayer.music.data.model.Music
+import com.goesplayer.player.mapper.toMusic
 import com.goesplayer.player.service.PlayerService
-import com.goesplayer.player.service.toMusic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,60 +26,13 @@ import kotlinx.coroutines.launch
 class MediaPlayerClientImpl(
     private val context: Context
 ) : MediaPlayerClient, CoroutineScope by CoroutineScope(Dispatchers.Main) {
-    private val mediaBrowserConnectionCallback: MediaBrowserConnectionCallback = MediaBrowserConnectionCallback()
-    private val mediaControllerCallback: MediaControllerCallback = MediaControllerCallback()
-    private val mediaBrowserSubscriptionCallback: MediaBrowserSubscriptionCallback = MediaBrowserSubscriptionCallback()
-    private var mediaBrowser: MediaBrowserCompat? = null
-    private var mediaController: MediaControllerCompat? = null
-    override val isPlaying: Boolean
-        get() = mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING
-    override val currentMusic: Music?
-        get() = mediaController?.metadata?.toMusic()
-    private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
-    val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
-
-    // TODO: Unificar position e isPlaying num objeto de PlaybackState
-    private val positionChannel = ConflatedBroadcastChannel<Long>()
-    val positionFlow: Flow<Long> = positionChannel.asFlow()
-    private val isPlayingChannel = ConflatedBroadcastChannel<Boolean>()
-    val isPlayingFlow: Flow<Boolean> = isPlayingChannel.asFlow()
-
-    fun playMusic(musicId: String) {
-        mediaController?.transportControls?.playFromMediaId(musicId, null)
-    }
-
-    fun onStart() {
-        if (mediaBrowser == null) {
-            mediaBrowser = MediaBrowserCompat(
-                context,
-                ComponentName(context, PlayerService::class.java),
-                mediaBrowserConnectionCallback,
-                null)
-            mediaBrowser?.connect()
-        }
-    }
-
-    fun onStop() {
-        if (mediaController != null) {
-            mediaController?.unregisterCallback(mediaControllerCallback)
-            mediaController = null
-        }
-        if (mediaBrowser != null && mediaBrowser?.isConnected == true) {
-            mediaBrowser?.disconnect()
-            mediaBrowser = null
-        }
-    }
-
-    private inner class MediaBrowserConnectionCallback : MediaBrowserCompat.ConnectionCallback() {
+    private val mediaBrowserConnectionCallback = object : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {
+            Log.e("Player connection", "Connection connected")
             try {
                 mediaBrowser?.let { mMediaBrowser ->
                     mediaController = MediaControllerCompat(context, mMediaBrowser.sessionToken)
-                        .apply {
-                            registerCallback(mediaControllerCallback)
-//                            mediaControllerCallback.onMetadataChanged(metadata)
-                            mediaControllerCallback.onPlaybackStateChanged(playbackState)
-                        }
+                    mediaController?.registerCallback(mediaControllerCallback)
                 }
             } catch (e: RemoteException) {
                 throw RuntimeException(e)
@@ -87,20 +41,16 @@ class MediaPlayerClientImpl(
                 mMediaBrowser.subscribe(mMediaBrowser.root, mediaBrowserSubscriptionCallback)
             }
         }
-    }
 
-    inner class MediaBrowserSubscriptionCallback : MediaBrowserCompat.SubscriptionCallback() {
-        override fun onChildrenLoaded(
-            parentId: String,
-            children: List<MediaBrowserCompat.MediaItem>
-        ) {
-            for (mediaItem in children)
-                mediaController?.addQueueItem(mediaItem.description)
-            mediaController?.transportControls?.prepare()
+        override fun onConnectionSuspended() {
+            Log.e("Player connection", "Connection suspended")
+        }
+
+        override fun onConnectionFailed() {
+            Log.e("Player connection", "Connection failed")
         }
     }
-
-    private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
+    private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
         override fun onMetadataChanged(metadata: MediaMetadataCompat) {
             launch {
                 _musicFlow.send(metadata)
@@ -118,24 +68,82 @@ class MediaPlayerClientImpl(
             onPlaybackStateChanged(null)
         }
     }
+    private val mediaBrowserSubscriptionCallback = object : MediaBrowserCompat.SubscriptionCallback() {
+        override fun onChildrenLoaded(
+            parentId: String,
+            children: List<MediaBrowserCompat.MediaItem>
+        ) {
+            for (mediaItem in children)
+                mediaController?.addQueueItem(mediaItem.description)
+            mediaController?.transportControls?.prepare()
+        }
+    }
+    private var mediaBrowser: MediaBrowserCompat? = null
+    private var mediaController: MediaControllerCompat? = null
+    override val isPlaying: Boolean
+        get() = mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING
+    override val currentMusic: Music?
+        get() = mediaController?.metadata?.toMusic()
+    private val _musicFlow = ConflatedBroadcastChannel<MediaMetadataCompat>()
+    override val musicFlow: Flow<Music> = _musicFlow.asFlow().map { it.toMusic() }
 
-    fun skipToPrevious() {
+    // TODO: Unificar position e isPlaying num objeto de PlaybackState
+    private val positionChannel = ConflatedBroadcastChannel<Long>()
+    override val positionFlow: Flow<Long> = positionChannel.asFlow()
+    private val isPlayingChannel = ConflatedBroadcastChannel<Boolean>()
+    override val isPlayingFlow: Flow<Boolean> = isPlayingChannel.asFlow()
+
+    override fun playMusic(musicId: String) {
+        mediaController?.transportControls?.playFromMediaId(musicId, null)
+    }
+
+    override fun onCreate() {
+        if (mediaBrowser == null) {
+            mediaBrowser = MediaBrowserCompat(
+                context,
+                ComponentName(
+                    context,
+                    PlayerService::class.java
+                ),
+                mediaBrowserConnectionCallback,
+                null
+            )
+        }
+    }
+
+    override fun onStart() {
+        if (mediaBrowser?.isConnected == false)
+            mediaBrowser?.connect()
+    }
+
+    override fun onStop() {
+        if (mediaController != null) {
+            mediaController?.unregisterCallback(mediaControllerCallback)
+            mediaController = null
+        }
+        if (mediaBrowser != null && mediaBrowser?.isConnected == true) {
+            mediaBrowser?.disconnect()
+            mediaBrowser = null
+        }
+    }
+
+    override fun skipToPrevious() {
         mediaController?.transportControls?.skipToPrevious()
     }
 
-    fun skipToNext() {
+    override fun skipToNext() {
         mediaController?.transportControls?.skipToNext()
     }
 
-    fun play() {
+    override fun play() {
         mediaController?.transportControls?.play()
     }
 
-    fun pause() {
+    override fun pause() {
         mediaController?.transportControls?.pause()
     }
 
-    fun playOrPause() {
+    override fun playOrPause() {
         if (mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
             pause()
         } else {
@@ -143,7 +151,7 @@ class MediaPlayerClientImpl(
         }
     }
 
-    fun seekTo(progress: Long) {
+    override fun seekTo(progress: Long) {
         mediaController?.transportControls?.seekTo(progress)
     }
 }
