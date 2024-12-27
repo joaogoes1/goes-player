@@ -1,11 +1,11 @@
-package com.goestech.goesplayer.view.home.categorylist
+package com.goesplayer.view.home.categorylist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.goestech.goesplayer.databinding.SimpleListItemBinding
+import com.goesplayer.databinding.SimpleListItemBinding
 
 class CategoryListAdapter : ListAdapter<String, CategoryListAdapter.CategoryItemViewHolder>(CategoryItemItemCallback) {
 

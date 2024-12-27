@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.splash
+package com.goesplayer.view.splash
 
 import androidx.fragment.app.Fragment
 

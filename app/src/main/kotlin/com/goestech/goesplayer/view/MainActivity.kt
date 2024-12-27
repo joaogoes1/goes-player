@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view
+package com.goesplayer.view
 
 import android.content.ComponentName
 import android.media.AudioManager
@@ -9,10 +9,10 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.goestech.goesplayer.R
+import com.goesplayer.R
 import com.goesplayer.music.data.model.Music
 import com.goesplayer.player.PlayerService
-import com.goestech.goesplayer.databinding.HomeActivityBinding
+import com.goesplayer.databinding.HomeActivityBinding
 
 class MainActivity : AppCompatActivity() {
 

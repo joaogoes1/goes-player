@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.goestech.goesplayer.view.splash.SplashFragment"
+        android:name="com.goesplayer.view.splash.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/splash_fragment">
         <action
@@ -21,13 +21,13 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.goestech.goesplayer.view.home.HomeFragment"
+        android:name="com.goesplayer.view.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/home_fragment" />
 
     <fragment
         android:id="@+id/playerFragment"
-        android:name="com.goestech.goesplayer.view.player.screen.PlayerFragment"
+        android:name="com.goesplayer.view.player.screen.PlayerFragment"
         android:label="PlayerFragment"
         tools:layout="@layout/player_fragment" />
 </navigation>

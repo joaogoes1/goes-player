@@ -1,7 +1,7 @@
-package com.goestech.goesplayer.view.home.categorylist.actions
+package com.goesplayer.view.home.categorylist.actions
 
 import com.goesplayer.music.data.repository.music.MusicRepository
-import com.goestech.goesplayer.view.home.categorylist.CategoryListType
+import com.goesplayer.view.home.categorylist.CategoryListType
 
 class FolderListActions(
     private val musicRepository: MusicRepository

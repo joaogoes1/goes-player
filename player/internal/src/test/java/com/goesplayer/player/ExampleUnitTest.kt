@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.player
+package com.goesplayer.player
 
 import org.junit.Test
 

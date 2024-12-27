@@ -1,13 +1,13 @@
-package com.goestech.goesplayer.view.home
+package com.goesplayer.view.home
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.goestech.goesplayer.view.home.categorylist.CategoryListFragment
-import com.goestech.goesplayer.view.home.categorylist.CategoryListType
-import com.goestech.goesplayer.view.home.music.MusicFragment
-import com.goestech.goesplayer.view.home.welcome.WelcomeFragment
+import com.goesplayer.view.home.categorylist.CategoryListFragment
+import com.goesplayer.view.home.categorylist.CategoryListType
+import com.goesplayer.view.home.music.MusicFragment
+import com.goesplayer.view.home.welcome.WelcomeFragment
 
 class HomeFragmentViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

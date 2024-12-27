@@ -1,7 +1,7 @@
-package com.goestech.goesplayer
+package com.goesplayer
 
 import android.app.Application
-import com.goestech.goesplayer.di.appModules
+import com.goesplayer.di.appModules
 import io.realm.Realm
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

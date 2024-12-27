@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home
+package com.goesplayer.view.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.goestech.goesplayer.R
-import com.goestech.goesplayer.databinding.HomeFragmentBinding
+import com.goesplayer.R
+import com.goesplayer.databinding.HomeFragmentBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home.music
+package com.goesplayer.view.home.music
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.goesplayer.music.data.model.Music
 import com.goesplayer.music.data.repository.music.MusicRepository
 import com.goesplayer.music.data.repository.playlist.PlaylistRepository
-import com.goestech.goesplayer.view.player.MediaPlayerClient
+import com.goesplayer.view.player.MediaPlayerClient
 import kotlinx.coroutines.launch
 
 class MusicViewModel(

@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home.music
+package com.goesplayer.view.home.music
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.goestech.goesplayer.R
+import com.goesplayer.R
 import com.goesplayer.music.data.model.Music
-import com.goestech.goesplayer.databinding.MusicListItemBinding
-import com.goestech.goesplayer.view.home.music.MusicFragmentAdapter.MusicFragmentAdapterViewHolder
+import com.goesplayer.databinding.MusicListItemBinding
+import com.goesplayer.view.home.music.MusicFragmentAdapter.MusicFragmentAdapterViewHolder
 
 class MusicFragmentAdapter(
     private val listener: MusicFragmentListener

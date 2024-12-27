@@ -1,9 +1,9 @@
-package com.goestech.goesplayer.view.home.categorylist
+package com.goesplayer.view.home.categorylist
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goestech.goesplayer.view.home.categorylist.actions.CategoryListViewModelActions
+import com.goesplayer.view.home.categorylist.actions.CategoryListViewModelActions
 import kotlinx.coroutines.launch
 
 class CategoryListViewModel(

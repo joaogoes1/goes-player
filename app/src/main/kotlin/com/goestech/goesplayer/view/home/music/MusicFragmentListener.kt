@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home.music
+package com.goesplayer.view.home.music
 
 import com.goesplayer.music.data.model.Music
 

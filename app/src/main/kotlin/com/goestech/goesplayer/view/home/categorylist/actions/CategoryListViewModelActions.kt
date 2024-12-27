@@ -1,6 +1,6 @@
-package com.goestech.goesplayer.view.home.categorylist.actions
+package com.goesplayer.view.home.categorylist.actions
 
-import com.goestech.goesplayer.view.home.categorylist.CategoryListType
+import com.goesplayer.view.home.categorylist.CategoryListType
 
 interface CategoryListViewModelActions {
     val type: CategoryListType

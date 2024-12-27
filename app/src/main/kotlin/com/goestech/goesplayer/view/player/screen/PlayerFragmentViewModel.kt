@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.player.screen
+package com.goesplayer.view.player.screen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.goesplayer.commons.data.Result
 import com.goesplayer.music.data.model.Music
-import com.goestech.goesplayer.view.player.MediaPlayerClient
+import com.goesplayer.view.player.MediaPlayerClient
 import com.goestech.lyrics.data.model.Lyrics
 import com.goestech.lyrics.data.repository.LyricsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi

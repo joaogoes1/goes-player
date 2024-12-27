@@ -1,4 +1,4 @@
-package com.goesplayer.internal
+package com.goesplayer.lyrics
 
 import org.junit.Test
 

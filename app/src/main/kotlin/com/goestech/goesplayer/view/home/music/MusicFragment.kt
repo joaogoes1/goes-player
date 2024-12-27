@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home.music
+package com.goesplayer.view.home.music
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.goesplayer.music.data.model.Music
-import com.goestech.goesplayer.databinding.MusicFragmentBinding
-import com.goestech.goesplayer.view.MainActivity
-import com.goestech.goesplayer.view.player.screen.PlayerFragmentDirections
+import com.goesplayer.databinding.MusicFragmentBinding
+import com.goesplayer.view.MainActivity
+import com.goesplayer.view.player.screen.PlayerFragmentDirections
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MusicFragment : Fragment(), MusicFragmentListener {

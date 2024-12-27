@@ -1,11 +1,11 @@
-package com.goestech.goesplayer.view.player.bottombar
+package com.goesplayer.view.player.bottombar
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.goestech.goesplayer.databinding.BottomBarPlayerFragmentBinding
+import com.goesplayer.databinding.BottomBarPlayerFragmentBinding
 
 class BottomBarPlayerFragment : Fragment() {
 

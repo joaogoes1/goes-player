@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.splash
+package com.goesplayer.view.splash
 
 import android.Manifest
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.goestech.goesplayer.R
-import com.goestech.goesplayer.databinding.SplashFragmentBinding
+import com.goesplayer.R
+import com.goesplayer.databinding.SplashFragmentBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val REQUEST_CODE = 123

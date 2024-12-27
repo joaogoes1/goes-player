@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.player.screen
+package com.goesplayer.view.player.screen
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.goesplayer.commons.extensions.formatToDigitalClock
-import com.goestech.goesplayer.R
-import com.goestech.goesplayer.databinding.PlayerFragmentBinding
+import com.goesplayer.R
+import com.goesplayer.databinding.PlayerFragmentBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.viewmodel.ext.android.viewModel

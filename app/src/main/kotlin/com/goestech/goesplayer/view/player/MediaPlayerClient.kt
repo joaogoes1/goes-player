@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.player
+package com.goesplayer.view.player
 
 import android.content.ComponentName
 import android.content.Context

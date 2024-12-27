@@ -1,4 +1,4 @@
-package com.goestech.goesplayer.view.home.categorylist
+package com.goesplayer.view.home.categorylist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.goestech.goesplayer.databinding.CategoryListFragmentBinding
+import com.goesplayer.databinding.CategoryListFragmentBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 

@@ -1,6 +1,6 @@
-package com.goestech.goesplayer.view.home.categorylist
+package com.goesplayer.view.home.categorylist
 
-import com.goestech.goesplayer.R
+import com.goesplayer.R
 
 enum class CategoryListType(val title: Int) {
     ARTIST(R.string.artist_fragment_title),
