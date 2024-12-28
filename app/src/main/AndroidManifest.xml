@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.goesplayer">
+    package="com.goesplayer">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -14,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,10 +32,10 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity
+        <activity android:exported="false"
             android:name=".PlayerActivity"
             android:parentActivityName=".MainActivity" />
-        <activity
+        <activity android:exported="false"
             android:name=".SearchableActivity"
             android:parentActivityName=".MainActivity">
             <intent-filter>
@@ -45,8 +46,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".PlaylistResultActivity" />
-        <activity android:name=".ResultActivity"></activity>
+        <activity android:name=".PlaylistResultActivity"  android:exported="false"/>
+        <activity
+            android:name=".ResultActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

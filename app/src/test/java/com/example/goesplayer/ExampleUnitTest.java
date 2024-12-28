@@ -1,4 +1,4 @@
-package com.example.goesplayer;
+package com.goesplayer;
 
 import org.junit.Test;
 
