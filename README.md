@@ -30,7 +30,7 @@ Steps:
 3. Migrate each fragments of home to Jetpack Compose
     - AlbumFragment ✅
     - HomeFragment ✅
-    - ArtistFragment
+    - ArtistFragment ✅
     - FolderFragment 
     - GenreFragment 
     - MusicFragment 

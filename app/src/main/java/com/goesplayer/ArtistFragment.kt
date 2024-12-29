@@ -5,42 +5,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import com.goesplayer.presentation.home.HomeList
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class AlbumFragment : Fragment() {
+
+class ArtistFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val albumsList = filterAlbums()
+        val artistsList = filterArtists()
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppTheme {
                     HomeList(
-                        title = stringResource(R.string.album_fragment_title),
-                        items = albumsList,
+                        title = stringResource(R.string.artist_fragment_title),
+                        items = artistsList,
                         onClick = { position ->
                             val intent = Intent(
                                 context,
                                 ResultActivity::class.java
                             )
-                            intent.putExtra("name", albumsList[position])
-                            intent.putExtra("type", ResultActivity.ALBUM)
+                            intent.putExtra("name", artistsList[position])
+                            intent.putExtra("type", ResultActivity.ARTISTA)
                             startActivity(intent)
                         },
                     )
@@ -61,10 +54,10 @@ class AlbumFragment : Fragment() {
 //        }
     }
 
-    private fun filterAlbums() =
+    private fun filterArtists() =
         MainActivity
             .todasMusicas
-            .map { it.album }
+            .map { it.artist }
             .filter { it != "<unknown>" }
             .sortedBy { it }
             .distinct()
