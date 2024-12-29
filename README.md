@@ -19,18 +19,19 @@ Goals:
 6. Fix Files Access permission
 7. Fix Service Player
 8. Modularize
+9. Change all icons from png to svg
 
 Steps:
 1. Upgrade to latest version of AGP, Android SDK and use gradle kts ✅
 2. Migrate to SingleActivity Architecture
-   1. Create HomeFragment
+   1. Create MainFragment
    2. Move layout from MainActivity
    3. Isolate player layout and remove repeated code from fragments
 3. Migrate each fragments of home to Jetpack Compose
-    - Album Fragment
-    - Artist Fragment
-    - Folder Fragment 
+    - AlbumFragment ✅
+    - HomeFragment ✅
+    - ArtistFragment
+    - FolderFragment 
     - GenreFragment 
     - MusicFragment 
     - PlaylistFragment 
-    - MainFragment

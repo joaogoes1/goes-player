@@ -30,24 +30,20 @@ class AlbumFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MaterialTheme {
-                    Box(
-                      modifier = Modifier.padding(80.dp)
-                    ) {
-                        HomeList(
-                            title = stringResource(R.string.album_fragment_title),
-                            items = albumsList,
-                            onClick = { position ->
-                                val intent = Intent(
-                                    context,
-                                    ResultActivity::class.java
-                                )
-                                intent.putExtra("name", albumsList[position])
-                                intent.putExtra("type", ResultActivity.ALBUM)
-                                startActivity(intent)
-                            },
-                        )
-                    }
+                AppTheme {
+                    HomeList(
+                        title = stringResource(R.string.album_fragment_title),
+                        items = albumsList,
+                        onClick = { position ->
+                            val intent = Intent(
+                                context,
+                                ResultActivity::class.java
+                            )
+                            intent.putExtra("name", albumsList[position])
+                            intent.putExtra("type", ResultActivity.ALBUM)
+                            startActivity(intent)
+                        },
+                    )
                 }
             }
         }
@@ -55,14 +51,14 @@ class AlbumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val aleatorioButton = view.findViewById<FloatingActionButton>(R.id.aleatorio)
-        aleatorioButton.setImageResource(R.drawable.ic_aleatorio)
-        aleatorioButton.setOnClickListener {
-            (activity as MainActivity).musicSrv.aleatorio = false
-            (activity as MainActivity).musicSrv.ordenarPlayList()
-            (activity as MainActivity).musicSrv.reproduzir()
-        }
+//
+//        val aleatorioButton = view.findViewById<FloatingActionButton>(R.id.aleatorio)
+//        aleatorioButton.setImageResource(R.drawable.ic_aleatorio)
+//        aleatorioButton.setOnClickListener {
+//            (activity as MainActivity).musicSrv.aleatorio = false
+//            (activity as MainActivity).musicSrv.ordenarPlayList()
+//            (activity as MainActivity).musicSrv.reproduzir()
+//        }
     }
 
     private fun filterAlbums() =

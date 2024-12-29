@@ -14,7 +14,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0){
-            return new MainFragment();
+            return new HomeFragment();
         } else if (position == 1) {
             return new PlaylistFragment();
         } else if (position == 2) {

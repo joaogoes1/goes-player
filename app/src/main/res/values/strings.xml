@@ -17,4 +17,6 @@
     <string name="menu_exibir_letras">Exibir Letras</string>
     <string name="shuffle_floating_button_content_description">Clique para reproduzir a lista atual aleatóriamente</string>
     <string name="album_fragment_title">Albums</string>
+    <string name="home_fragment_welcome_text">Olá! Seja bem-vindo</string>
+    <string name="home_fragment_last_music_title">Última música reproduzida</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ fun HomeList(
     ) {
         Text(
             text = title,
-            fontSize = 24.sp,
+            style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -35,8 +36,7 @@ fun HomeList(
                 ) {
                     Text(
                         text = item,
-                        fontSize = 20.sp,
-                        color = Color.Red,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }
