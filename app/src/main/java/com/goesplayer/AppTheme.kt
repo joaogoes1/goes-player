@@ -1,5 +1,6 @@
 package com.goesplayer
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -10,6 +11,10 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = Color(0xFFFFD600),
+            background = Color.Black,
+        ),
         typography = Typography(
             displayLarge = MaterialTheme.typography.displayLarge.copy(color = Color.White),
             displayMedium = MaterialTheme.typography.displayMedium.copy(color = Color.White),

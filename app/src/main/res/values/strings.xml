@@ -20,4 +20,11 @@
     <string name="home_fragment_welcome_text">Olá! Seja bem-vindo</string>
     <string name="home_fragment_last_music_title">Última música reproduzida</string>
     <string name="artist_fragment_title">Artistas</string>
+    <string name="playlist_tab_create_playlist_dialog_title">"Digite o nome da Playlist: "</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirme">Confirmar</string>
+    <string name="delete_playlist_dialog_title">Excluir playlist</string>
+    <string name="delete_playlist_dialog_text">Você está preste a excluir a playlist %1$s, essa ação é irreversível. Você tem certeza disso?</string>
+    <string name="delete_playlist_success_message">Playlist excluída com sucesso</string>
+    <string name="delete_playlist_error_message">Error ao excluir playlist. Tente novamente.</string>
 </resources>

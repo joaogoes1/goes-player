@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -75,6 +74,7 @@ public class BancoController {
         return valor;
     }
 
+    // TODO: Verify if the playlist name already exists
     public void criarPlaylist(Context context, String nome) {
         ContentValues contentValues = new ContentValues();
         long resultado;
@@ -85,9 +85,9 @@ public class BancoController {
         resultado = db.insert(DataBaseOpenHelper.PLAYLIST_TABLE, null, contentValues);
         db.close();
 
-        if (resultado == -1)
-            Toast.makeText(context, R.string.erro_playlist, Toast.LENGTH_SHORT).show();
-        else Toast.makeText(context, R.string.playlist_concluido, Toast.LENGTH_SHORT).show();
+//        if (resultado == -1)
+//            Toast.makeText(context, R.string.erro_playlist, Toast.LENGTH_SHORT).show();
+//        else Toast.makeText(context, R.string.playlist_concluido, Toast.LENGTH_SHORT).show();
     }
 
     public void adicionarAPlaylist(int playlist, int musica, Context context) {
@@ -101,9 +101,9 @@ public class BancoController {
         resultado = db.insert(DataBaseOpenHelper.PLAYLIST_MUSICA_TABLE, null, contentValues);
         db.close();
 
-        if (resultado == -1)
-            Toast.makeText(context, "Erro ao adicionar musica", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(context, "Musica adicionada com sucesso", Toast.LENGTH_SHORT).show();
+//        if (resultado == -1)
+//            Toast.makeText(context, "Erro ao adicionar musica", Toast.LENGTH_SHORT).show();
+//        else Toast.makeText(context, "Musica adicionada com sucesso", Toast.LENGTH_SHORT).show();
     }
 
     public Cursor carregaPlaylist() {
@@ -148,24 +148,20 @@ public class BancoController {
         return musics;
     }
 
-    public void deletarPlaylist(Context context, int id) {
-        int resultado;
+    public boolean deletePlaylist(int id) {
+        int result;
         db = dboh.getWritableDatabase();
 
         if (countNumOfMusics(id) != 0) {
-            resultado = db.delete(DataBaseOpenHelper.PLAYLIST_MUSICA_TABLE, "idPlaylist = ?", new String[]{"" + id});
+            result = db.delete(DataBaseOpenHelper.PLAYLIST_MUSICA_TABLE, "idPlaylist = ?", new String[]{"" + id});
 
-            if (resultado == 0) {
-                Log.e("EXCLUIR PLAYLIST", "Erro ao excluir na tabela: playlistMusica");
-                Toast.makeText(context, "Erro ao excluir playlist", Toast.LENGTH_SHORT).show();
-                return;
+            if (result == 0) {
+                Log.e("DELETE PLAYLIST", "Error on exclude data on playlistMusica table");
+                return false;
             }
         }
-        resultado = db.delete(DataBaseOpenHelper.PLAYLIST_TABLE, "_id = ?", new String[]{"" + id});
-
-        if (resultado != 0)
-            Toast.makeText(context, "Playlist excluida com sucesso", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(context, "Erro ao excluir playlist", Toast.LENGTH_SHORT).show();
+        result = db.delete(DataBaseOpenHelper.PLAYLIST_TABLE, "_id = ?", new String[]{"" + id});
+        return result != 0;
     }
 
     public int countNumOfMusics(int playlist) {

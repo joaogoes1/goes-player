@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,9 +51,12 @@ public class PlaylistResultActivity extends AppCompatActivity {
         if (crud.countNumOfMusics(valor) != 0) {
         Cursor cursor = crud.consultaPlayMus(valor);
 
-        if (cursor != null) arrayList = crud.musicsOfPlaylist(cursor);
-        else arrayList = new ArrayList<>();
-            for (Music i : arrayList) {
+        if (cursor != null)
+            arrayList = crud.musicsOfPlaylist(cursor);
+        else
+            arrayList = new ArrayList<>();
+
+        for (Music i : arrayList) {
                 nomeDasMusicas.add(i.getTitle());
             }
         }
