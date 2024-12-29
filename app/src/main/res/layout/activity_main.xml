@@ -10,7 +10,7 @@
     android:screenOrientation="portrait">
 
     <!-- ActionBar -->
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -19,14 +19,14 @@
         android:theme="@style/MPlayerTheme"
         app:popupTheme="@style/MPlayerTheme" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_below="@id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/toolbar_rounded_corners" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"

@@ -10,7 +10,7 @@
     android:screenOrientation="portrait">
 
     <!-- ActionBar -->
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbarResult"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"

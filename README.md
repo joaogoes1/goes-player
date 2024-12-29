@@ -10,11 +10,27 @@ The object of this app is study more about Android Framework and and go beyond w
 This app is in refactor (rewrite) process bringing this to the modernity (MAD skills).
 Considering this is my first app after a Android course, before even start to study Computer Science, like OOP, a lot of things needs to be fixed, improved or updated.
 
-Roadmap:
-1. Update SDK Version
+Goals:
+1. Enable to run in API 34 ✅
 2. Migrate to Kotlin
-3. Fix Files Access permission
-4. Fix Service Player
-5. Move to MVVM architecture
-6. Migrate layout to Jetpack Compose
-7. Modularize
+3. Use Single Activity arch
+4. Move to MVVM architecture
+5. Migrate layout to Jetpack Compose
+6. Fix Files Access permission
+7. Fix Service Player
+8. Modularize
+
+Steps:
+1. Upgrade to latest version of AGP, Android SDK and use gradle kts ✅
+2. Migrate to SingleActivity Architecture
+   1. Create HomeFragment
+   2. Move layout from MainActivity
+   3. Isolate player layout and remove repeated code from fragments
+3. Migrate each fragments of home to Jetpack Compose
+    - Album Fragment
+    - Artist Fragment
+    - Folder Fragment 
+    - GenreFragment 
+    - MusicFragment 
+    - PlaylistFragment 
+    - MainFragment

@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.goesplayer"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.goesplayer"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -33,17 +33,27 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        compose = true
+    }
     useLibrary("org.apache.http.legacy")
 }
 
 dependencies {
-    implementation("com.android.support:appcompat-v7:27.1.1")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
-    implementation("com.android.support:design:27.1.1")
-    implementation("com.android.support:support-v4:27.1.1")
+    implementation(libs.material)
+    val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
+    implementation(composeBom)
+    implementation(libs.material3)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.androidx.appcompat)
     implementation("me.drakeet.materialdialog:library:1.2.2")
     implementation("com.squareup.picasso:picasso:2.5.2")
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("com.android.support.test:runner:1.0.2")
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")
+
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
+
+    testImplementation(libs.junit.v412)
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(composeBom)
 }
