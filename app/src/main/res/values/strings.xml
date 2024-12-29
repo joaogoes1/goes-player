@@ -16,5 +16,5 @@
     <string name="deletar_playlist">Deletar playlist</string>
     <string name="menu_exibir_letras">Exibir Letras</string>
     <string name="shuffle_floating_button_content_description">Clique para reproduzir a lista atual aleatóriamente</string>
-    <string name="album_fragment_title">Album</string>
+    <string name="album_fragment_title">Albums</string>
 </resources>
