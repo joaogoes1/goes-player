@@ -158,7 +158,7 @@ public class BancoController {
         return musics;
     }
 
-    public boolean deletePlaylist(int id) {
+    public boolean deletePlaylist(long id) {
         int result;
         db = dboh.getWritableDatabase();
 
@@ -174,9 +174,9 @@ public class BancoController {
         return result != 0;
     }
 
-    public int countNumOfMusics(int playlist) {
+    public long countNumOfMusics(long playlist) {
         db = dboh.getWritableDatabase();
 
-        return (int) DatabaseUtils.queryNumEntries(db, DataBaseOpenHelper.PLAYLIST_MUSICA_TABLE, "idPlaylist = ?", new String[]{playlist + ""});
+        return DatabaseUtils.queryNumEntries(db, DataBaseOpenHelper.PLAYLIST_MUSICA_TABLE, "idPlaylist = ?", new String[]{playlist + ""});
     }
 }

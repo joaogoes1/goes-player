@@ -23,15 +23,16 @@ Goals:
 
 Steps:
 1. Upgrade to latest version of AGP, Android SDK and use gradle kts ✅
-2. Migrate to SingleActivity Architecture
-   1. Create MainFragment
-   2. Move layout from MainActivity
-   3. Isolate player layout and remove repeated code from fragments
-3. Migrate each fragments of home to Jetpack Compose
+2. Migrate each fragments of home to Jetpack Compose
     - AlbumFragment ✅
     - HomeFragment ✅
     - ArtistFragment ✅
-    - FolderFragment 
-    - GenreFragment 
-    - MusicFragment 
-    - PlaylistFragment 
+    - MusicFragment ✅
+    - PlaylistFragment ✅
+    - FolderFragment ✅
+    - GenreFragment ✅
+3. Migrate to SingleActivity Architecture
+   1. Create MainFragment
+   2. Move layout from MainActivity
+   3. Isolate player layout and remove repeated code from fragments
+   4. Migrate others activities to fragments

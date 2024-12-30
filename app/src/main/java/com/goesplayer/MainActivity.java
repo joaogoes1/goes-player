@@ -29,14 +29,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.viewpager.widget.ViewPager;
 
+import com.goesplayer.data.model.Playlist;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static ImageButton toolbarPlayButton;
     public ImageButton toolbatNextButton;
     public static ImageButton toolbarImageAlbum;
+    public MutableLiveData<List<Playlist>> playlists = new MutableLiveData<>(Collections.emptyList());
+    public MutableLiveData<Boolean> isLoadingPlaylists = new MutableLiveData<>(true);
 
     public PlayerService musicSrv;
     private Intent playIntent;
@@ -65,8 +72,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar mainToolbar = findViewById(R.id.mainToolbar);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container_view, MainFragment.class, null)
+                .setReorderingAllowed(true)
+                .commit();
+        crud = new BancoController(this);
+        /*Toolbar mainToolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(mainToolbar);
         toolbar = findViewById(R.id.inc_toolbar_inferior);
         toolbar.setVisibility(View.INVISIBLE);
@@ -75,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarMusica = findViewById(R.id.nome_musica_reproduzindo);
         toolbarArtista = findViewById(R.id.nome_artista_reproduzindo);
         toolbarImageAlbum = findViewById(R.id.toolbar_imagem);
-        crud = new BancoController(this);
+        crud = new BancoController(this);*/
 
     }
 
@@ -100,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
+        playlists.postValue(crud.loadPlaylists());
+        isLoadingPlaylists.postValue(false);
     }
 
     @Override
@@ -179,25 +193,6 @@ public class MainActivity extends AppCompatActivity {
             musicBound = false;
         }
     };
-
-    //Método para criar o ViewPager
-    private void setViewPager() {
-        ViewPager viewPager = findViewById(R.id.viewpager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        if (tabLayout != null) {
-            tabLayout.setupWithViewPager(viewPager);
-            tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_playlist);
-            tabLayout.getTabAt(2).setIcon(R.drawable.ic_musica);
-            tabLayout.getTabAt(3).setIcon(R.drawable.ic_cantor);
-            tabLayout.getTabAt(4).setIcon(R.drawable.ic_album);
-            tabLayout.getTabAt(5).setIcon(R.drawable.ic_genero);
-            tabLayout.getTabAt(6).setIcon(R.drawable.ic_pasta);
-        }
-    }
 
     private void setButtonsToolbar() {
         toolbarPrevButton = findViewById(R.id.anterior_toolbar);

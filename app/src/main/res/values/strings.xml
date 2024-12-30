@@ -33,4 +33,7 @@
     <string name="add_music_to_playlist_error_message">Erro ao adicionar música</string>
     <string name="music_tab_add_to_playlist_dialog_title">Escolha a playlist</string>
     <string name="music_options_dialog_title">Ações</string>
+    <string name="folder_fragment_title">Diretorios</string>
+    <string name="genre_fragment_title">Estilos Musicais</string>
+    <string name="skip_previous_button_content_description">Reproduzir anterior</string>
 </resources>

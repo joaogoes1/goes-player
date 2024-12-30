@@ -115,7 +115,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun deletePlaylist(name: String, crud: BancoController) {
-        val id = crud.acharPlaylist(name)
+        val id = crud.acharPlaylist(name).toLong()
         val result = crud.deletePlaylist(id)
         val toastText = if (result) {
             loadPlaylist()
