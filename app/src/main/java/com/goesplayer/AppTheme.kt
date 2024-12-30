@@ -14,6 +14,7 @@ fun AppTheme(
         colorScheme = MaterialTheme.colorScheme.copy(
             primary = Color(0xFFFFD600),
             background = Color.Black,
+            onPrimary = Color.Black,
         ),
         typography = Typography(
             displayLarge = MaterialTheme.typography.displayLarge.copy(color = Color.White),

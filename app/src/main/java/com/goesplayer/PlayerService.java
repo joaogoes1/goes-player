@@ -336,13 +336,14 @@ public class PlayerService extends Service {
         intent.putExtra("musica", musicaAtual.getTitle());
         intent.putExtra("artista", musicaAtual.getArtist());
         intent.putExtra("aleatorio", aleatorio);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(getApplicationContext(), musicaAtual.getUri());
             byte[] imgBytes = retriever.getEmbeddedPicture();
             if (imgBytes != null) {
-                intent.putExtra("imagemBitmap", imgBytes);
+//                intent.putExtra("imagemBitmap", imgBytes);
                 imageAlbum = true;
             } else {
                 imageAlbum = false;

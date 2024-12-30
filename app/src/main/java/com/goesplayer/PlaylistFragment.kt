@@ -2,7 +2,6 @@ package com.goesplayer
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.home.HomeList
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PlaylistFragment : Fragment() {
-    private val playlists = MutableLiveData(emptyList<String>())
+    private val playlists = MutableLiveData(emptyList<Playlist>())
     private val isLoading = MutableLiveData(false)
 
     override fun onCreateView(
@@ -82,15 +82,15 @@ class PlaylistFragment : Fragment() {
                                 context,
                                 PlaylistResultActivity::class.java
                             )
-                            intent.putExtra("nome", playlists?.get(item))
+                            intent.putExtra("nome", playlists?.get(item)?.name)
                             startActivity(intent)
                         },
                         onLongClick = { index ->
-                            deletePlaylistDialogPlaylistName = playlists?.get(index) ?: ""
+                            deletePlaylistDialogPlaylistName = playlists?.get(index)?.name ?: ""
                             shouldShowDeletePlaylistDialog.value = true
                         },
                         title = "Playlists",
-                        items = playlists ?: emptyList(),
+                        items = playlists?.map { it.name } ?: emptyList(),
                     )
                 }
             }
@@ -106,16 +106,7 @@ class PlaylistFragment : Fragment() {
     private fun loadPlaylist() {
         // TODO: Remove this after migrate to MVVM architecture
         GlobalScope.launch(Dispatchers.IO) {
-            val crud = BancoController(requireContext())
-            val cursor = crud.carregaPlaylist()
-            val columnIndex = cursor.getColumnIndex(DataBaseOpenHelper.DB_NOME)
-            if (columnIndex < 0) return@launch
-            val results = mutableListOf<String>()
-            cursor.moveToFirst()
-            while (cursor.moveToNext()) {
-                results.add(cursor.getString(columnIndex))
-            }
-            cursor.close()
+            val results = BancoController(requireContext()).loadPlaylists()
             withContext(Dispatchers.Main) {
                 playlists.value = results
                 isLoading.value = false
@@ -172,7 +163,7 @@ private fun CreatePlaylistDialog(
         },
         confirmButton = {
             Button(onClick = {}) {
-                Text(stringResource(R.string.confirme))
+                Text(stringResource(R.string.confirm))
             }
         },
     )
@@ -208,7 +199,7 @@ private fun DeletePlaylistDialog(
         confirmButton = {
             Button(onClick = { confirmAction(name) }) {
                 Text(
-                    stringResource(R.string.confirme),
+                    stringResource(R.string.confirm),
                     color = Color.Black,
                 )
             }
