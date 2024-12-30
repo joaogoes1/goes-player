@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,18 +25,13 @@ import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.viewpager.widget.ViewPager;
 
 import com.goesplayer.data.model.Playlist;
-import com.google.android.material.tabs.TabLayout;
+import com.goesplayer.presentation.home.HomeFragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,21 +68,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container_view, MainFragment.class, null)
+                .replace(R.id.fragment_container_view, HomeFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
         crud = new BancoController(this);
-        /*Toolbar mainToolbar = findViewById(R.id.mainToolbar);
-        setSupportActionBar(mainToolbar);
-        toolbar = findViewById(R.id.inc_toolbar_inferior);
-        toolbar.setVisibility(View.INVISIBLE);
-        setButtonsToolbar();
-        setViewPager();
-        toolbarMusica = findViewById(R.id.nome_musica_reproduzindo);
-        toolbarArtista = findViewById(R.id.nome_artista_reproduzindo);
-        toolbarImageAlbum = findViewById(R.id.toolbar_imagem);
-        crud = new BancoController(this);*/
-
     }
 
     @Override

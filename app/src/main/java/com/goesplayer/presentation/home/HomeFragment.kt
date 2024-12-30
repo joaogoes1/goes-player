@@ -1,19 +1,18 @@
-package com.goesplayer
+package com.goesplayer.presentation.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.goesplayer.presentation.home.HomeScreen
-import com.goesplayer.presentation.home.tabs.MusicTab
+import com.goesplayer.AppTheme
+import com.goesplayer.MainActivity
 
-class MainFragment : Fragment() {
+class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
