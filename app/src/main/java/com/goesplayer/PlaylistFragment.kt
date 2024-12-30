@@ -97,9 +97,13 @@ class PlaylistFragment : Fragment() {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadPlaylist()
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun loadPlaylist() {
         // TODO: Remove this after migrate to MVVM architecture
         GlobalScope.launch(Dispatchers.IO) {
             val crud = BancoController(requireContext())
@@ -123,6 +127,7 @@ class PlaylistFragment : Fragment() {
         val id = crud.acharPlaylist(name)
         val result = crud.deletePlaylist(id)
         val toastText = if (result) {
+            loadPlaylist()
             getString(R.string.delete_playlist_success_message)
         } else {
             getString(R.string.delete_playlist_error_message)
@@ -130,8 +135,10 @@ class PlaylistFragment : Fragment() {
         Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show()
     }
 }
+
+
 @Composable
-fun CreatePlaylistDialog(
+private fun CreatePlaylistDialog(
     name: String,
     shouldShowDialog: MutableState<Boolean>,
     dialogTextFieldValue: MutableState<String>,
@@ -172,7 +179,7 @@ fun CreatePlaylistDialog(
 }
 
 @Composable
-fun DeletePlaylistDialog(
+private fun DeletePlaylistDialog(
     name: String,
     shouldShowDialog: MutableState<Boolean>,
     confirmAction: (String) -> Unit,
