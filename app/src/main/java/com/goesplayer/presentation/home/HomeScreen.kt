@@ -18,9 +18,7 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,6 +50,7 @@ import com.goesplayer.presentation.home.tabs.GenreTab
 import com.goesplayer.presentation.home.tabs.HomeTab
 import com.goesplayer.presentation.home.tabs.MusicTab
 import com.goesplayer.presentation.home.tabs.PlaylistTab
+import com.goesplayer.presentation.widgets.PlayPauseButtonIcon
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +68,7 @@ fun HomeScreen(
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors().copy(
                         containerColor = MaterialTheme.colorScheme.background,
-                        ),
+                    ),
                     title = {
                         Text(
                             stringResource(R.string.app_name),
@@ -162,12 +161,7 @@ private fun MiniPlayer(
                         onClick = {},
                         modifier = Modifier.height(30.dp),
                     ) {
-                        Icon(
-                            if (isMusicPlaying.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                            contentDescription = stringResource(
-                                R.string.skip_previous_button_content_description
-                            )
-                        )
+                        PlayPauseButtonIcon(isMusicPlaying.value)
                     }
                     IconButton(
                         onClick = {},
@@ -176,7 +170,7 @@ private fun MiniPlayer(
                         Icon(
                             Icons.Filled.SkipPrevious,
                             contentDescription = stringResource(
-                                R.string.skip_previous_button_content_description
+                                R.string.skip_next_button_content_description
                             )
                         )
                     }
