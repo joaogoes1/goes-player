@@ -21,6 +21,7 @@ public class Music {
         this.album = albumName;
         this.gender = gender;
         this.folder = folder;
+
         this.uri = uri;
     }
 

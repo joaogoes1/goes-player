@@ -49,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public static View toolbar;
     public static TextView toolbarMusica;
     public static TextView toolbarArtista;
-    public ImageButton toolbarPrevButton;
     public static ImageButton toolbarPlayButton;
-    public ImageButton toolbatNextButton;
     public static ImageButton toolbarImageAlbum;
     public MutableLiveData<List<Playlist>> playlists = new MutableLiveData<>(Collections.emptyList());
     public MutableLiveData<Boolean> isLoadingPlaylists = new MutableLiveData<>(true);
@@ -176,47 +174,6 @@ public class MainActivity extends AppCompatActivity {
             musicBound = false;
         }
     };
-
-    private void setButtonsToolbar() {
-        toolbarPrevButton = findViewById(R.id.anterior_toolbar);
-        toolbarPlayButton = findViewById(R.id.play_toolbar);
-        toolbatNextButton = findViewById(R.id.proximo_toolbar);
-        ImageButton toolbarImageAlbum = findViewById(R.id.toolbar_imagem);
-
-        toolbarPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicSrv.reproduzirAnterior();
-            }
-        });
-
-        toolbarPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!musicSrv.mediaPlayer.isPlaying()) {
-                    musicSrv.voltarAReproduzir();
-                    toolbarPlayButton.setImageResource(R.drawable.ic_pause_small);
-                } else {
-                    musicSrv.pausar();
-                    toolbarPlayButton.setImageResource(R.drawable.ic_play_toolbar);
-                }
-            }
-        });
-
-        toolbatNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicSrv.reproduzirProxima();
-            }
-        });
-
-        toolbarImageAlbum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicSrv.abrirPlayerTela();
-            }
-        });
-    }
 
     private void callDialog(String message, final String[] permissions) {
         mMaterialDialog = new MaterialDialog(this)

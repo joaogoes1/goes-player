@@ -65,10 +65,10 @@ fun HomeScreen(
     AppTheme {
         Scaffold(
             topBar = {
+                // TODO: Add search button
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors().copy(
                         containerColor = MaterialTheme.colorScheme.background,
-
                         ),
                     title = {
                         Text(
@@ -104,7 +104,7 @@ fun HomeScreen(
                         .wrapContentHeight()
                 ) {
                     tabs.forEachIndexed { index, icon ->
-                        Tab(icon = { Icon(icon, contentDescription = "") },
+                        Tab(icon = { Icon(icon, contentDescription = null) },
                             selected = pagerState.pageCount == index,
                             onClick = { scope.launch { pagerState.scrollToPage(index) } }
                         )

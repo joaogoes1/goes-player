@@ -204,7 +204,7 @@ private fun MusicList(
                                 BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
                             Image(
                                 bitmap = thumb.asImageBitmap(),
-                                contentDescription = "",
+                                contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(48.dp)
                             )

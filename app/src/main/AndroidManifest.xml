@@ -16,15 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchableActivity" />
         </activity>
 
         <service
@@ -32,21 +23,22 @@
             android:enabled="true"
             android:exported="false" />
 
+        <activity android:exported="true"
+            android:name=".presentation.player.PlayerActivityKt"
+            android:parentActivityName=".MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity android:name=".PlaylistResultActivity"  android:exported="false"/>
+
         <activity android:exported="false"
             android:name=".PlayerActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:exported="false"
-            android:name=".SearchableActivity"
-            android:parentActivityName=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <activity android:name=".PlaylistResultActivity"  android:exported="false"/>
         <activity
             android:name=".ResultActivity"
             android:exported="false" />

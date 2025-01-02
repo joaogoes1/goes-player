@@ -20,6 +20,8 @@ import android.view.View;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.goesplayer.presentation.player.PlayerActivityKt;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -332,7 +334,7 @@ public class PlayerService extends Service {
     }
 
     public void abrirPlayerTela() {
-        Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlayerActivityKt.class);
         intent.putExtra("musica", musicaAtual.getTitle());
         intent.putExtra("artista", musicaAtual.getArtist());
         intent.putExtra("aleatorio", aleatorio);
@@ -365,10 +367,10 @@ public class PlayerService extends Service {
         } else {
             mBuilder.setSmallIcon(R.drawable.ic_pause_toolbar);
         }
-        Intent resultIntent = new Intent(this, PlayerActivity.class);
+        Intent resultIntent = new Intent(this, PlayerActivityKt.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(resultIntent);
-        stackBuilder.addParentStack(PlayerActivity.class);
+        stackBuilder.addParentStack(PlayerActivityKt.class);
         PendingIntent resultPendindIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendindIntent);
         notificationManager.notify(NOTIFICACAO_ID, mBuilder.build());

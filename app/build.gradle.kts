@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.appcompat)
     implementation("me.drakeet.materialdialog:library:1.2.2")
