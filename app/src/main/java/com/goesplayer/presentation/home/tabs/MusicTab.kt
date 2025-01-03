@@ -60,7 +60,6 @@ sealed class MusicTabDialogState {
     data class AddToPlaylist(val music: Music) : MusicTabDialogState()
 }
 
-
 @Composable
 fun MusicTab(
     playSong: (Music) -> Unit,

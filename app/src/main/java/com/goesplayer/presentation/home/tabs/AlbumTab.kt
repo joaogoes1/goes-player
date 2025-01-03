@@ -7,10 +7,12 @@ import com.goesplayer.R
 import com.goesplayer.data.model.Music
 import com.goesplayer.presentation.components.DoubleTextWithAlbumArtList
 import com.goesplayer.presentation.components.DoubleTextWithAlbumItemView
+import com.goesplayer.presentation.musiclist.Album
+import com.goesplayer.presentation.musiclist.SearchProperties
 
 @Composable
 fun AlbumTab(
-    openAlbumMusics: (String, String) -> Unit,
+    openAlbumMusics: (String, SearchProperties) -> Unit,
     songList: List<Music>,
 ) {
     val albumsList = songList.filterAlbums()
@@ -20,7 +22,7 @@ fun AlbumTab(
         emptyStateMessage = stringResource(R.string.album_tab_empty_state_message),
         onClick = { position ->
             val album = albumsList[position]
-            openAlbumMusics(album.artist, album.name)
+            openAlbumMusics(album.name, Album(album.artist, album.name))
         },
     )
 }

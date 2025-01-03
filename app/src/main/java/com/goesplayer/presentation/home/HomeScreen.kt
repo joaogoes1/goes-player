@@ -61,6 +61,7 @@ import com.goesplayer.presentation.home.tabs.HomeTab
 import com.goesplayer.presentation.home.tabs.MusicTab
 import com.goesplayer.presentation.home.tabs.PlaylistTab
 import com.goesplayer.presentation.home.tabs.PlaylistTabDialogState
+import com.goesplayer.presentation.musiclist.SearchProperties
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,6 +73,7 @@ fun HomeScreen(
     loadPlaylistsRetryAction: () -> Unit,
     addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
     getPlaylistsAction: () -> List<Playlist>,
+    navigateToMusicList: (String, SearchProperties) -> Unit,
     songList: MutableLiveData<List<Music>>,
     isMusicActive: State<Boolean>,
     isMusicPlaying: State<Boolean>,
@@ -101,7 +103,6 @@ fun HomeScreen(
             pagerState,
         )
     }, bottomBar = { if (isMusicActive.value) MiniPlayer(isMusicPlaying) }) { innerPadding ->
-        val context = LocalContext.current
         val tabs = listOf(
             Icons.Filled.Home,
             Icons.AutoMirrored.Filled.PlaylistPlay,
@@ -161,11 +162,11 @@ fun HomeScreen(
                     )
 
                     3 -> ArtistTab(
-                        openArtistMusics = {}, // TODO: Implement this
+                        openArtistMusics = navigateToMusicList, // TODO: Implement this
                         songList = musicsState.value ?: emptyList(),
                     )
                     4 -> AlbumTab(
-                        openAlbumMusics = {_,_ -> }, // TODO: Implement this
+                        openAlbumMusics = navigateToMusicList, // TODO: Implement this
                         songList = musicsState.value ?: emptyList(),
                     )
                     5 -> GenreTab(

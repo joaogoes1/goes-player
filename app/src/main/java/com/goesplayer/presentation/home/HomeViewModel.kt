@@ -3,6 +3,7 @@ package com.goesplayer.presentation.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
@@ -18,7 +19,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _playlistTabViewState =
         MutableLiveData<PlaylistTabViewState>(PlaylistTabViewState.Loading)
-    val playlistTabViewState: LiveData<PlaylistTabViewState> = _playlistTabViewState
+    val playlistTabViewState: LiveData<PlaylistTabViewState> = liveData { _playlistTabViewState }
 
     fun deletePlaylist(playlistId: Long): Boolean {
         val result = playlistRepository.deletePlaylist(playlistId)

@@ -4,6 +4,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 object GoesPlayerDestinations {
+    const val MUSIC_LIST_ROUTE = "music_list"
     const val PLAYER_ROUTE = "player"
     const val HOME_ROUTE = "home"
 }
