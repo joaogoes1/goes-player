@@ -1,6 +1,7 @@
 package com.goesplayer.presentation.player
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -38,6 +39,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -54,8 +58,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.goesplayer.AppTheme
-import com.goesplayer.Music
 import com.goesplayer.R
+import com.goesplayer.data.model.Music
 import com.goesplayer.presentation.widgets.PlayPauseButtonIcon
 
 @Preview(
@@ -67,23 +71,29 @@ fun Preview() {
     val context = LocalContext.current
     AppTheme {
         PlayerScreen(
+            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
+            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
+            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
+            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
+            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
             lyrics = mockLyrics,
-            music = Music(
-                1,
-                "Music teste",
-                "Music teste",
-                "Artist teste",
-                "Album teste",
-                "Genre teste",
-                "Folder teste",
-                Uri.EMPTY
-            ),
-            343,
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
+            isPlaying = remember { derivedStateOf { true }},
+            music = remember {
+                derivedStateOf {
+                    Music(
+                        1,
+                        "Music teste",
+                        "Music teste",
+                        "Artist teste",
+                        "Album teste",
+                        "Genre teste",
+                        Uri.EMPTY,
+                        Uri.EMPTY,
+                        343
+                    )
+                }
+            },
+            albumArt = null
         )
     }
 }
@@ -92,18 +102,18 @@ fun Preview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreen(
-    lyrics: String?,
-    music: Music,
-    durationInSeconds: Long,
     repeatAction: () -> Unit,
     skipPreviousAction: () -> Unit,
     playPauseAction: () -> Unit,
     skipNextAction: () -> Unit,
     shuffleAction: () -> Unit,
+    isPlaying: State<Boolean>,
+    lyrics: String?,
+    music: State<Music>,
+    albumArt: Bitmap?
 ) {
     var isLyricsAppearing by remember { mutableStateOf(false) }
     var sliderPosition by remember { mutableFloatStateOf(0f) }
-    var isPlaying by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -140,14 +150,23 @@ fun PlayerScreen(
                     .padding(horizontal = 24.dp)
             ) {
                 if (lyrics == null || !isLyricsAppearing)
-                    Image(
-                        painter = painterResource(R.mipmap.teste_album),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .aspectRatio(1f)
-                    )
+                    if (albumArt != null)
+                        Image(
+                            bitmap = albumArt.asImageBitmap(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .aspectRatio(1f))
+                    else
+                        Image(
+                            painter = painterResource(R.mipmap.teste_album),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .aspectRatio(1f)
+                        )
                 else
                     Text(
                         lyrics, modifier = Modifier
@@ -158,14 +177,14 @@ fun PlayerScreen(
                     )
             }
             Text(
-                text = music.name,
+                text = music.value.title,
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                text = music.artist,
+                text = music.value.artist,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleSmall,
@@ -174,7 +193,7 @@ fun PlayerScreen(
                 value = sliderPosition,
                 modifier = Modifier.padding(16.dp),
                 onValueChange = { sliderPosition = it },
-                valueRange = 0F..durationInSeconds.toFloat(),
+                valueRange = 0F..music.value.durationInSeconds.toFloat(),
                 colors = SliderDefaults.colors().copy(
                     activeTrackColor = Color.White,
                     inactiveTrackColor = Color.White,
@@ -237,7 +256,7 @@ fun PlayerScreen(
                                 containerColor = MaterialTheme.colorScheme.primary,
                             )
                     ) {
-                        PlayPauseButtonIcon(isPlaying)
+                        PlayPauseButtonIcon(isPlaying.value)
                     }
                     IconButton(
                         onClick = skipNextAction,

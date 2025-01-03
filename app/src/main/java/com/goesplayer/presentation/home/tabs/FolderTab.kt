@@ -2,12 +2,13 @@ package com.goesplayer.presentation.home.tabs
 
 import android.content.Context
 import android.content.Intent
+import android.icu.text.CaseMap.Fold
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.goesplayer.MainActivity.todasMusicas
+import com.goesplayer.OldMainActivity.todasMusicas
 import com.goesplayer.R
 import com.goesplayer.ResultActivity
 import com.goesplayer.presentation.home.HomeList
@@ -32,9 +33,9 @@ fun FolderTab(context: Context) {
     }
 }
 
-private fun filterfolders() =
+private fun filterfolders(): List<String> =
     todasMusicas
-        .map { it.folder }
+        .mapNotNull { it.folder }
         .filter { it != "<unknown>" }
         .sortedBy { it }
         .distinct()

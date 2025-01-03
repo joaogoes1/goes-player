@@ -10,7 +10,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.goesplayer.AppTheme
-import com.goesplayer.MainActivity
+import com.goesplayer.OldMainActivity
+import com.goesplayer.presentation.MainActivity
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
@@ -25,9 +26,12 @@ class HomeFragment : Fragment() {
                 val isMusicPlaying = remember { mutableStateOf(false) }
                 AppTheme {
                     HomeScreen(
-                        requireActivity() as MainActivity,
+                        { (activity as MainActivity).playSong(it) },
+                        (activity as MainActivity).todasMusicas,
                         isMusicActive,
                         isMusicPlaying,
+                        (activity as MainActivity).playlists,
+                        (activity as MainActivity).isLoadingPlaylists,
                     )
                 }
             }

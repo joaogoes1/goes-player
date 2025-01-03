@@ -45,9 +45,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.goesplayer.AppTheme
 import com.goesplayer.BancoController
-import com.goesplayer.MainActivity
+import com.goesplayer.data.model.Music
 import com.goesplayer.R
 import com.goesplayer.data.model.Playlist
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +64,8 @@ private data class MusicView(
 
 @Composable
 fun MusicTab(
-    activity: MainActivity,
+    playSong: (Music) -> Unit,
+    songList: List<Music>,
     db: BancoController,
     context: Context,
 ) {
@@ -77,12 +77,9 @@ fun MusicTab(
     Box(modifier = Modifier.fillMaxSize()) {
         MusicList(
             title = stringResource(R.string.music_tab_title),
-            items = mapMusics(),
+            items = mapMusics(songList),
             onClick = { position ->
-                activity.musicSrv.PlayList(MainActivity.todasMusicas)
-                activity.musicSrv.posicao = position
-                activity.musicSrv.reproduzir()
-                activity.musicSrv.abrirPlayerTela()
+                playSong(songList[position])
             },
             onLongClick = { musicId ->
                 shouldShowMusicOptionsDialog.value = true
@@ -150,15 +147,14 @@ private fun addMusicToPlaylist(
     }
 }
 
-private fun mapMusics() =
-    MainActivity
-        .todasMusicas
+private fun mapMusics(songList: List<Music>) =
+    songList
         .map {
             MusicView(
-                it.idNumber,
-                it.name,
+                it.id,
+                it.title,
                 it.artist,
-                it.uri,
+                it.songUri,
                 null
             )
         }

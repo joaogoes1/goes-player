@@ -16,6 +16,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.goesplayer.data.model.Music;
+import com.goesplayer.presentation.player.PlayerService;
+
 import java.util.ArrayList;
 
 public class ResultActivity extends AppCompatActivity {
@@ -58,12 +61,12 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (musicList != null) {
-                    musicSrv.PlayList(musicList);
-                    musicSrv.setPosicao(position);
-                    musicSrv.aleatorio = false;
-                    musicSrv.ordenarPlayList();
-                    musicSrv.reproduzir();
-                    musicSrv.abrirPlayerTela();
+//                    musicSrv.PlayList(musicList);
+//                    musicSrv.setPosicao(position);
+//                    musicSrv.aleatorio = false;
+//                    musicSrv.ordenarPlayList();
+//                    musicSrv.reproduzir();
+//                    musicSrv.abrirPlayerTela();
                 }
             }
         });
@@ -99,24 +102,24 @@ public class ResultActivity extends AppCompatActivity {
         switch (type) {
             case ARTISTA:
                 //@TODO: Arrumar o algoritmo para ele pesquisar a substring de cada artista
-                for (int i = 0; i < MainActivity.todasMusicas.size(); i++)
-                    if (MainActivity.todasMusicas.get(i).getArtist().equals(nome))
-                        musicList.add(MainActivity.todasMusicas.get(i));
+                for (int i = 0; i < OldMainActivity.todasMusicas.size(); i++)
+                    if (OldMainActivity.todasMusicas.get(i).getArtist().equals(nome))
+                        musicList.add(OldMainActivity.todasMusicas.get(i));
                 break;
             case ALBUM:
-                for (int i = 0; i < MainActivity.todasMusicas.size(); i++)
-                    if (MainActivity.todasMusicas.get(i).getAlbum().equals(nome))
-                        musicList.add(MainActivity.todasMusicas.get(i));
+                for (int i = 0; i < OldMainActivity.todasMusicas.size(); i++)
+                    if (OldMainActivity.todasMusicas.get(i).getAlbum().equals(nome))
+                        musicList.add(OldMainActivity.todasMusicas.get(i));
                 break;
             case GENDER:
-                for (int i = 0; i < MainActivity.todasMusicas.size(); i++)
-                    if (MainActivity.todasMusicas.get(i).getGenre().equals(nome))
-                        musicList.add(MainActivity.todasMusicas.get(i));
+                for (int i = 0; i < OldMainActivity.todasMusicas.size(); i++)
+                    if (OldMainActivity.todasMusicas.get(i).getGenre().equals(nome))
+                        musicList.add(OldMainActivity.todasMusicas.get(i));
                 break;
             case FOLDER:
-                for (int i = 0; i < MainActivity.todasMusicas.size(); i++)
-                    if (MainActivity.todasMusicas.get(i).getFolder().equals(nome))
-                        musicList.add(MainActivity.todasMusicas.get(i));
+                for (int i = 0; i < OldMainActivity.todasMusicas.size(); i++)
+                    if (OldMainActivity.todasMusicas.get(i).getFolder().equals(nome))
+                        musicList.add(OldMainActivity.todasMusicas.get(i));
                 break;
         }
 
@@ -125,9 +128,9 @@ public class ResultActivity extends AppCompatActivity {
     private ServiceConnection musicConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.MusicBinder binder = (PlayerService.MusicBinder) service;
-            //get service
-            musicSrv = binder.getService();
+//            PlayerService.MusicBinder binder = (PlayerService.MusicBinder) service;
+//            //get service
+//            musicSrv = binder.getService();
         }
 
         @Override

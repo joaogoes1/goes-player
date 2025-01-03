@@ -19,9 +19,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +27,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
+import com.goesplayer.data.model.Music;
 import com.goesplayer.data.model.Playlist;
 import com.goesplayer.presentation.home.HomeFragment;
+import com.goesplayer.presentation.player.PlayerService;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,18 +41,13 @@ import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
-public class MainActivity extends AppCompatActivity {
+public class OldMainActivity extends AppCompatActivity {
 
     public static final int REQUEST_PERMISSIONS_CODE = 128;
 
     private BancoController crud;
 
     private MaterialDialog mMaterialDialog;
-    public static View toolbar;
-    public static TextView toolbarMusica;
-    public static TextView toolbarArtista;
-    public static ImageButton toolbarPlayButton;
-    public static ImageButton toolbarImageAlbum;
     public MutableLiveData<List<Playlist>> playlists = new MutableLiveData<>(Collections.emptyList());
     public MutableLiveData<Boolean> isLoadingPlaylists = new MutableLiveData<>(true);
 
@@ -82,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS_CODE);
             }
         } else {
-            if (!PlayerService.mainCriada) {
-                lerMusicas();
-                ordenarMusicas();
-                PlayerService.mainCriada = true;
-            }
+//            if (!PlayerService.mainCriada) {
+//                lerMusicas();
+//                ordenarMusicas();
+//                PlayerService.mainCriada = true;
+//            }
         }
         if (playIntent == null) {
             playIntent = new Intent(this, PlayerService.class);
@@ -161,12 +158,12 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection musicConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.MusicBinder binder = (PlayerService.MusicBinder) service;
-            //get service
-            musicSrv = binder.getService();
-            //pass list
-            musicSrv.PlayList(todasMusicas);
-            musicBound = true;
+//            PlayerService.MusicBinder binder = (PlayerService.MusicBinder) service;
+//            //get service
+//            musicSrv = binder.getService();
+//            //pass list
+//            musicSrv.PlayList(todasMusicas);
+//            musicBound = true;
         }
 
         @Override
@@ -182,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Ok", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ActivityCompat.requestPermissions(MainActivity.this, permissions, REQUEST_PERMISSIONS_CODE);
+                        ActivityCompat.requestPermissions(OldMainActivity.this, permissions, REQUEST_PERMISSIONS_CODE);
                         mMaterialDialog.dismiss();
                     }
                 })
@@ -255,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (thisAlbum == null) thisAlbum = "<unknown>";
 
-                todasMusicas.add(new Music(thisId, thisName, thisTitle, thisArtist, thisAlbum, thisGender, thisFolder, thisUri));
+                todasMusicas.add(new Music(thisId, thisName, thisTitle, thisArtist, thisAlbum, thisGender, musicUri, thisUri, 0));
             } while (musicCursor.moveToNext());
         }
     }
@@ -269,6 +266,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void abrirPlayer(View view) {
-        musicSrv.abrirPlayerTela();
+//        musicSrv.abrirPlayerTela();
+    }
+
+    public void playSong(@Nullable Music music) {
+
     }
 }
