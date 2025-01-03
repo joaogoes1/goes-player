@@ -34,22 +34,27 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
-        compose = true
+            compose = true
     }
     useLibrary("org.apache.http.legacy")
 }
 
 dependencies {
     implementation(libs.material)
+    implementation(libs.androidx.media3.session)
     val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
     implementation(composeBom)
     implementation(libs.material3)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.appcompat)
     implementation("me.drakeet.materialdialog:library:1.2.2")
     implementation("com.squareup.picasso:picasso:2.5.2")
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.common)
 
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)

@@ -36,4 +36,11 @@
     <string name="folder_fragment_title">Diretorios</string>
     <string name="genre_fragment_title">Estilos Musicais</string>
     <string name="skip_previous_button_content_description">Reproduzir anterior</string>
+    <string name="shuffle_button_content_description">Aleatório</string>
+    <string name="repeat_button_content_description">Repetir</string>
+    <string name="pause_button_content_description">Pausar música</string>
+    <string name="play_button_content_description">Reproduzir</string>
+    <string name="skip_next_button_content_description">Reproduzir próxima</string>
+    <string name="player_fragment_show_lyrics_button_content_description">Exibir letra</string>
+    <string name="player_fragment_hide_lyrics_button_content_description">Esconder letra</string>
 </resources>

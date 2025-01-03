@@ -33,7 +33,7 @@ fun HomeTab() {
         ) {
             Image(
                 painterResource(R.mipmap.perfil_teste),
-                contentDescription = "",
+                contentDescription = null,
                 modifier = Modifier
                     .padding(top = 32.dp, bottom = 16.dp)
                     .width(150.dp)

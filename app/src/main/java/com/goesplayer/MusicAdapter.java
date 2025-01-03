@@ -14,7 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.IOException;
+import com.goesplayer.data.model.Music;
+
 import java.util.ArrayList;
 
 public class MusicAdapter extends ArrayAdapter<Music> {
@@ -63,7 +64,7 @@ public class MusicAdapter extends ArrayAdapter<Music> {
 
         try {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(getContext(), music.getUri());
+            retriever.setDataSource(getContext(), music.getSongUri());
             byte[] imgBytes = retriever.getEmbeddedPicture();
             Bitmap albumBitmap;
             if (imgBytes != null) {

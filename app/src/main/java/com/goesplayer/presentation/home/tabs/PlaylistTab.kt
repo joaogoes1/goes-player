@@ -20,17 +20,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.goesplayer.AppTheme
 import com.goesplayer.BancoController
-import com.goesplayer.PlaylistResultActivity
 import com.goesplayer.R
 import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.home.HomeList
@@ -44,7 +40,7 @@ import kotlinx.coroutines.withContext
 fun PlaylistTab(
     context: Context,
     playlistsLiveData: MutableLiveData<List<Playlist>>,
-    isLoadingLiveData: MutableLiveData<Boolean>
+    isLoadingLiveData: MutableLiveData<Boolean>,
 ) {
     // TODO: Improve this after implement MVVM and ViewModel
     val isLoading = isLoadingLiveData.observeAsState()
@@ -83,15 +79,9 @@ fun PlaylistTab(
             }
         }
 
-        Log.i("ASDFGHJKL", "Playlists not loading ${playlists.value}")
         HomeList(
             onClick = { item ->
-                val intent = Intent(
-                    context,
-                    PlaylistResultActivity::class.java
-                )
-                intent.putExtra("nome", playlists.value?.get(item)?.name)
-                context.startActivity(intent)
+                // TODO: Implement this
             },
             onLongClick = { index ->
                 deletePlaylistDialogPlaylistId = playlists.value?.get(index)?.id ?: -1
@@ -111,14 +101,11 @@ private fun loadPlaylist(
 ) {
     // TODO: Remove this after migrate to MVVM architecture
     GlobalScope.launch(Dispatchers.IO) {
-        Log.i("ASDFGHJKL", "Entrou no GlobalScope")
         val crud = BancoController(context)
         val results = crud.loadPlaylists()
-        Log.i("ASDFGHJKL", "Results $results")
         withContext(Dispatchers.Main) {
             playlists.value = results
             isLoading.value = false
-            Log.i("ASDFGHJKL", "Playlists ${playlists.value}")
         }
     }
 }

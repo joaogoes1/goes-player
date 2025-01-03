@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.goesplayer.MainActivity
-import com.goesplayer.MainActivity.todasMusicas
+import com.goesplayer.OldMainActivity.todasMusicas
 import com.goesplayer.R
 import com.goesplayer.ResultActivity
 import com.goesplayer.presentation.home.HomeList

@@ -32,7 +32,9 @@ Steps:
     - FolderFragment ✅
     - GenreFragment ✅
 3. Migrate to SingleActivity Architecture
-   1. Create MainFragment
+   1. Create main fragment (HomeFragment)
    2. Move layout from MainActivity
    3. Isolate player layout and remove repeated code from fragments
    4. Migrate others activities to fragments
+4. Migrate all icons and images to .svg
+5. Create unit and layout tests for the app

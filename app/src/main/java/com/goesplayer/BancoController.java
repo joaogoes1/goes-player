@@ -9,6 +9,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.goesplayer.data.model.Music;
 import com.goesplayer.data.model.Playlist;
 
 import java.util.ArrayList;
@@ -150,8 +151,8 @@ public class BancoController {
             listIds.add((long) cursor.getInt(0));
         } while (cursor.moveToNext());
 
-        for (Music i : MainActivity.todasMusicas) {
-            if (listIds.contains(i.getIdNumber()))
+        for (Music i : OldMainActivity.todasMusicas) {
+            if (listIds.contains(i.getId()))
                 musics.add(i);
         }
 
