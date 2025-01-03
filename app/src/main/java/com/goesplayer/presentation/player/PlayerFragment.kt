@@ -3,18 +3,14 @@ package com.goesplayer.presentation.player
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.media3.session.MediaController
 import com.goesplayer.AppTheme
 import com.goesplayer.data.model.Music
@@ -37,25 +33,28 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        controller = (activity as MainActivity).controller
+        controller = (activity as MainActivity).viewModel.controller
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val music = (activity as MainActivity).currentMusic.observeAsState()
+                val music = (activity as MainActivity).viewModel.currentMusic.observeAsState()
 
-                AppTheme {
-                    music.value?.let { PlayerScreen(
-                        {},
-                        {},
-                        ::pauseMusic,
-                        {},
-                        {},
-                        (activity as MainActivity).isPlaying,
-                        null,
-                        derivedStateOf { it },
-                        retrieveImage(it)
-                    ) }
-
+                music.value?.let {
+                    AppTheme {
+                        music.value?.let {
+                            PlayerScreen(
+                                {},
+                                {},
+                                ::pauseMusic,
+                                {},
+                                {},
+                                (activity as MainActivity).viewModel.isPlaying,
+                                null,
+                                it,
+                                retrieveImage(it)
+                            )
+                        }
+                    }
                 }
             }
         }

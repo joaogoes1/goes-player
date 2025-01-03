@@ -27,11 +27,11 @@ class HomeFragment : Fragment() {
                 AppTheme {
                     HomeScreen(
                         { (activity as MainActivity).playSong(it) },
-                        (activity as MainActivity).todasMusicas,
+                        (activity as MainActivity).viewModel.songList, //FIXME
                         isMusicActive,
                         isMusicPlaying,
-                        (activity as MainActivity).playlists,
-                        (activity as MainActivity).isLoadingPlaylists,
+                        (activity as MainActivity).viewModel.playlists, //FIXME
+                        (activity as MainActivity).viewModel.isLoadingPlaylists, //FIXME
                     )
                 }
             }

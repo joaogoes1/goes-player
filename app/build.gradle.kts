@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -42,8 +44,7 @@ android {
 dependencies {
     implementation(libs.material)
     implementation(libs.androidx.media3.session)
-    val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
-    implementation(composeBom)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.material3)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.material.icons.extended)
@@ -55,11 +56,15 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.common)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.navigation.compose)
+
+    ksp(libs.hilt.android.compiler)
 
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
     testImplementation(libs.junit.v412)
     androidTestImplementation(libs.ui.test.junit4)
-    androidTestImplementation(composeBom)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 }

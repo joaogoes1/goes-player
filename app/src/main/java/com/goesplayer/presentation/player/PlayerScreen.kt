@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import com.goesplayer.AppTheme
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
-import com.goesplayer.presentation.widgets.PlayPauseButtonIcon
+import com.goesplayer.presentation.components.PlayPauseButtonIcon
 
 @Preview(
     showSystemUi = true,
@@ -77,22 +77,18 @@ fun Preview() {
             { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
             { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
             lyrics = mockLyrics,
-            isPlaying = remember { derivedStateOf { true }},
-            music = remember {
-                derivedStateOf {
-                    Music(
-                        1,
-                        "Music teste",
-                        "Music teste",
-                        "Artist teste",
-                        "Album teste",
-                        "Genre teste",
-                        Uri.EMPTY,
-                        Uri.EMPTY,
-                        343
-                    )
-                }
-            },
+            isPlaying = remember { derivedStateOf { true } },
+            music = Music(
+                1,
+                "Music teste",
+                "Music teste",
+                "Artist teste",
+                "Album teste",
+                "Genre teste",
+                Uri.EMPTY,
+                Uri.EMPTY,
+                343
+            ),
             albumArt = null
         )
     }
@@ -109,7 +105,7 @@ fun PlayerScreen(
     shuffleAction: () -> Unit,
     isPlaying: State<Boolean>,
     lyrics: String?,
-    music: State<Music>,
+    music: Music,
     albumArt: Bitmap?
 ) {
     var isLyricsAppearing by remember { mutableStateOf(false) }
@@ -157,7 +153,8 @@ fun PlayerScreen(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .aspectRatio(1f))
+                                .aspectRatio(1f)
+                        )
                     else
                         Image(
                             painter = painterResource(R.mipmap.teste_album),
@@ -177,14 +174,14 @@ fun PlayerScreen(
                     )
             }
             Text(
-                text = music.value.title,
+                text = music.title,
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                text = music.value.artist,
+                text = music.artist,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleSmall,
@@ -193,7 +190,7 @@ fun PlayerScreen(
                 value = sliderPosition,
                 modifier = Modifier.padding(16.dp),
                 onValueChange = { sliderPosition = it },
-                valueRange = 0F..music.value.durationInSeconds.toFloat(),
+                valueRange = 0F..music.durationInSeconds.toFloat(),
                 colors = SliderDefaults.colors().copy(
                     activeTrackColor = Color.White,
                     inactiveTrackColor = Color.White,

@@ -6,7 +6,10 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.annotation.OptIn
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -26,29 +29,19 @@ import com.goesplayer.presentation.home.HomeFragment
 import com.goesplayer.presentation.player.PlayerFragment
 import com.goesplayer.presentation.player.PlayerService
 import com.google.common.util.concurrent.MoreExecutors
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : FragmentActivity() {
-    private var crud: BancoController? = null
-    var controller: MediaController? = null
-
-    // TODO: Review this after the arch migration
-    var playlists: MutableLiveData<List<Playlist>> = MutableLiveData(emptyList())
-    var isLoadingPlaylists: MutableLiveData<Boolean> = MutableLiveData(true)
-    val todasMusicas: MutableLiveData<List<Music>> = MutableLiveData()
-    val currentMusic: MutableLiveData<Music?> = MutableLiveData()
-    val isPlaying: MutableState<Boolean> = mutableStateOf(false)
-
+    val viewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container_view, HomeFragment::class.java, null)
-            .setReorderingAllowed(true)
-            .commit()
-        crud = BancoController(applicationContext)
+        viewModel.crud = BancoController(applicationContext)
+        setContent {
+            GoesPlayerApp(viewModel)
+        }
     }
 
     override fun onStart() {
@@ -57,11 +50,11 @@ class MainActivity : FragmentActivity() {
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
         controllerFuture.addListener(
             {
-                controller = controllerFuture.get()
-                controller?.addListener(object : Player.Listener {
+                viewModel.controller = controllerFuture.get()
+                viewModel.controller?.addListener(object : Player.Listener {
                     override fun onEvents(player: Player, events: Player.Events) {
-                        if (isPlaying.value != player.isPlaying)
-                            isPlaying.value = player.isPlaying
+                        if (viewModel.isPlaying.value != player.isPlaying)
+                            viewModel.isPlaying.value = player.isPlaying
                     }
 
                     @OptIn(UnstableApi::class)
@@ -77,96 +70,28 @@ class MainActivity : FragmentActivity() {
                             durationInSeconds = mediaMetadata.durationMs?.times(1000) ?: 0,
                             albumArtUri = mediaMetadata.artworkUri
                         )
-                        currentMusic.value = music
+                        viewModel.currentMusic.value = music
                     }
                 })
             },
             MoreExecutors.directExecutor()
         )
-        playlists.postValue(crud?.loadPlaylists())
-        isLoadingPlaylists.postValue(false)
-        loadSongs()
+        viewModel.playlists.postValue(viewModel.crud?.loadPlaylists())
+        viewModel.isLoadingPlaylists.postValue(false)
+        viewModel.loadSongs()
     }
 
     fun playSong(music: Music) {
-        controller?.setMediaItem(MediaItem.Builder().setUri(music.songUri).setMediaMetadata(
-            MediaMetadata.Builder().setArtworkUri(music.albumArtUri).build()
-        ).build())
-        controller?.prepare()
-        controller?.play()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container_view, PlayerFragment::class.java, null)
-            .setReorderingAllowed(true)
-            .commit()
-    }
-
-    // TODO: Review this
-    private fun loadSongs() {
-       val musicResolver = contentResolver
-        val musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val musicCursor = musicResolver.query(musicUri, null, null, null, null)
-        val musics = mutableListOf<Music>()
-
-        if (musicCursor != null && musicCursor.moveToFirst()) {
-            val titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-            val idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID)
-            val nameColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
-            val artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
-            val albumColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-
-
-            do {
-                val id = musicCursor.getLong(idColumn)
-                val thisTitle = musicCursor.getString(titleColumn)
-                val thisArtist = musicCursor.getString(artistColumn)
-                var thisAlbum = "<unknown>"
-                val thisName = musicCursor.getString(nameColumn)
-                val thisUri = ContentUris.withAppendedId(musicUri, id)
-                var thisgenre = "<unknown>"
-
-                val genreUri =
-                    MediaStore.Audio.Genres.getContentUriForAudioId("external", id.toInt())
-                val genreCursor = contentResolver.query(
-                    genreUri,
-                    arrayOf(MediaStore.Audio.Genres.NAME),
-                    null,
-                    null,
-                    null
-                )
-                if (genreCursor!!.moveToFirst()) {
-                    thisgenre =
-                        genreCursor!!.getString(genreCursor!!.getColumnIndex(MediaStore.Audio.Genres.NAME))
-                }
-                genreCursor!!.close()
-
-                val media = MediaMetadataRetriever()
-                try {
-                    media.setDataSource(this, thisUri)
-                    thisAlbum = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM) ?: ""
-                    media.release()
-                } catch (e: Exception) {
-                    //Ignore it
-                }
-
-                if (thisAlbum == null) thisAlbum = "<unknown>"
-
-                musics.add(
-                    Music(
-                        id,
-                        thisName,
-                        thisTitle,
-                        thisArtist,
-                        thisAlbum,
-                        thisgenre,
-                        musicUri,
-                        thisUri,
-                        musicCursor.getLong(musicCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)) * 1000,
-                    )
-                )
-            } while (musicCursor.moveToNext())
-        }
-        musicCursor?.close()
-        todasMusicas.postValue(musics)
+        viewModel.controller?.setMediaItem(MediaItem
+            .Builder()
+            .setUri(music.songUri)
+            .setMediaMetadata(MediaMetadata
+                .Builder()
+                .setArtworkUri(music.albumArtUri)
+                .build()
+            ).build())
+        viewModel.controller?.prepare()
+        viewModel.controller?.play()
+        // TODO: Navigate to PlayerScreen
     }
 }

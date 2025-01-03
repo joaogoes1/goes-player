@@ -53,7 +53,7 @@ import com.goesplayer.presentation.home.tabs.GenreTab
 import com.goesplayer.presentation.home.tabs.HomeTab
 import com.goesplayer.presentation.home.tabs.MusicTab
 import com.goesplayer.presentation.home.tabs.PlaylistTab
-import com.goesplayer.presentation.widgets.PlayPauseButtonIcon
+import com.goesplayer.presentation.components.PlayPauseButtonIcon
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

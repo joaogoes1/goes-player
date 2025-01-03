@@ -1,4 +1,4 @@
-package com.goesplayer.presentation.widgets
+package com.goesplayer.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
