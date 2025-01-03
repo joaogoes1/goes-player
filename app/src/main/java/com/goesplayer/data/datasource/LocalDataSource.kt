@@ -100,11 +100,11 @@ class LocalDataSource @Inject constructor(
         return result > 0
     }
 
-    fun addToPlaylist(playlist: Long, musica: Long): Boolean {
+    fun addToPlaylist(playlist: Long, music: Long): Boolean {
         val contentValues = ContentValues()
 
         val db = dboh.writableDatabase
-        contentValues.put(DataBaseOpenHelper.PLAYMUS_ID_MUSICA, musica)
+        contentValues.put(DataBaseOpenHelper.PLAYMUS_ID_MUSICA, music)
         contentValues.put(DataBaseOpenHelper.PLAYMUS_ID_PLAYLIST, playlist)
 
         val result =

@@ -51,6 +51,7 @@ import androidx.lifecycle.MutableLiveData
 import com.goesplayer.BancoController
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
+import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
 import com.goesplayer.presentation.home.tabs.AlbumTab
 import com.goesplayer.presentation.home.tabs.ArtistTab
@@ -69,6 +70,8 @@ fun HomeScreen(
     createPlaylistAction: (String) -> Unit,
     deletePlaylistAction: (Long) -> Boolean,
     loadPlaylistsRetryAction: () -> Unit,
+    addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
+    getPlaylistsAction: () -> List<Playlist>,
     songList: MutableLiveData<List<Music>>,
     isMusicActive: State<Boolean>,
     isMusicPlaying: State<Boolean>,
@@ -151,10 +154,10 @@ fun HomeScreen(
                     )
 
                     2 -> MusicTab(
-                        playSong,
-                        musicsState.value ?: emptyList(),
-                        BancoController(context),
-                        context
+                        playSong = playSong,
+                        addMusicToPlaylistAction = addMusicToPlaylistAction,
+                        getPlaylistsAction = getPlaylistsAction,
+                        songList = musicsState.value ?: emptyList(),
                     )
 
                     3 -> ArtistTab(context)

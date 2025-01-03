@@ -11,12 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.goesplayer.R
 import com.goesplayer.presentation.components.ErrorScreen
@@ -120,7 +123,7 @@ private fun CreatePlaylistDialog(
     onDismissRequest: () -> Unit,
     createPlaylistAction: (String) -> Unit,
 ) {
-    val textFieldValue = remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(TextFieldValue("")) }
     AlertDialog(
         onDismissRequest = onDismissRequest,
         containerColor = Color(0xFF151515),
@@ -135,8 +138,8 @@ private fun CreatePlaylistDialog(
         },
         text = {
             TextField(
-                value = textFieldValue.value,
-                onValueChange = { textFieldValue.value = it },
+                value = text,
+                onValueChange = { text = it },
                 modifier = Modifier.padding(horizontal = 16.dp),
                 colors = TextFieldDefaults.colors().copy(
                     focusedContainerColor = Color.DarkGray,
@@ -153,7 +156,10 @@ private fun CreatePlaylistDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { createPlaylistAction(textFieldValue.value) }) {
+            Button(onClick = {
+                createPlaylistAction(text.text)
+                onDismissRequest()
+            }) {
                 Text(
                     stringResource(R.string.confirm),
                     color = MaterialTheme.colorScheme.onPrimary,

@@ -26,6 +26,8 @@ fun HomeRoute(
         songList = activityViewModel.songList,
         isMusicActive = remember { mutableStateOf(false) },
         isMusicPlaying = remember { mutableStateOf(false) },
+        addMusicToPlaylistAction = homeViewModel::addMusicToPlaylist,
+        getPlaylistsAction = homeViewModel::getPlaylist,
         playlistTabViewState = playlistViewState.value ?: PlaylistTabViewState.Error,
     )
 }

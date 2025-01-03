@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.goesplayer.data.model.Music
+import com.goesplayer.data.model.Playlist
 import com.goesplayer.data.repository.PlaylistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -37,4 +39,10 @@ class HomeViewModel @Inject constructor(
             if (result) loadPlaylists()
         }
     }
+
+    fun addMusicToPlaylist(music: Music, playlist: Playlist): Boolean =
+        playlistRepository.addToPlaylist(music, playlist)
+
+    fun getPlaylist(): List<Playlist> =
+        playlistRepository.loadPlaylists()
 }

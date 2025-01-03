@@ -50,4 +50,6 @@
     <string name="artist_tab_empty_state_message">Nenhum artista encontrado</string>
     <string name="folder_tab_empty_state_message">Nenhum diretório encontrado</string>
     <string name="genre_tab_empty_state_message">Nenhum genero musical encontrado</string>
+    <string name="music_tab_add_to_playlist_dialog_empty_state_title">Nenhuma playlist encontrada</string>
+    <string name="music_tab_add_to_playlist_dialog_empty_state_description">Crie uma playlist antes.</string>
 </resources>

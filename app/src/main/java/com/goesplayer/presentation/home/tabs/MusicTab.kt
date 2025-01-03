@@ -33,9 +33,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -44,15 +44,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.goesplayer.BancoController
-import com.goesplayer.data.model.Music
 import com.goesplayer.R
+import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private data class MusicView(
     val id: Long,
@@ -62,17 +58,58 @@ private data class MusicView(
     val thumb: Bitmap?,
 )
 
+sealed class MusicTabDialogState {
+    data object None : MusicTabDialogState()
+    data class Options(val music: Music) : MusicTabDialogState()
+    data class AddToPlaylist(val music: Music) : MusicTabDialogState()
+}
+
+
 @Composable
 fun MusicTab(
     playSong: (Music) -> Unit,
+    addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
+    getPlaylistsAction: () -> List<Playlist>,
     songList: List<Music>,
-    db: BancoController,
-    context: Context,
 ) {
-    val shouldShowMusicOptionsDialog = remember { mutableStateOf(false) }
-    val shouldShowAddMusicToPlaylistDialog = remember { mutableStateOf(false) }
-    var selectedMusicId: Long? = null
-    var playlists = emptyList<Playlist>()
+    val musicTabDialogState =
+        remember { mutableStateOf<MusicTabDialogState>(MusicTabDialogState.None) }
+    val context = LocalContext.current
+
+    when (musicTabDialogState.value) {
+        is MusicTabDialogState.None -> {}
+        is MusicTabDialogState.Options -> {
+            MusicOptionsDialog(
+                { music ->
+                    musicTabDialogState.value = MusicTabDialogState.AddToPlaylist(music)
+                },
+                { musicTabDialogState.value = MusicTabDialogState.None },
+                (musicTabDialogState.value as MusicTabDialogState.Options).music // TODO: Find better approach
+            )
+        }
+
+        is MusicTabDialogState.AddToPlaylist -> {
+            val successMessage = stringResource(R.string.add_music_to_playlist_success_message)
+            val errorMessage = stringResource(R.string.add_music_to_playlist_error_message)
+            val music =
+                (musicTabDialogState.value as MusicTabDialogState.AddToPlaylist).music // TODO: Find better approach
+            AddMusicToPlaylistDialog(
+                onDismissRequest = {
+                    musicTabDialogState.value = MusicTabDialogState.None
+                },
+                onConfirm = { playlist ->
+                    addMusicToPlaylistResult(
+                        addMusicToPlaylistAction(music, playlist),
+                        context,
+                        successMessage,
+                        errorMessage
+                    )
+                    musicTabDialogState.value = MusicTabDialogState.None
+                },
+                items = getPlaylistsAction(),
+            )
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         MusicList(
@@ -81,59 +118,19 @@ fun MusicTab(
             onClick = { position ->
                 playSong(songList[position])
             },
-            onLongClick = { musicId ->
-                shouldShowMusicOptionsDialog.value = true
-                selectedMusicId = musicId
+            onLongClick = { position ->
+                musicTabDialogState.value = MusicTabDialogState.Options(songList[position])
             }
         )
-
-        if (shouldShowMusicOptionsDialog.value && selectedMusicId != null)
-            MusicOptionsDialog(
-                shouldShowMusicOptionsDialog,
-            ) {
-                // TODO: Remove this GlobalScope after migration to MVVM and ViewModel
-                GlobalScope.launch(Dispatchers.IO) {
-                    playlists = db.loadPlaylists()
-                    withContext(Dispatchers.Main) {
-                        shouldShowMusicOptionsDialog.value = false
-                        shouldShowAddMusicToPlaylistDialog.value = true
-                    }
-                }
-            }
-
-        if (shouldShowAddMusicToPlaylistDialog.value)
-            selectedMusicId?.let { musicId ->
-                val successMessage = stringResource(R.string.add_music_to_playlist_success_message)
-                val errorMessage = stringResource(R.string.add_music_to_playlist_error_message)
-                AddMusicToPlaylistDialog(
-                    onDismissRequest = {
-                        shouldShowAddMusicToPlaylistDialog.value = false
-                    },
-                    onConfirm = { playlistName ->
-                        addMusicToPlaylist(
-                            db,
-                            playlistName,
-                            musicId,
-                            context,
-                            successMessage,
-                            errorMessage,
-                        )
-                        shouldShowAddMusicToPlaylistDialog.value = false
-                    },
-                    items = playlists,
-                )
-            }
     }
 }
 
-private fun addMusicToPlaylist(
-    db: BancoController,
-    playlist: Playlist, musicId: Long,
+private fun addMusicToPlaylistResult(
+    result: Boolean,
     context: Context,
     successMessage: String,
     errorMessage: String,
 ) {
-    val result = db.addToPlaylist(playlist.id, musicId)
     if (result) {
         Toast.makeText(
             context,
@@ -164,7 +161,7 @@ private fun mapMusics(songList: List<Music>) =
 @Composable
 private fun MusicList(
     onClick: (Int) -> Unit = {},
-    onLongClick: (Long) -> Unit = {},
+    onLongClick: (Int) -> Unit = {},
     title: String,
     items: List<MusicView>,
 ) {
@@ -177,7 +174,7 @@ private fun MusicList(
             maxLines = 1,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        LazyColumn(modifier = Modifier.padding(horizontal = 8.dp)) {
+        LazyColumn(modifier = Modifier.padding(8.dp)) {
             itemsIndexed(items) { index, item ->
                 Box(
                     modifier = Modifier
@@ -187,7 +184,7 @@ private fun MusicList(
                                 onClick(index)
                             },
                             onLongClick = {
-                                onLongClick(item.id)
+                                onLongClick(index)
                             },
                         )
                 ) {
@@ -239,16 +236,17 @@ private fun MusicList(
 
 @Composable
 private fun MusicOptionsDialog(
-    shouldShowDialog: MutableState<Boolean>,
-    showAddToPlaylistDialog: () -> Unit,
+    showAddToPlaylistDialog: (Music) -> Unit,
+    onDismissRequest: () -> Unit,
+    music: Music
 ) {
     AlertDialog(
-        onDismissRequest = { shouldShowDialog.value = false },
+        onDismissRequest = onDismissRequest,
         containerColor = Color(0xFF151515),
         title = { Text(stringResource(R.string.music_options_dialog_title)) },
         text = {
             TextButton(
-                onClick = showAddToPlaylistDialog,
+                onClick = { showAddToPlaylistDialog(music) },
                 shape = RectangleShape,
             ) {
                 Text(
@@ -273,38 +271,57 @@ private fun AddMusicToPlaylistDialog(
         containerColor = Color(0xFF151515),
         title = { Text(stringResource(R.string.music_tab_add_to_playlist_dialog_title)) },
         text = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxHeight(0.5f)
-            ) {
-                items(items) { item ->
-                    Box(
-                        modifier = Modifier
-                            .clickable { playlistSelected.value = item }
-                            .background(color = if (item == playlistSelected.value) Color.DarkGray else Color.Transparent)
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp),
-                    ) {
-                        Text(
-                            item.name,
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                    }
+            if (items.isEmpty()) {
+                Column(Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.music_tab_add_to_playlist_dialog_empty_state_title),
+                        style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(R.string.music_tab_add_to_playlist_dialog_empty_state_description),
+                        style = MaterialTheme.typography.titleSmall.copy(color = Color.Gray),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxHeight(0.5f)
+                ) {
+                    items(items) { item ->
+                        Box(
+                            modifier = Modifier
+                                .clickable { playlistSelected.value = item }
+                                .background(color = if (item == playlistSelected.value) Color.DarkGray else Color.Transparent)
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp),
+                        ) {
+                            Text(
+                                item.name,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                        }
 
+                    }
                 }
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    playlistSelected.value?.let { onConfirm(it) }
+            if (items.isNotEmpty()) {
+                Button(
+                    onClick = {
+                        playlistSelected.value?.let { onConfirm(it) }
+                    }
+                ) {
+                    Text(
+                        stringResource(R.string.confirm),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
                 }
-            ) {
-                Text(
-                    stringResource(R.string.confirm),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
             }
         }
     )

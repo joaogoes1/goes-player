@@ -25,16 +25,16 @@ class HomeFragment : Fragment() {
                 val isMusicActive = remember { mutableStateOf(false) }
                 val isMusicPlaying = remember { mutableStateOf(false) }
                 AppTheme {
-                    HomeScreen(
-                        { (activity as MainActivity).playSong(it) },
-                        {true},
-                        {true},
-                        {},
-                        (activity as MainActivity).viewModel.songList, //FIXME
-                        isMusicActive,
-                        isMusicPlaying,
-                        PlaylistTabViewState.Success(emptyList())
-                    )
+//                    HomeScreen(
+//                        { (activity as MainActivity).playSong(it) },
+//                        {true},
+//                        {true},
+//                        {},
+//                        (activity as MainActivity).viewModel.songList, //FIXME
+//                        isMusicActive,
+//                        isMusicPlaying,
+//                        PlaylistTabViewState.Success(emptyList())
+//                    )
                 }
             }
         }
