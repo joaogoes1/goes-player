@@ -2,7 +2,7 @@ package com.goesplayer.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,7 +26,7 @@ fun GoesPlayerNavGraph(
         composable(
             route = GoesPlayerDestinations.HOME_ROUTE,
         ) {
-            val homeViewModel: HomeViewModel = viewModel()
+            val homeViewModel: HomeViewModel = hiltViewModel()
             HomeRoute(
                 { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
                 activityViewModel = activityViewModel,

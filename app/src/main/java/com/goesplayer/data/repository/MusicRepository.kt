@@ -1,4 +1,4 @@
-package com.goesplayer.data
+package com.goesplayer.data.repository
 
 import com.goesplayer.data.datasource.MediaDataSource
 import com.goesplayer.data.model.Music

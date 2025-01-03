@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.media3.session.MediaController
 import com.goesplayer.BancoController
-import com.goesplayer.data.MusicRepository
+import com.goesplayer.data.repository.MusicRepository
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel

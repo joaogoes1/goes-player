@@ -15,21 +15,20 @@ import com.goesplayer.presentation.home.HomeList
 @Composable
 fun GenreTab(context: Context) {
     val genresList = filterGenres()
-    Box(modifier = Modifier.fillMaxSize()) {
-        HomeList(
-            title = stringResource(R.string.genre_fragment_title),
-            items = genresList,
-            onClick = { position ->
-                val intent = Intent(
-                    context,
-                    ResultActivity::class.java
-                )
-                intent.putExtra("name", genresList[position])
-                intent.putExtra("type", ResultActivity.GENDER)
-                context.startActivity(intent)
-            },
-        )
-    }
+    HomeList(
+        title = stringResource(R.string.genre_fragment_title),
+        items = genresList,
+        emptyStateMessage = stringResource(R.string.genre_tab_empty_state_message),
+        onClick = { position ->
+            val intent = Intent(
+                context,
+                ResultActivity::class.java
+            )
+            intent.putExtra("name", genresList[position])
+            intent.putExtra("type", ResultActivity.GENDER)
+            context.startActivity(intent)
+        },
+    )
 }
 
 private fun filterGenres() =

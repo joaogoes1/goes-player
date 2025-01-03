@@ -2,10 +2,7 @@ package com.goesplayer.presentation.home.tabs
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.goesplayer.OldMainActivity.todasMusicas
 import com.goesplayer.R
@@ -17,21 +14,20 @@ fun ArtistTab(
     context: Context
 ) {
     val artistsList = filterAlbums()
-    Box(modifier = Modifier.fillMaxSize()) {
-        HomeList(
-            title = stringResource(R.string.artist_fragment_title),
-            items = artistsList,
-            onClick = { position ->
-                val intent = Intent(
-                    context,
-                    ResultActivity::class.java
-                )
-                intent.putExtra("name", artistsList[position])
-                intent.putExtra("type", ResultActivity.ARTISTA)
-                context.startActivity(intent)
-            },
-        )
-    }
+    HomeList(
+        title = stringResource(R.string.artist_fragment_title),
+        items = artistsList,
+        emptyStateMessage = stringResource(R.string.artist_tab_empty_state_message),
+        onClick = { position ->
+            val intent = Intent(
+                context,
+                ResultActivity::class.java
+            )
+            intent.putExtra("name", artistsList[position])
+            intent.putExtra("type", ResultActivity.ARTISTA)
+            context.startActivity(intent)
+        },
+    )
 }
 
 private fun filterAlbums() =

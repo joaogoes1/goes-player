@@ -43,4 +43,11 @@
     <string name="skip_next_button_content_description">Reproduzir próxima</string>
     <string name="player_fragment_show_lyrics_button_content_description">Exibir letra</string>
     <string name="player_fragment_hide_lyrics_button_content_description">Esconder letra</string>
+    <string name="home_screen_create_new_playlist_fab_content_description">Criar nova playlist</string>
+    <string name="playlists_tab_title">Playlists</string>
+    <string name="playlists_tab_empty_state_message">Você ainda não tem nenhuma playlist criada.</string>
+    <string name="album_tab_empty_state_message">Nenhum album encontrado</string>
+    <string name="artist_tab_empty_state_message">Nenhum artista encontrado</string>
+    <string name="folder_tab_empty_state_message">Nenhum diretório encontrado</string>
+    <string name="genre_tab_empty_state_message">Nenhum genero musical encontrado</string>
 </resources>
