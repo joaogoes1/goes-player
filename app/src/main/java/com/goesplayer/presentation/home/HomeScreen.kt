@@ -160,10 +160,22 @@ fun HomeScreen(
                         songList = musicsState.value ?: emptyList(),
                     )
 
-                    3 -> ArtistTab(context)
-                    4 -> AlbumTab(context)
-                    5 -> GenreTab(context)
-                    6 -> FolderTab(context)
+                    3 -> ArtistTab(
+                        openArtistMusics = {}, // TODO: Implement this
+                        songList = musicsState.value ?: emptyList(),
+                    )
+                    4 -> AlbumTab(
+                        openAlbumMusics = {_,_ -> }, // TODO: Implement this
+                        songList = musicsState.value ?: emptyList(),
+                    )
+                    5 -> GenreTab(
+                        openGenreMusics = {}, // TODO: Implement this
+                        songList = musicsState.value ?: emptyList(),
+                    )
+                    6 -> FolderTab(
+                        openFolderMusics = {}, // TODO: Implement this
+                        songList = musicsState.value ?: emptyList(),
+                    )
                 }
             }
 

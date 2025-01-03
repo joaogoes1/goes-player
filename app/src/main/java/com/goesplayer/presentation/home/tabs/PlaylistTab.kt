@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.goesplayer.R
 import com.goesplayer.presentation.components.ErrorScreen
 import com.goesplayer.presentation.components.LoadingScreen
-import com.goesplayer.presentation.home.HomeList
+import com.goesplayer.presentation.components.SingleTextList
 import com.goesplayer.presentation.home.PlaylistTabViewState
 
 sealed class PlaylistTabDialogState {
@@ -85,7 +85,7 @@ fun PlaylistTab(
         }
 
         is PlaylistTabViewState.Success -> {
-            HomeList(
+            SingleTextList(
                 onClick = { item ->
                     // TODO: Implement this
                 },

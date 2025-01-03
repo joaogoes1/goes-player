@@ -49,14 +49,10 @@ import androidx.compose.ui.unit.dp
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
+import com.goesplayer.presentation.components.DoubleTextWithAlbumArtList
+import com.goesplayer.presentation.components.DoubleTextWithAlbumItemView
+import com.goesplayer.presentation.components.EmptyScreen
 
-private data class MusicView(
-    val id: Long,
-    val name: String,
-    val artist: String,
-    val uri: Uri,
-    val thumb: Bitmap?,
-)
 
 sealed class MusicTabDialogState {
     data object None : MusicTabDialogState()
@@ -110,19 +106,17 @@ fun MusicTab(
             )
         }
     }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        MusicList(
-            title = stringResource(R.string.music_tab_title),
-            items = mapMusics(songList),
-            onClick = { position ->
-                playSong(songList[position])
-            },
-            onLongClick = { position ->
-                musicTabDialogState.value = MusicTabDialogState.Options(songList[position])
-            }
-        )
-    }
+    DoubleTextWithAlbumArtList(
+        title = stringResource(R.string.music_tab_title),
+        items = mapMusics(songList),
+        onClick = { position ->
+            playSong(songList[position])
+        },
+        emptyStateMessage = stringResource(R.string.music_tab_empty_state_message),
+        onLongClick = { position ->
+            musicTabDialogState.value = MusicTabDialogState.Options(songList[position])
+        }
+    )
 }
 
 private fun addMusicToPlaylistResult(
@@ -147,7 +141,7 @@ private fun addMusicToPlaylistResult(
 private fun mapMusics(songList: List<Music>) =
     songList
         .map {
-            MusicView(
+            DoubleTextWithAlbumItemView(
                 it.id,
                 it.title,
                 it.artist,
@@ -156,83 +150,6 @@ private fun mapMusics(songList: List<Music>) =
             )
         }
         .sortedBy { it.name }
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MusicList(
-    onClick: (Int) -> Unit = {},
-    onLongClick: (Int) -> Unit = {},
-    title: String,
-    items: List<MusicView>,
-) {
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            maxLines = 1,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        LazyColumn(modifier = Modifier.padding(8.dp)) {
-            itemsIndexed(items) { index, item ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .combinedClickable(
-                            onClick = {
-                                onClick(index)
-                            },
-                            onLongClick = {
-                                onLongClick(index)
-                            },
-                        )
-                ) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        val retriever = MediaMetadataRetriever()
-                        retriever.setDataSource(LocalContext.current, item.uri)
-                        val imgBytes = retriever.embeddedPicture
-                        if (imgBytes != null) {
-                            val thumb =
-                                BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
-                            Image(
-                                bitmap = thumb.asImageBitmap(),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        } else {
-                            Image(painterResource(R.mipmap.teste_album), "")
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .padding(start = 8.dp),
-                            verticalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Text(
-                                text = item.name,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                            Text(
-                                text = item.artist,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    }
-                }
-                if (index < items.lastIndex) {
-                    Spacer(Modifier.height(8.dp))
-                    HorizontalDivider(color = Color.DarkGray, modifier = Modifier.width(64.dp))
-                    Spacer(Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
-
 
 @Composable
 private fun MusicOptionsDialog(

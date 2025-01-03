@@ -1,38 +1,29 @@
 package com.goesplayer.presentation.home.tabs
 
-import android.content.Context
-import android.content.Intent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.goesplayer.OldMainActivity.todasMusicas
 import com.goesplayer.R
-import com.goesplayer.ResultActivity
-import com.goesplayer.presentation.home.HomeList
+import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.components.SingleTextList
 
 @Composable
-fun GenreTab(context: Context) {
-    val genresList = filterGenres()
-    HomeList(
+fun GenreTab(
+    openGenreMusics: (String) -> Unit,
+    songList: List<Music>,
+) {
+    val genresList = songList.filterGenres()
+    SingleTextList(
         title = stringResource(R.string.genre_fragment_title),
         items = genresList,
         emptyStateMessage = stringResource(R.string.genre_tab_empty_state_message),
         onClick = { position ->
-            val intent = Intent(
-                context,
-                ResultActivity::class.java
-            )
-            intent.putExtra("name", genresList[position])
-            intent.putExtra("type", ResultActivity.GENDER)
-            context.startActivity(intent)
+            openGenreMusics(genresList[position])
         },
     )
 }
 
-private fun filterGenres() =
-    todasMusicas
+private fun List<Music>.filterGenres() =
+    this
         .map { it.genre }
         .filter { it != "<unknown>" }
         .sortedBy { it }

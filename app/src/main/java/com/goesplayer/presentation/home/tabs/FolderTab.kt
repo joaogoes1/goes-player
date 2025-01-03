@@ -1,35 +1,29 @@
 package com.goesplayer.presentation.home.tabs
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.goesplayer.OldMainActivity.todasMusicas
 import com.goesplayer.R
-import com.goesplayer.ResultActivity
-import com.goesplayer.presentation.home.HomeList
+import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.components.SingleTextList
 
 @Composable
-fun FolderTab(context: Context) {
-    val foldersList = filterfolders()
-    HomeList(
+fun FolderTab(
+    openFolderMusics: (String) -> Unit,
+    songList: List<Music>,
+) {
+    val foldersList = songList.filterFolders()
+    SingleTextList(
         title = stringResource(R.string.folder_fragment_title),
         items = foldersList,
         emptyStateMessage = stringResource(R.string.folder_tab_empty_state_message),
         onClick = { position ->
-            val intent = Intent(
-                context,
-                ResultActivity::class.java
-            )
-            intent.putExtra("name", foldersList[position])
-            intent.putExtra("type", ResultActivity.FOLDER)
-            context.startActivity(intent)
+            openFolderMusics(foldersList[position])
         },
     )
 }
 
-private fun filterfolders(): List<String> =
-    todasMusicas
+private fun List<Music>.filterFolders(): List<String> =
+    this
         .mapNotNull { it.folder }
         .filter { it != "<unknown>" }
         .sortedBy { it }

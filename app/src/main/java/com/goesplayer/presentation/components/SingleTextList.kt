@@ -1,4 +1,4 @@
-package com.goesplayer.presentation.home
+package com.goesplayer.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -16,15 +16,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeList(
+fun SingleTextList(
     onClick: (Int) -> Unit = {},
     onLongClick: (Int) -> Unit = {},
     title: String,
@@ -74,20 +72,7 @@ fun HomeList(
                     }
                 }
             } else {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(24.dp),
-                ) {
-                    Text(
-                        text = emptyStateMessage,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.titleLarge.copy(color = Color.Gray),
-                        textAlign = TextAlign.Center,
-                    )
-                }
+                EmptyScreen(text = emptyStateMessage)
             }
         }
     }

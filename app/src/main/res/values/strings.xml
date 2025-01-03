@@ -34,7 +34,7 @@
     <string name="music_tab_add_to_playlist_dialog_title">Escolha a playlist</string>
     <string name="music_options_dialog_title">Ações</string>
     <string name="folder_fragment_title">Diretorios</string>
-    <string name="genre_fragment_title">Estilos Musicais</string>
+    <string name="genre_fragment_title">Generos Musicais</string>
     <string name="skip_previous_button_content_description">Reproduzir anterior</string>
     <string name="shuffle_button_content_description">Aleatório</string>
     <string name="repeat_button_content_description">Repetir</string>
@@ -52,4 +52,5 @@
     <string name="genre_tab_empty_state_message">Nenhum genero musical encontrado</string>
     <string name="music_tab_add_to_playlist_dialog_empty_state_title">Nenhuma playlist encontrada</string>
     <string name="music_tab_add_to_playlist_dialog_empty_state_description">Crie uma playlist antes.</string>
+    <string name="music_tab_empty_state_message">Nenhuma música foi encontrada no seu dispostivo</string>
 </resources>
