@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import com.goesplayer.data.model.Music
 import com.goesplayer.presentation.MainActivityViewModel
 import com.goesplayer.presentation.components.LoadingScreen
@@ -14,6 +15,7 @@ import com.goesplayer.presentation.components.LoadingScreen
 @Composable
 fun PlayerRoute(
     activityViewModel: MainActivityViewModel,
+    navController: NavController,
 ) {
     val context = LocalContext.current
     val music = activityViewModel.currentMusic.observeAsState()
@@ -28,7 +30,8 @@ fun PlayerRoute(
             activityViewModel.isPlaying,
             null,
             it,
-            retrieveImage(it, context)
+            retrieveImage(it, context),
+            navController,
         )
     } ?: LoadingScreen()
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.media3.session.MediaController
+import androidx.navigation.compose.rememberNavController
 import com.goesplayer.AppTheme
 import com.goesplayer.data.model.Music
 import com.goesplayer.presentation.MainActivity
@@ -51,7 +52,8 @@ class PlayerFragment : Fragment() {
                                 (activity as MainActivity).viewModel.isPlaying,
                                 null,
                                 it,
-                                retrieveImage(it)
+                                retrieveImage(it),
+                                rememberNavController(),
                             )
                         }
                     }

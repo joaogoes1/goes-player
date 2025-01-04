@@ -23,6 +23,11 @@ data class MusicListRouteConfig(
     val folder: String? = null,
 )
 
+object GoesPlayerDestinations {
+    const val PLAYER_ROUTE = "player"
+    const val HOME_ROUTE = "home"
+}
+
 @Composable
 fun GoesPlayerNavGraph(
     activityViewModel: MainActivityViewModel,
@@ -38,19 +43,19 @@ fun GoesPlayerNavGraph(
         composable(
             route = GoesPlayerDestinations.HOME_ROUTE,
         ) {
-            val homeViewModel: HomeViewModel = hiltViewModel()
             HomeRoute(
                 navigateToPlayer = { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
                 navigateToMusicList = { navController.navigate(it) },
                 activityViewModel = activityViewModel,
-                homeViewModel = homeViewModel,
+                homeViewModel = hiltViewModel(),
             )
         }
         composable(
             route = GoesPlayerDestinations.PLAYER_ROUTE
         ) {
             PlayerRoute(
-                activityViewModel = activityViewModel
+                activityViewModel = activityViewModel,
+                navController = navController,
             )
         }
         composable<MusicListRouteConfig> { backStackEntry ->

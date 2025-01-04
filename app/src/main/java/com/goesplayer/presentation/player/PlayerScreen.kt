@@ -57,42 +57,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.goesplayer.AppTheme
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.components.BackButton
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
-
-@Preview(
-    showSystemUi = true,
-    showBackground = true,
-)
-@Composable
-fun Preview() {
-    val context = LocalContext.current
-    AppTheme {
-        PlayerScreen(
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            { Toast.makeText(context, "REPEAT ACTION", Toast.LENGTH_LONG).show() },
-            lyrics = mockLyrics,
-            isPlaying = remember { derivedStateOf { true } },
-            music = Music(
-                1,
-                "Music teste",
-                "Music teste",
-                "Artist teste",
-                "Album teste",
-                "Genre teste",
-                Uri.EMPTY,
-                Uri.EMPTY,
-                343
-            ),
-            albumArt = null
-        )
-    }
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,7 +76,8 @@ fun PlayerScreen(
     isPlaying: State<Boolean>,
     lyrics: String?,
     music: Music,
-    albumArt: Bitmap?
+    albumArt: Bitmap?,
+    navController: NavController,
 ) {
     var isLyricsAppearing by remember { mutableStateOf(false) }
     var sliderPosition by remember { mutableFloatStateOf(0f) }
@@ -114,7 +85,7 @@ fun PlayerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = { Icons.AutoMirrored.Filled.ArrowBack },
+                navigationIcon = { BackButton(navController) },
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     if (lyrics != null)

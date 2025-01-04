@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.components.BackButton
 import com.goesplayer.presentation.components.DoubleTextWithAlbumArtList
 import com.goesplayer.presentation.components.DoubleTextWithAlbumItemView
 
@@ -36,19 +37,7 @@ fun MusicListScreen(
                 colors = TopAppBarDefaults.topAppBarColors().copy(
                     containerColor = MaterialTheme.colorScheme.background,
                 ),
-                navigationIcon = if (navController.previousBackStackEntry != null) {
-                    {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back_button_content_description),
-                                tint = MaterialTheme.typography.bodyLarge.color
-                            )
-                        }
-                    }
-                } else {
-                    {}
-                }
+                navigationIcon = { BackButton(navController) }
             )
         }
     ) { innerPadding ->
