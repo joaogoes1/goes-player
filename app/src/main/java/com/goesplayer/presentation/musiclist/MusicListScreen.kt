@@ -26,6 +26,7 @@ import com.goesplayer.presentation.components.DoubleTextWithAlbumItemView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicListScreen(
+    onClickAction: (List<Music>) -> Unit,
     title: String,
     songList: List<Music>,
 ) {
@@ -43,7 +44,7 @@ fun MusicListScreen(
     ) { innerPadding ->
         DoubleTextWithAlbumArtList(
             modifier = Modifier.padding(innerPadding),
-            onClick = {},
+            onClick = { onClickAction(songList) },
             onLongClick = {},
             title = "Músicas",
             emptyStateMessage = "",

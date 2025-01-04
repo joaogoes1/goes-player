@@ -2,10 +2,13 @@ package com.goesplayer.presentation.musiclist
 
 import androidx.compose.runtime.Composable
 import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.MainActivityViewModel
 import com.goesplayer.presentation.MusicListRouteConfig
 
 @Composable
 fun MusicListRoute(
+    navigateToPlayer: () -> Unit,
+    activityViewModel: MainActivityViewModel,
     title: String,
     musicList: List<Music>,
     searchProperties: MusicListRouteConfig
@@ -25,6 +28,10 @@ fun MusicListRoute(
         }
 
     MusicListScreen(
+        onClickAction = { list ->
+            activityViewModel.playMusicList(list)
+            navigateToPlayer()
+        },
         title = title,
         songList = filteredMusics
     )

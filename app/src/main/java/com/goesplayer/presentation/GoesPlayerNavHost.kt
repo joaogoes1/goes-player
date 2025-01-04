@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.goesplayer.presentation.home.HomeRoute
-import com.goesplayer.presentation.home.HomeViewModel
 import com.goesplayer.presentation.musiclist.MusicListRoute
 import com.goesplayer.presentation.player.PlayerRoute
 import kotlinx.serialization.Serializable
@@ -61,6 +60,8 @@ fun GoesPlayerNavGraph(
         composable<MusicListRouteConfig> { backStackEntry ->
             val params = backStackEntry.toRoute<MusicListRouteConfig>()
             MusicListRoute(
+                navigateToPlayer = { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
+                activityViewModel = activityViewModel,
                 title = params.pageTitle,
                 musicList = activityViewModel.songList.value ?: emptyList(),
                 searchProperties = params,

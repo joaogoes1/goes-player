@@ -30,16 +30,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun playSong(music: Music) {
-        controller?.setMediaItem(
-            MediaItem
-            .Builder()
-            .setUri(music.songUri)
-            .setMediaMetadata(
-                MediaMetadata
-                .Builder()
-                .setArtworkUri(music.albumArtUri)
-                .build()
-            ).build())
+        controller?.setMediaItem(music.toMediaItem())
         controller?.prepare()
         controller?.play()
     }
@@ -51,4 +42,24 @@ class MainActivityViewModel @Inject constructor(
             controller?.play()
         }
     }
+
+    fun playMusicList(list: List<Music>) {
+        controller?.clearMediaItems()
+        controller?.addMediaItems(
+            list.map { it.toMediaItem() }
+        )
+        controller?.prepare()
+        controller?.play()
+    }
+
+    private fun Music.toMediaItem() =
+        MediaItem
+            .Builder()
+            .setUri(songUri)
+            .setMediaMetadata(
+                MediaMetadata
+                    .Builder()
+                    .setArtworkUri(albumArtUri)
+                    .build()
+            ).build()
 }
