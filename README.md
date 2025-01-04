@@ -12,18 +12,18 @@ Considering this is my first app after a Android course, before even start to st
 
 Goals:
 1. Enable to run in API 34 ✅
-2. Migrate to Kotlin
-3. Use Single Activity arch
-4. Move to MVVM architecture
-5. Migrate layout to Jetpack Compose
+2. Migrate to Kotlin ✅
+3. Use Single Activity arch ✅
+4. Move to MVVM architecture ✅
+5. Migrate layout to Jetpack Compose ✅
 6. Fix Files Access permission
-7. Fix Service Player
+7. Fix Service Player ⏳
 8. Modularize
 9. Change all icons from png to svg
 
 Steps:
 1. Upgrade to latest version of AGP, Android SDK and use gradle kts ✅
-2. Migrate each fragments of home to Jetpack Compose
+2. Migrate each fragments of home to Jetpack Compose ✅
     - AlbumFragment ✅
     - HomeFragment ✅
     - ArtistFragment ✅
@@ -31,10 +31,10 @@ Steps:
     - PlaylistFragment ✅
     - FolderFragment ✅
     - GenreFragment ✅
-3. Migrate to SingleActivity Architecture
-   1. Create main fragment (HomeFragment)
-   2. Move layout from MainActivity
-   3. Isolate player layout and remove repeated code from fragments
-   4. Migrate others activities to fragments
+3. Migrate to SingleActivity Architecture ✅
+   1. Create main fragment (HomeFragment) ✅
+   2. Move layout from MainActivity ✅
+   3. Isolate player layout and remove repeated code from fragments ✅
+   4. Migrate others activities to fragments ✅
 4. Migrate all icons and images to .svg
 5. Create unit and layout tests for the app

@@ -117,17 +117,17 @@ fun PlayerScreen(
                 navigationIcon = { Icons.AutoMirrored.Filled.ArrowBack },
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
-                    IconButton(onClick = { isLyricsAppearing = !isLyricsAppearing }) {
-                        Icon(
-                            Icons.Filled.Lyrics,
-                            contentDescription = if (isLyricsAppearing) stringResource(
-                                R.string.player_fragment_hide_lyrics_button_content_description
-                            ) else stringResource(
-                                R.string.player_fragment_show_lyrics_button_content_description
-                            ),
-                        )
-                    }
-
+                    if (lyrics != null)
+                        IconButton(onClick = { isLyricsAppearing = !isLyricsAppearing }) {
+                            Icon(
+                                Icons.Filled.Lyrics,
+                                contentDescription = if (isLyricsAppearing) stringResource(
+                                    R.string.player_fragment_hide_lyrics_button_content_description
+                                ) else stringResource(
+                                    R.string.player_fragment_show_lyrics_button_content_description
+                                ),
+                            )
+                        }
                 },
                 colors = TopAppBarDefaults.topAppBarColors().copy(
                     containerColor = MaterialTheme.colorScheme.background,

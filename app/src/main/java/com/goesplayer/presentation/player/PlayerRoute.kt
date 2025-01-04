@@ -22,7 +22,7 @@ fun PlayerRoute(
         PlayerScreen(
             {},
             {},
-            {},
+            { activityViewModel.playOrPause() },
             {},
             {},
             activityViewModel.isPlaying,

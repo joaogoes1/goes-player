@@ -18,8 +18,8 @@ fun HomeRoute(
     val playlistViewState = homeViewModel.playlistTabViewState.observeAsState()
 
     HomeScreen(
-        playSong = {
-            // activityViewModel.playSong() // TODO: Implement this
+        playSong = { music ->
+            activityViewModel.playSong(music)
             navigateToPlayer()
         },
         deletePlaylistAction = homeViewModel::deletePlaylist,

@@ -76,22 +76,6 @@ class MainActivity : AppCompatActivity() {
             },
             MoreExecutors.directExecutor()
         )
-        viewModel.playlists.postValue(viewModel.crud?.loadPlaylists())
-        viewModel.isLoadingPlaylists.postValue(false)
         viewModel.loadSongs()
-    }
-
-    fun playSong(music: Music) {
-        viewModel.controller?.setMediaItem(MediaItem
-            .Builder()
-            .setUri(music.songUri)
-            .setMediaMetadata(MediaMetadata
-                .Builder()
-                .setArtworkUri(music.albumArtUri)
-                .build()
-            ).build())
-        viewModel.controller?.prepare()
-        viewModel.controller?.play()
-        // TODO: Navigate to PlayerScreen
     }
 }
