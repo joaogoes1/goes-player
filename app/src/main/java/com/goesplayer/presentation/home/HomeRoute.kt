@@ -5,12 +5,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.goesplayer.presentation.MainActivityViewModel
-import com.goesplayer.presentation.musiclist.SearchProperties
+import com.goesplayer.presentation.MusicListRouteConfig
 
 @Composable
 fun HomeRoute(
     navigateToPlayer: () -> Unit,
-    navigateToMusicList: (String, SearchProperties) -> Unit,
+    navigateToMusicList: (MusicListRouteConfig) -> Unit,
     activityViewModel: MainActivityViewModel,
     homeViewModel: HomeViewModel,
 ) {
@@ -31,6 +31,6 @@ fun HomeRoute(
         isMusicPlaying = remember { mutableStateOf(false) },
         addMusicToPlaylistAction = homeViewModel::addMusicToPlaylist,
         getPlaylistsAction = homeViewModel::getPlaylist,
-        playlistTabViewState = playlistViewState.value ?: PlaylistTabViewState.Error,
+        playlistTabViewState = playlistViewState.value ?: PlaylistTabViewState.Success(emptyList()),
     )
 }

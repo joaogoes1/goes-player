@@ -43,15 +43,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import com.goesplayer.BancoController
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
+import com.goesplayer.presentation.MusicListRouteConfig
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
 import com.goesplayer.presentation.home.tabs.AlbumTab
 import com.goesplayer.presentation.home.tabs.ArtistTab
@@ -61,7 +60,6 @@ import com.goesplayer.presentation.home.tabs.HomeTab
 import com.goesplayer.presentation.home.tabs.MusicTab
 import com.goesplayer.presentation.home.tabs.PlaylistTab
 import com.goesplayer.presentation.home.tabs.PlaylistTabDialogState
-import com.goesplayer.presentation.musiclist.SearchProperties
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +71,7 @@ fun HomeScreen(
     loadPlaylistsRetryAction: () -> Unit,
     addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
     getPlaylistsAction: () -> List<Playlist>,
-    navigateToMusicList: (String, SearchProperties) -> Unit,
+    navigateToMusicList: (MusicListRouteConfig) -> Unit,
     songList: MutableLiveData<List<Music>>,
     isMusicActive: State<Boolean>,
     isMusicPlaying: State<Boolean>,
@@ -162,19 +160,22 @@ fun HomeScreen(
                     )
 
                     3 -> ArtistTab(
-                        openArtistMusics = navigateToMusicList, // TODO: Implement this
+                        openArtistMusics = navigateToMusicList,
                         songList = musicsState.value ?: emptyList(),
                     )
+
                     4 -> AlbumTab(
-                        openAlbumMusics = navigateToMusicList, // TODO: Implement this
+                        openAlbumMusics = navigateToMusicList,
                         songList = musicsState.value ?: emptyList(),
                     )
+
                     5 -> GenreTab(
-                        openGenreMusics = {}, // TODO: Implement this
+                        openGenreMusics = navigateToMusicList,
                         songList = musicsState.value ?: emptyList(),
                     )
+
                     6 -> FolderTab(
-                        openFolderMusics = {}, // TODO: Implement this
+                        openFolderMusics = navigateToMusicList,
                         songList = musicsState.value ?: emptyList(),
                     )
                 }

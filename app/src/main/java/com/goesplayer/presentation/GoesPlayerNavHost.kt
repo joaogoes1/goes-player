@@ -11,14 +11,16 @@ import androidx.navigation.toRoute
 import com.goesplayer.presentation.home.HomeRoute
 import com.goesplayer.presentation.home.HomeViewModel
 import com.goesplayer.presentation.musiclist.MusicListRoute
-import com.goesplayer.presentation.musiclist.SearchProperties
 import com.goesplayer.presentation.player.PlayerRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MusicList(
-    val title: String,
-    val searchProperties: SearchProperties,
+data class MusicListRouteConfig(
+    val pageTitle: String = "",
+    val artist: String? = null,
+    val album: String? = null,
+    val genre: String? = null,
+    val folder: String? = null,
 )
 
 @Composable
@@ -38,15 +40,8 @@ fun GoesPlayerNavGraph(
         ) {
             val homeViewModel: HomeViewModel = hiltViewModel()
             HomeRoute(
-                { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
-                navigateToMusicList = { title, searchProperties ->
-                    navController.navigate(
-                        MusicList(
-                            title,
-                            searchProperties,
-                        )
-                    )
-                },
+                navigateToPlayer = { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
+                navigateToMusicList = { navController.navigate(it) },
                 activityViewModel = activityViewModel,
                 homeViewModel = homeViewModel,
             )
@@ -58,12 +53,12 @@ fun GoesPlayerNavGraph(
                 activityViewModel = activityViewModel
             )
         }
-        composable<MusicList> { backStackEntry ->
-            val route = backStackEntry.toRoute<MusicList>()
+        composable<MusicListRouteConfig> { backStackEntry ->
+            val params = backStackEntry.toRoute<MusicListRouteConfig>()
             MusicListRoute(
-                title = route.title,
+                title = params.pageTitle,
                 musicList = activityViewModel.songList.value ?: emptyList(),
-                searchProperties = route.searchProperties,
+                searchProperties = params,
             )
         }
     }

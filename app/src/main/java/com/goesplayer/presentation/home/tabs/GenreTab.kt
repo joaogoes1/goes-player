@@ -4,11 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.MusicListRouteConfig
 import com.goesplayer.presentation.components.SingleTextList
 
 @Composable
 fun GenreTab(
-    openGenreMusics: (String) -> Unit,
+    openGenreMusics: (MusicListRouteConfig) -> Unit,
     songList: List<Music>,
 ) {
     val genresList = songList.filterGenres()
@@ -17,7 +18,12 @@ fun GenreTab(
         items = genresList,
         emptyStateMessage = stringResource(R.string.genre_tab_empty_state_message),
         onClick = { position ->
-            openGenreMusics(genresList[position])
+            openGenreMusics(
+                MusicListRouteConfig(
+                    pageTitle = genresList[position],
+                    genre = genresList[position],
+                )
+            )
         },
     )
 }

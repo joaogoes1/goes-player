@@ -5,14 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.MusicListRouteConfig
 import com.goesplayer.presentation.components.DoubleTextWithAlbumArtList
 import com.goesplayer.presentation.components.DoubleTextWithAlbumItemView
-import com.goesplayer.presentation.musiclist.Album
-import com.goesplayer.presentation.musiclist.SearchProperties
 
 @Composable
 fun AlbumTab(
-    openAlbumMusics: (String, SearchProperties) -> Unit,
+    openAlbumMusics: (MusicListRouteConfig) -> Unit,
     songList: List<Music>,
 ) {
     val albumsList = songList.filterAlbums()
@@ -22,7 +21,13 @@ fun AlbumTab(
         emptyStateMessage = stringResource(R.string.album_tab_empty_state_message),
         onClick = { position ->
             val album = albumsList[position]
-            openAlbumMusics(album.name, Album(album.artist, album.name))
+            openAlbumMusics(
+                MusicListRouteConfig(
+                    pageTitle = album.name,
+                    artist = album.artist,
+                    album = album.name,
+                )
+            )
         },
     )
 }

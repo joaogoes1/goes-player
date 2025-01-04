@@ -11,12 +11,6 @@ fun GoesPlayerApp(
     activityViewModel: MainActivityViewModel,
 ) {
     AppTheme {
-        val navController = rememberNavController()
-        val navigationActions = remember(navController) {
-            GoesPlayerNavigationActions(navController)
-        }
-        val coroutineScope = rememberCoroutineScope()
-
         GoesPlayerNavGraph(
             activityViewModel = activityViewModel,
         )

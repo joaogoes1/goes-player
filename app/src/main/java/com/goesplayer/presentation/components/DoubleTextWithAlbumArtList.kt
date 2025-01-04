@@ -45,13 +45,14 @@ data class DoubleTextWithAlbumItemView(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DoubleTextWithAlbumArtList(
+    modifier: Modifier = Modifier,
     onClick: (Int) -> Unit = {},
     onLongClick: (Int) -> Unit = {},
     title: String,
     emptyStateMessage: String,
     items: List<DoubleTextWithAlbumItemView>,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
