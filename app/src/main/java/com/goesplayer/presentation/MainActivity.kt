@@ -1,35 +1,19 @@
 package com.goesplayer.presentation
 
 import android.content.ComponentName
-import android.content.ContentUris
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.goesplayer.BancoController
-import com.goesplayer.R
-import com.goesplayer.data.model.Music
-import com.goesplayer.data.model.Playlist
-import com.goesplayer.presentation.home.HomeFragment
-import com.goesplayer.presentation.player.PlayerFragment
 import com.goesplayer.presentation.player.PlayerService
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.max
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -38,12 +22,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.crud = BancoController(applicationContext)
         setContent {
             GoesPlayerApp(viewModel)
         }
     }
 
+    @OptIn(UnstableApi::class)
     override fun onStart() {
         super.onStart()
         val sessionToken = SessionToken(this, ComponentName(this, PlayerService::class.java))
@@ -53,24 +37,17 @@ class MainActivity : AppCompatActivity() {
                 viewModel.controller = controllerFuture.get()
                 viewModel.controller?.addListener(object : Player.Listener {
                     override fun onEvents(player: Player, events: Player.Events) {
-                        if (viewModel.isPlaying.value != player.isPlaying)
-                            viewModel.isPlaying.value = player.isPlaying
-                    }
-
-                    @OptIn(UnstableApi::class)
-                    override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                        val music = Music(
-                            id = 1,
-                            fileName = mediaMetadata.displayTitle?.toString() ?: "",
-                            title = mediaMetadata.title?.toString() ?: "",
-                            artist = mediaMetadata.artist?.toString() ?: "",
-                            album = mediaMetadata.albumTitle?.toString() ?: "",
-                            genre = mediaMetadata.genre?.toString() ?: "",
-                            songUri = mediaMetadata.artworkUri ?: Uri.EMPTY,
-                            durationInSeconds = mediaMetadata.durationMs?.times(1000) ?: 0,
-                            albumArtUri = mediaMetadata.artworkUri
+                        viewModel.updatePlayerStatus(
+                            PlayerViewState.Success(
+                                songName = player.mediaMetadata.title.toString(),
+                                artist = player.mediaMetadata.artist.toString(),
+                                album = player.mediaMetadata.artworkUri,
+                                durationInMs = max(0L, player.duration),
+                                isPlaying = player.isPlaying,
+                                isShuffleEnabled = player.shuffleModeEnabled,
+                                repeatMode = player.repeatMode,
+                            )
                         )
-                        viewModel.currentMusic.value = music
                     }
                 })
             },

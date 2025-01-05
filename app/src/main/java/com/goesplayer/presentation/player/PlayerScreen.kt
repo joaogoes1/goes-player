@@ -1,9 +1,12 @@
 package com.goesplayer.presentation.player
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.widget.Toast
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,14 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
@@ -39,30 +38,31 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
 import androidx.navigation.NavController
-import com.goesplayer.AppTheme
 import com.goesplayer.R
-import com.goesplayer.data.model.Music
+import com.goesplayer.presentation.PlayerViewState
 import com.goesplayer.presentation.components.BackButton
+import com.goesplayer.presentation.components.ErrorScreen
+import com.goesplayer.presentation.components.LoadingScreen
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,236 +73,206 @@ fun PlayerScreen(
     playPauseAction: () -> Unit,
     skipNextAction: () -> Unit,
     shuffleAction: () -> Unit,
-    isPlaying: State<Boolean>,
-    lyrics: String?,
-    music: Music,
-    albumArt: Bitmap?,
+    getPositionAction: () -> Long,
+    changeProgressAction: (Long) -> Unit,
+    progress: State<Long>,
+    playerViewState: State<PlayerViewState>,
     navController: NavController,
 ) {
-    var isLyricsAppearing by remember { mutableStateOf(false) }
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    when (val currentState = playerViewState.value) {
+        is PlayerViewState.None, PlayerViewState.Error -> { // T
+            ErrorScreen { }
+        }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = { BackButton(navController) },
-                title = { Text(stringResource(R.string.app_name)) },
-                actions = {
-                    if (lyrics != null)
-                        IconButton(onClick = { isLyricsAppearing = !isLyricsAppearing }) {
-                            Icon(
-                                Icons.Filled.Lyrics,
-                                contentDescription = if (isLyricsAppearing) stringResource(
-                                    R.string.player_fragment_hide_lyrics_button_content_description
-                                ) else stringResource(
-                                    R.string.player_fragment_show_lyrics_button_content_description
-                                ),
+        is PlayerViewState.Loading -> {
+            LoadingScreen()
+        }
+
+        is PlayerViewState.Success -> {
+            Scaffold(topBar = {
+                TopAppBar(
+                    navigationIcon = { BackButton(navController) },
+                    title = { Text(stringResource(R.string.app_name)) },
+                    colors = TopAppBarDefaults.topAppBarColors().copy(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ),
+                )
+            }) { _ ->
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Box(
+                        Modifier
+                            .aspectRatio(1f)
+                            .align(Alignment.CenterHorizontally)
+                            .weight(1f)
+                            .padding(horizontal = 24.dp)
+                    ) {
+                        val albumArt = currentState.album?.retrieveImage(LocalContext.current)
+                        if (albumArt != null) {
+                            Image(
+                                bitmap = albumArt.asImageBitmap(),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .aspectRatio(1f)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(R.mipmap.teste_album),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .aspectRatio(1f)
                             )
                         }
-                },
-                colors = TopAppBarDefaults.topAppBarColors().copy(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
-            )
-        }
-    ) { _ ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Box(
-                Modifier
-                    .aspectRatio(1f)
-                    .align(Alignment.CenterHorizontally)
-                    .weight(1f)
-                    .padding(horizontal = 24.dp)
-            ) {
-                if (lyrics == null || !isLyricsAppearing)
-                    if (albumArt != null)
-                        Image(
-                            bitmap = albumArt.asImageBitmap(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .aspectRatio(1f)
-                        )
-                    else
-                        Image(
-                            painter = painterResource(R.mipmap.teste_album),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .aspectRatio(1f)
-                        )
-                else
+                    }
                     Text(
-                        lyrics, modifier = Modifier
-                            .clip(RoundedCornerShape(24.dp))
-                            .verticalScroll(rememberScrollState())
-                            .background(color = Color(0xFF151515))
-                            .padding(8.dp)
+                        text = currentState.songName,
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.titleLarge,
                     )
-            }
-            Text(
-                text = music.title,
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                text = music.artist,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Slider(
-                value = sliderPosition,
-                modifier = Modifier.padding(16.dp),
-                onValueChange = { sliderPosition = it },
-                valueRange = 0F..music.durationInSeconds.toFloat(),
-                colors = SliderDefaults.colors().copy(
-                    activeTrackColor = Color.White,
-                    inactiveTrackColor = Color.White,
-                ),
-                thumb = {
-                    Box(
-                        Modifier
-                            .size(24.dp)
-                            .padding(4.dp)
-                            .background(Color.White, RoundedCornerShape(20.dp))
+                    Text(
+                        text = currentState.artist,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.titleSmall,
                     )
-                },
-                track = { sliderState ->
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Color.White, CircleShape)
+                    PlayerSlider(
+                        changeProgressAction = changeProgressAction,
+                        getPositionAction = getPositionAction,
+                        initialValue = progress.value,
+                        durationSeconds = currentState.durationInMs,
                     )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                IconButton(
-                    onClick = shuffleAction,
-                    colors = IconButtonDefaults
-                        .iconButtonColors()
-                        .copy(
-                            containerColor = Color.Transparent,
-                            contentColor = Color.White,
-                        )
-                ) {
-                    Icon(
-                        Icons.Filled.Shuffle,
-                        contentDescription = stringResource(R.string.shuffle_button_content_description)
-                    )
-                }
-                Row(modifier = Modifier.padding(bottom = 32.dp)) {
-                    IconButton(
-                        onClick = skipPreviousAction,
-                        colors = IconButtonDefaults
-                            .iconButtonColors()
-                            .copy(
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        IconButton(
+                            onClick = shuffleAction,
+                            colors = IconButtonDefaults.iconButtonColors().copy(
                                 containerColor = Color.Transparent,
-                                contentColor = Color.White,
+                                contentColor = if (currentState.isShuffleEnabled) MaterialTheme.colorScheme.primary
+                                else Color.White,
                             )
-                    ) {
-                        Icon(
-                            Icons.Filled.SkipPrevious,
-                            contentDescription = stringResource(R.string.skip_previous_button_content_description)
-                        )
-                    }
-                    IconButton(
-                        onClick = playPauseAction,
-                        colors = IconButtonDefaults
-                            .iconButtonColors()
-                            .copy(
-                                containerColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            Icon(
+                                Icons.Filled.Shuffle,
+                                contentDescription = stringResource(R.string.shuffle_button_content_description)
                             )
-                    ) {
-                        PlayPauseButtonIcon(isPlaying.value)
-                    }
-                    IconButton(
-                        onClick = skipNextAction,
-                        colors = IconButtonDefaults
-                            .iconButtonColors()
-                            .copy(
+                        }
+                        Row(modifier = Modifier.padding(bottom = 32.dp)) {
+                            IconButton(
+                                onClick = skipPreviousAction,
+                                colors = IconButtonDefaults.iconButtonColors().copy(
+                                    containerColor = Color.Transparent,
+                                    contentColor = Color.White,
+                                )
+                            ) {
+                                Icon(
+                                    Icons.Filled.SkipPrevious,
+                                    contentDescription = stringResource(R.string.skip_previous_button_content_description)
+                                )
+                            }
+                            IconButton(
+                                onClick = playPauseAction,
+                                colors = IconButtonDefaults.iconButtonColors().copy(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                )
+                            ) {
+                                PlayPauseButtonIcon(currentState.isPlaying)
+                            }
+                            IconButton(
+                                onClick = skipNextAction,
+                                colors = IconButtonDefaults.iconButtonColors().copy(
+                                    containerColor = Color.Transparent,
+                                    contentColor = Color.White,
+                                )
+                            ) {
+                                Icon(
+                                    Icons.Filled.SkipNext,
+                                    contentDescription = stringResource(R.string.skip_next_button_content_description)
+                                )
+                            }
+                        }
+                        IconButton(
+                            onClick = repeatAction,
+                            colors = IconButtonDefaults.iconButtonColors().copy(
                                 containerColor = Color.Transparent,
-                                contentColor = Color.White,
+                                contentColor = if (currentState.repeatMode == Player.REPEAT_MODE_OFF) Color.White
+                                else MaterialTheme.colorScheme.primary,
                             )
-                    ) {
-                        Icon(
-                            Icons.Filled.SkipNext,
-                            contentDescription = stringResource(R.string.skip_next_button_content_description)
-                        )
+                        ) {
+                            Icon(
+                                if (currentState.repeatMode == Player.REPEAT_MODE_ONE) Icons.Filled.RepeatOne
+                                else Icons.Filled.Repeat,
+                                contentDescription = stringResource(R.string.repeat_button_content_description)
+                            )
+                        }
                     }
-                }
-                IconButton(
-                    onClick = repeatAction,
-                    colors = IconButtonDefaults
-                        .iconButtonColors()
-                        .copy(
-                            containerColor = Color.Transparent,
-                            contentColor = Color.White,
-                        )
-                ) {
-                    Icon(
-                        Icons.Filled.Repeat,
-                        contentDescription = stringResource(R.string.repeat_button_content_description)
-                    )
                 }
             }
         }
     }
 }
 
-// TODO: Delete this mock lyrics
-const val mockLyrics = "They got loose to you\n" +
-        "Here it comes\n" +
-        "Oh, whoa-whoa\n" +
-        "Big wheels keep on turnin'\n" +
-        "Carry me home to see my kin\n" +
-        "Singin' songs about the Southland\n" +
-        "I miss Alabamy once again, and I think it's a sin, I said\n" +
-        "Well, I heard Mr. Young sing about her\n" +
-        "Well, I heard old Neil put her down\n" +
-        "Well, I hope Neil Young will remember\n" +
-        "A Southern man don't need him around, anyhow\n" +
-        "Sweet home Alabama\n" +
-        "Where the skies are so blue\n" +
-        "Sweet home Alabama\n" +
-        "Lord, I'm comin' home to you\n" +
-        "One thing I wanna tell you\n" +
-        "In Birmingham, they love the governor (boo, boo, boo!)\n" +
-        "Now we all did what we could do\n" +
-        "Now Watergate does not bother me, uh-uh\n" +
-        "Does your conscience bother you? Tell the truth\n" +
-        "Sweet home Alabama\n" +
-        "Where the skies are so blue\n" +
-        "Sweet home Alabama (oh, my baby)\n" +
-        "Lord, I'm comin' home to you (here I come, Alabama)\n" +
-        "Speak your mind\n" +
-        "Ah-ah-ah (can you feel that?), Alabama\n" +
-        "Ah-ah-ah, Alabama\n" +
-        "Ah-ah-ah, Alabama\n" +
-        "Ah-ah-ah, Alabama\n" +
-        "Now Muscle Shoals has got the Swampers\n" +
-        "And they've been known to pick a song or two (yes, they do)\n" +
-        "Lord, they get me off so much\n" +
-        "They pick me up when I'm feelin' blue, now how 'bout you?\n" +
-        "Sweet home Alabama (oh)\n" +
-        "Where the skies are so blue\n" +
-        "Sweet home Alabama\n" +
-        "Lord, I'm comin' home to you\n" +
-        "Sweet home Alabama (home, sweet home, baby)\n" +
-        "Where the skies are so blue (and the governor's, too)\n" +
-        "Sweet home Alabama (Lord, yeah)\n" +
-        "Lord, I'm comin' home to you (whoo, whoa, yeah, oh)\n" +
-        "Alright, brother, now\n" +
-        "Wait one minute\n" +
-        "Oh-oh, sweet Alabama\n" +
-        "Thank you"
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PlayerSlider(
+    changeProgressAction: (Long) -> Unit,
+    getPositionAction: () -> Long,
+    initialValue: Long,
+    durationSeconds: Long,
+) {
+    Log.i("ASDFGHJKL", "Duration: $durationSeconds")
+    var progress by remember { mutableFloatStateOf(initialValue.toFloat()) }
+    LaunchedEffect(Unit) {
+        while (isActive) {
+            progress = getPositionAction().toFloat()
+            delay(200)
+        }
+    }
+    Slider(
+        value = progress,
+        modifier = Modifier.padding(16.dp),
+        onValueChange = {
+            progress = it
+        },
+        onValueChangeFinished = {
+            changeProgressAction(progress.toLong())
+        },
+        valueRange = 0F..durationSeconds.toFloat(),
+        thumb = {
+            Box(
+                Modifier
+                    .size(16.dp)
+                    .background(
+                        MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(16.dp),
+                    )
+            )
+        },
+        track = { sliderState ->
+            SliderDefaults.Track(
+                modifier = Modifier.height(4.dp),
+                sliderState = sliderState,
+                drawStopIndicator = null,
+                thumbTrackGapSize = 0.dp,
+                colors = SliderDefaults.colors().copy(
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = Color.White,
+                ),
+            )
+        }
+    )
+}
+
+private fun Uri.retrieveImage(context: Context): Bitmap? {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(context, this)
+    val imgBytes = retriever.embeddedPicture
+    return imgBytes?.let { BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size) }
+}

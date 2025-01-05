@@ -21,8 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".GoesPlayerApplication">
-        <activity android:name=".OldMainActivity" android:exported="true">
-        </activity>
 
         <service
             android:name=".presentation.player.PlayerService"
@@ -44,10 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ResultActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

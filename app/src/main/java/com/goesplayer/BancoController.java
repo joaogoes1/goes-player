@@ -151,11 +151,6 @@ public class BancoController {
             listIds.add((long) cursor.getInt(0));
         } while (cursor.moveToNext());
 
-        for (Music i : OldMainActivity.todasMusicas) {
-            if (listIds.contains(i.getId()))
-                musics.add(i);
-        }
-
         return musics;
     }
 

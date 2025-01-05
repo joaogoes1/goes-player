@@ -1,29 +1,49 @@
 package com.goesplayer.presentation
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.session.MediaController
-import com.goesplayer.BancoController
-import com.goesplayer.data.repository.MusicRepository
 import com.goesplayer.data.model.Music
-import com.goesplayer.data.model.Playlist
+import com.goesplayer.data.repository.MusicRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+
+sealed class PlayerViewState {
+    data object None : PlayerViewState()
+    data object Error : PlayerViewState()
+    data object Loading : PlayerViewState()
+    data class Success(
+        val songName: String,
+        val artist: String,
+        val album: Uri?,
+        val durationInMs: Long,
+        val isPlaying: Boolean,
+        val isShuffleEnabled: Boolean,
+        val repeatMode: @Player.RepeatMode Int,
+    ) : PlayerViewState()
+}
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
 ) : ViewModel() {
 
-    var crud: BancoController? = null
     var controller: MediaController? = null
     val songList: MutableLiveData<List<Music>> = MutableLiveData()
-    val currentMusic: MutableLiveData<Music?> = MutableLiveData()
-    val isPlaying: MutableState<Boolean> = mutableStateOf(false)
+    private val _playerViewState: MutableLiveData<PlayerViewState> =
+        MutableLiveData(PlayerViewState.None)
+    val playerViewState: LiveData<PlayerViewState>
+        get() = _playerViewState.distinctUntilChanged()
+
+    private val _playerProgress = MutableLiveData<Long>()
+    val playerProgress: LiveData<Long>
+        get() = _playerProgress.distinctUntilChanged()
 
     fun loadSongs() {
         songList.postValue(musicRepository.loadSongs())
@@ -36,30 +56,69 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun playOrPause() {
-        if (isPlaying.value) {
-            controller?.pause()
-        } else {
-            controller?.play()
+        controller?.let { controller ->
+            if (controller.isPlaying) {
+                controller.pause()
+            } else {
+                controller.play()
+            }
         }
     }
 
     fun playMusicList(list: List<Music>) {
-        controller?.clearMediaItems()
-        controller?.addMediaItems(
-            list.map { it.toMediaItem() }
-        )
-        controller?.prepare()
-        controller?.play()
+        controller?.apply {
+            clearMediaItems()
+            addMediaItems(
+                list.map { it.toMediaItem() }
+            )
+            prepare()
+            play()
+        }
     }
 
-    private fun Music.toMediaItem() =
-        MediaItem
-            .Builder()
-            .setUri(songUri)
-            .setMediaMetadata(
-                MediaMetadata
-                    .Builder()
-                    .setArtworkUri(albumArtUri)
-                    .build()
-            ).build()
+    fun changeShuffleState() {
+        controller?.apply {
+            shuffleModeEnabled = !shuffleModeEnabled
+        }
+    }
+
+    fun changeRepeatState() {
+        controller?.apply {
+            repeatMode = when (repeatMode) {
+                Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ONE
+                Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_ALL
+                Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_OFF
+                else -> Player.REPEAT_MODE_OFF
+            }
+        }
+    }
+
+    fun skipToPrevious() {
+        controller?.seekToPrevious()
+    }
+
+    fun skipToNext() {
+        controller?.seekToNext()
+    }
+
+    fun updatePlayerStatus(viewState: PlayerViewState) {
+        _playerViewState.postValue(viewState)
+    }
+
+    fun changeProgress(position: Long) {
+        controller?.seekTo(position)
+    }
+
+    fun getPosition(): Long = controller?.contentPosition ?: 0
 }
+
+private fun Music.toMediaItem() =
+    MediaItem
+        .Builder()
+        .setUri(songUri)
+        .setMediaMetadata(
+            MediaMetadata
+                .Builder()
+                .setArtworkUri(albumArtUri)
+                .build()
+        ).build()

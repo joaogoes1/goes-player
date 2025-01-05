@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.DatabaseUtils
 import android.util.Log
 import com.goesplayer.DataBaseOpenHelper
-import com.goesplayer.OldMainActivity
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -164,9 +163,9 @@ class LocalDataSource @Inject constructor(
             listIds.add(cursor.getInt(0).toLong())
         } while (cursor.moveToNext())
 
-        for (i in OldMainActivity.todasMusicas) {
-            if (listIds.contains(i.id)) musics.add(i)
-        }
+//        for (i in OldMainActivity.todasMusicas) {
+//            if (listIds.contains(i.id)) musics.add(i)
+//        }
 
         return musics
     }
