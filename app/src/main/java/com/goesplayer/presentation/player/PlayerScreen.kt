@@ -50,7 +50,7 @@ import com.goesplayer.presentation.components.BackButton
 import com.goesplayer.presentation.components.ErrorScreen
 import com.goesplayer.presentation.components.LoadingScreen
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
-import com.goesplayer.presentation.components.PlayerImage
+import com.goesplayer.presentation.components.AlbumImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -98,7 +98,7 @@ fun PlayerScreen(
                             .weight(1f)
                             .padding(horizontal = 24.dp)
                     ) {
-                        PlayerImage(
+                        AlbumImage(
                             modifier = Modifier.fillMaxSize(),
                             albumUri = currentState.album,
                         )

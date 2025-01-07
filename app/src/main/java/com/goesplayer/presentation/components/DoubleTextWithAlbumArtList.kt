@@ -79,21 +79,7 @@ fun DoubleTextWithAlbumArtList(
                                 )
                         ) {
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                val retriever = MediaMetadataRetriever()
-                                retriever.setDataSource(LocalContext.current, item.uri)
-                                val imgBytes = retriever.embeddedPicture
-                                if (imgBytes != null) {
-                                    val thumb =
-                                        BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
-                                    Image(
-                                        bitmap = thumb.asImageBitmap(),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier.size(48.dp)
-                                    )
-                                } else {
-                                    Image(painterResource(R.mipmap.teste_album), null)
-                                }
+                                AlbumImage(modifier = Modifier.size(48.dp), albumUri = item.uri)
                                 Column(
                                     modifier = Modifier
                                         .fillMaxHeight()

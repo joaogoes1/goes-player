@@ -6,17 +6,20 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Album
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import com.goesplayer.R
 
 @Composable
-fun PlayerImage(
+fun AlbumImage(
     modifier: Modifier = Modifier,
     albumUri: Uri?,
 ) {
@@ -30,12 +33,13 @@ fun PlayerImage(
                 .aspectRatio(1f)
         )
     } else {
-        Image(
-            painter = painterResource(R.mipmap.teste_album),
+        Icon(
+            Icons.Filled.Album,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            tint = Color.Gray,
             modifier = modifier
                 .aspectRatio(1f)
+                .background(Color(0xFF151515))
         )
     }
 }

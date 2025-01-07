@@ -58,7 +58,7 @@ import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.MusicListRouteConfig
 import com.goesplayer.presentation.PlayerViewState
 import com.goesplayer.presentation.components.PlayPauseButtonIcon
-import com.goesplayer.presentation.components.PlayerImage
+import com.goesplayer.presentation.components.AlbumImage
 import com.goesplayer.presentation.home.tabs.AlbumTab
 import com.goesplayer.presentation.home.tabs.ArtistTab
 import com.goesplayer.presentation.home.tabs.FolderTab
@@ -245,7 +245,7 @@ private fun MiniPlayer(
                 .background(Color(0xFF101010))
         ) {
             Row {
-                PlayerImage(
+                AlbumImage(
                     modifier = Modifier
                         .padding(top = 4.dp, bottom = 2.dp, start = 4.dp, end = 0.dp)
                         .size(48.dp)
