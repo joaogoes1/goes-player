@@ -38,6 +38,7 @@ fun HomeRoute(
         playOrPauseAction = activityViewModel::playOrPause,
         skipToNextAction = activityViewModel::skipToNext,
         navigateToMusicList = navigateToMusicList,
+        navigateToPlayer = navigateToPlayer,
         songList = activityViewModel.songList,
         playerViewState = activityViewModel.playerViewState.observeAsState(PlayerViewState.Loading),
         addMusicToPlaylistAction = homeViewModel::addMusicToPlaylist,

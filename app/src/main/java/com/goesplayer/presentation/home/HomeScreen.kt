@@ -1,22 +1,14 @@
 package com.goesplayer.presentation.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
 import androidx.compose.material.icons.filled.Add
@@ -26,12 +18,9 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -45,20 +34,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.goesplayer.R
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.MusicListRouteConfig
 import com.goesplayer.presentation.PlayerViewState
-import com.goesplayer.presentation.components.PlayPauseButtonIcon
-import com.goesplayer.presentation.components.AlbumImage
+import com.goesplayer.presentation.components.MiniPlayer
 import com.goesplayer.presentation.home.tabs.AlbumTab
 import com.goesplayer.presentation.home.tabs.ArtistTab
 import com.goesplayer.presentation.home.tabs.FolderTab
@@ -81,6 +66,7 @@ fun HomeScreen(
     addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
     getPlaylistsAction: () -> Flow<SearchPlaylistsState>,
     navigateToMusicList: (MusicListRouteConfig) -> Unit,
+    navigateToPlayer: () -> Unit,
     skipToPreviousAction: () -> Unit,
     playOrPauseAction: () -> Unit,
     skipToNextAction: () -> Unit,
@@ -119,6 +105,7 @@ fun HomeScreen(
                 skipToPreviousAction,
                 playOrPauseAction,
                 skipToNextAction,
+                navigateToPlayer,
                 playerViewState,
             )
         }
@@ -226,91 +213,5 @@ private fun HomeFloatingButton(
             Icons.Filled.Add,
             contentDescription = stringResource(R.string.home_screen_create_new_playlist_fab_content_description),
         )
-    }
-}
-
-@Composable
-private fun MiniPlayer(
-    skipToPreviousAction: () -> Unit,
-    playOrPauseAction: () -> Unit,
-    skipToNextAction: () -> Unit,
-    playerViewState: State<PlayerViewState>,
-) {
-    val currentState = playerViewState.value
-    if (currentState is PlayerViewState.Success) {
-        Box(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp))
-                .fillMaxWidth()
-                .background(Color(0xFF101010))
-        ) {
-            Row {
-                AlbumImage(
-                    modifier = Modifier
-                        .padding(top = 4.dp, bottom = 2.dp, start = 4.dp, end = 0.dp)
-                        .size(48.dp)
-                        .clip(shape = RoundedCornerShape(12.dp)),
-                    albumUri = currentState.album,
-                )
-                Spacer(
-                    Modifier
-                        .width(8.dp)
-                        .align(Alignment.CenterVertically)
-                )
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .weight(1f)
-                ) {
-                    Text(
-                        currentState.songName,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                    Text(
-                        currentState.artist,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-                IconButton(
-                    onClick = skipToPreviousAction,
-                    modifier = Modifier
-                        .height(30.dp)
-                        .align(Alignment.CenterVertically),
-                ) {
-                    Icon(
-                        Icons.Filled.SkipPrevious,
-                        contentDescription = stringResource(
-                            R.string.skip_previous_button_content_description
-                        ),
-                        tint = Color.White,
-                    )
-                }
-                IconButton(
-                    onClick = playOrPauseAction,
-                    modifier = Modifier
-                        .height(30.dp)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    PlayPauseButtonIcon(
-                        currentState.isPlaying,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-                IconButton(
-                    onClick = skipToNextAction,
-                    modifier = Modifier
-                        .height(30.dp)
-                        .align(Alignment.CenterVertically),
-                ) {
-                    Icon(
-                        Icons.Filled.SkipNext,
-                        contentDescription = stringResource(
-                            R.string.skip_next_button_content_description
-                        ),
-                        tint = Color.White,
-                    )
-                }
-            }
-        }
     }
 }

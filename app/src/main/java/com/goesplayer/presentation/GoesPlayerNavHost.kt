@@ -1,5 +1,7 @@
 package com.goesplayer.presentation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +58,12 @@ fun GoesPlayerNavGraph(
             )
         }
         composable(
-            route = GoesPlayerDestinations.PLAYER_ROUTE
+            route = GoesPlayerDestinations.PLAYER_ROUTE,
+            enterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up, tween(700)
+                )
+            }
         ) {
             PlayerRoute(
                 activityViewModel = activityViewModel,
