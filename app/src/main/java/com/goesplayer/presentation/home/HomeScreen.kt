@@ -60,6 +60,7 @@ import com.goesplayer.presentation.home.tabs.HomeTab
 import com.goesplayer.presentation.home.tabs.MusicTab
 import com.goesplayer.presentation.home.tabs.PlaylistTab
 import com.goesplayer.presentation.home.tabs.PlaylistTabDialogState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,12 +71,12 @@ fun HomeScreen(
     deletePlaylistAction: (Long) -> Boolean,
     loadPlaylistsRetryAction: () -> Unit,
     addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
-    getPlaylistsAction: () -> List<Playlist>,
+    getPlaylistsAction: () -> Flow<SearchPlaylistsState>,
     navigateToMusicList: (MusicListRouteConfig) -> Unit,
     songList: MutableLiveData<List<Music>>,
     isMusicActive: State<Boolean>,
     isMusicPlaying: State<Boolean>,
-    playlistTabViewState: PlaylistTabViewState
+    playlistTabViewState: State<PlaylistTabViewState>
 ) {
     val scope = rememberCoroutineScope()
     val musicsState = songList.observeAsState()

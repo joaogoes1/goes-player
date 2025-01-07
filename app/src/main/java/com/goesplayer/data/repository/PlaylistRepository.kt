@@ -8,15 +8,15 @@ import javax.inject.Inject
 class PlaylistRepository @Inject constructor(
     private val dataSource: LocalDataSource,
 ) {
-    fun deletePlaylist(playlistId: Long): Boolean =
+    suspend fun deletePlaylist(playlistId: Long) =
         dataSource.deletePlaylist(playlistId)
 
-    fun loadPlaylists(): List<Playlist> =
+    suspend fun loadPlaylists(): List<Playlist> =
         dataSource.loadPlaylists()
 
-    fun createPlaylist(playlistName: String): Boolean =
+    suspend fun createPlaylist(playlistName: String) =
         dataSource.createPlaylist(playlistName)
 
-    fun addToPlaylist(music: Music, playlist: Playlist) =
+    suspend fun addToPlaylist(music: Music, playlist: Playlist) =
         dataSource.addToPlaylist(music.id, playlist.id)
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +41,7 @@ fun PlaylistTab(
     showDeletePlaylistDialog: (Long, String) -> Unit,
     onDismissRequest: () -> Unit,
     retryAction: () -> Unit,
-    playlistTabViewState: PlaylistTabViewState,
+    playlistTabViewState: State<PlaylistTabViewState>,
     playlistTabDialogState: PlaylistTabDialogState,
 ) {
     val context = LocalContext.current
@@ -75,7 +76,7 @@ fun PlaylistTab(
         }
     }
 
-    when (playlistTabViewState) {
+    when (val currentState = playlistTabViewState.value) {
         is PlaylistTabViewState.Loading -> {
             LoadingScreen()
         }
@@ -90,11 +91,11 @@ fun PlaylistTab(
                     // TODO: Implement this
                 },
                 onLongClick = { index ->
-                    val playlist = playlistTabViewState.playlists[index]
+                    val playlist = currentState.playlists[index]
                     showDeletePlaylistDialog(playlist.id, playlist.name)
                 },
                 title = stringResource(R.string.playlists_tab_title),
-                items = playlistTabViewState.playlists.map { it.name },
+                items = currentState.playlists.map { it.name },
                 emptyStateMessage = stringResource(R.string.playlists_tab_empty_state_message)
             )
         }

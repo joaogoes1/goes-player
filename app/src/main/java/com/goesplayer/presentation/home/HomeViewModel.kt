@@ -3,6 +3,7 @@ package com.goesplayer.presentation.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.goesplayer.data.model.Music
@@ -10,6 +11,9 @@ import com.goesplayer.data.model.Playlist
 import com.goesplayer.data.repository.PlaylistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,31 +23,66 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _playlistTabViewState =
         MutableLiveData<PlaylistTabViewState>(PlaylistTabViewState.Loading)
-    val playlistTabViewState: LiveData<PlaylistTabViewState> = liveData { _playlistTabViewState }
+    val playlistTabViewState: LiveData<PlaylistTabViewState> = _playlistTabViewState.distinctUntilChanged()
 
     fun deletePlaylist(playlistId: Long): Boolean {
-        val result = playlistRepository.deletePlaylist(playlistId)
-        if (result) loadPlaylists()
-        return result
+        try {
+            viewModelScope.launch {
+                playlistRepository.deletePlaylist(playlistId)
+                playlistRepository.loadPlaylists().apply {
+                    _playlistTabViewState.postValue(PlaylistTabViewState.Success(this))
+                }
+            }
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 
     fun loadPlaylists() {
         viewModelScope.launch(Dispatchers.IO) {
-            val results = playlistRepository.loadPlaylists()
-            _playlistTabViewState.postValue(PlaylistTabViewState.Success(results))
+            try {
+                val results = playlistRepository.loadPlaylists()
+                _playlistTabViewState.postValue(PlaylistTabViewState.Success(results))
+            } catch (_: Exception) {
+                _playlistTabViewState.postValue(PlaylistTabViewState.Error)
+            }
         }
     }
 
     fun createPlaylist(playlistName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = playlistRepository.createPlaylist(playlistName)
-            if (result) loadPlaylists()
+            try {
+                playlistRepository.createPlaylist(playlistName)
+                loadPlaylists()
+            } catch (_: Exception) {
+            }
         }
     }
 
-    fun addMusicToPlaylist(music: Music, playlist: Playlist): Boolean =
-        playlistRepository.addToPlaylist(music, playlist)
+    fun addMusicToPlaylist(music: Music, playlist: Playlist): Boolean {
+        try {
+            viewModelScope.launch {
+                playlistRepository.addToPlaylist(music, playlist)
+            }
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
 
-    fun getPlaylist(): List<Playlist> =
-        playlistRepository.loadPlaylists()
+    fun getPlaylist(): Flow<SearchPlaylistsState> = flow {
+        emit(SearchPlaylistsState.Loading)
+        try {
+            emit(SearchPlaylistsState.Success(playlistRepository.loadPlaylists()))
+        } catch (e: Exception) {
+            emit(SearchPlaylistsState.Error)
+        }
+    }
+}
+
+sealed class SearchPlaylistsState {
+    data object Error : SearchPlaylistsState()
+    data object Loading : SearchPlaylistsState()
+    data class Success(val list: List<Playlist>) : SearchPlaylistsState()
 }

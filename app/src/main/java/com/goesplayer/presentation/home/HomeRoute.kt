@@ -15,7 +15,9 @@ fun HomeRoute(
     homeViewModel: HomeViewModel,
 ) {
     homeViewModel.loadPlaylists()
-    val playlistViewState = homeViewModel.playlistTabViewState.observeAsState()
+    val playlistViewState = homeViewModel
+        .playlistTabViewState
+        .observeAsState(PlaylistTabViewState.Loading)
 
     HomeScreen(
         playSong = { music ->
@@ -31,6 +33,6 @@ fun HomeRoute(
         isMusicPlaying = remember { mutableStateOf(false) },
         addMusicToPlaylistAction = homeViewModel::addMusicToPlaylist,
         getPlaylistsAction = homeViewModel::getPlaylist,
-        playlistTabViewState = playlistViewState.value ?: PlaylistTabViewState.Success(emptyList()),
+        playlistTabViewState = playlistViewState,
     )
 }

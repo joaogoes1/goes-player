@@ -1,6 +1,5 @@
 package com.goesplayer.data.datasource
 
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.media.MediaMetadataRetriever
@@ -11,7 +10,6 @@ import javax.inject.Inject
 
 class MediaDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
-
 ) {
     // TODO: Review this
     fun loadSongs(): List<Music> {

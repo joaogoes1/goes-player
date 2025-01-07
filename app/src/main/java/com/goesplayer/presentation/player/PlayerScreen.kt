@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -227,7 +226,6 @@ private fun PlayerSlider(
     initialValue: Long,
     durationSeconds: Long,
 ) {
-    Log.i("ASDFGHJKL", "Duration: $durationSeconds")
     var progress by remember { mutableFloatStateOf(initialValue.toFloat()) }
     LaunchedEffect(Unit) {
         while (isActive) {
