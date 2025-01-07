@@ -55,9 +55,14 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun playSong(music: Music) {
-        controller?.setMediaItem(music.toMediaItem())
-        controller?.prepare()
-        controller?.play()
+        controller?.apply {
+            if (mediaMetadata.title == music.title && mediaMetadata.artist == music.artist) {
+                return@apply
+            }
+            setMediaItem(music.toMediaItem())
+            prepare()
+            play()
+        }
     }
 
     fun playOrPause() {

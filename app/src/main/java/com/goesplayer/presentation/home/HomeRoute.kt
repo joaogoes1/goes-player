@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.MainActivityViewModel
 import com.goesplayer.presentation.MusicListRouteConfig
+import com.goesplayer.presentation.PlayerViewState
 import com.goesplayer.presentation.musiclist.MusicListScreen
 
 @Composable
@@ -33,10 +34,12 @@ fun HomeRoute(
             navigateToPlaylistDetails(playlist.id, playlist.name)
         },
         loadPlaylistsRetryAction = homeViewModel::loadPlaylists,
+        skipToPreviousAction = activityViewModel::skipToPrevious,
+        playOrPauseAction = activityViewModel::playOrPause,
+        skipToNextAction = activityViewModel::skipToNext,
         navigateToMusicList = navigateToMusicList,
         songList = activityViewModel.songList,
-        isMusicActive = remember { mutableStateOf(false) },
-        isMusicPlaying = remember { mutableStateOf(false) },
+        playerViewState = activityViewModel.playerViewState.observeAsState(PlayerViewState.Loading),
         addMusicToPlaylistAction = homeViewModel::addMusicToPlaylist,
         getPlaylistsAction = homeViewModel::getPlaylist,
         playlistTabViewState = playlistViewState,

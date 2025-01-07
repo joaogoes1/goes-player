@@ -23,11 +23,11 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist WHERE playlistId = :playlistId")
     suspend fun getPlaylistWithSongs(playlistId: Long): PlaylistWithSongs
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(playlist: PlaylistEntity)
 
     @Transaction
-    @Insert(onConflict = OnConflictStrategy.ABORT) // TODO: Ask for the user before add repeated musics in a Playlist
+    @Insert(onConflict = OnConflictStrategy.IGNORE) // TODO: Ask for the user before add repeated musics in a Playlist
     suspend fun insertMusic(ref: PlaylistSongCrossRef)
 
     @Query("DELETE FROM playlist WHERE playlistId = :id")
