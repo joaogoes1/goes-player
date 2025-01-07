@@ -1,6 +1,9 @@
 package com.goesplayer.presentation
 
+import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import androidx.annotation.OptIn
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +11,15 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.MediaMetadata.PICTURE_TYPE_FRONT_COVER
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.repository.MusicRepository
+import com.goesplayer.presentation.components.retrieveImage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +41,7 @@ sealed class PlayerViewState {
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
 ) : ViewModel() {
 
@@ -59,7 +67,7 @@ class MainActivityViewModel @Inject constructor(
             if (mediaMetadata.title == music.title && mediaMetadata.artist == music.artist) {
                 return@apply
             }
-            setMediaItem(music.toMediaItem())
+            setMediaItem(music.toMediaItem(context))
             prepare()
             play()
         }
@@ -79,8 +87,9 @@ class MainActivityViewModel @Inject constructor(
         controller?.apply {
             clearMediaItems()
             addMediaItems(
-                list.map { it.toMediaItem() }
+                list.map { it.toMediaItem(context) }
             )
+            skipToNext()
             prepare()
             play()
         }
@@ -122,13 +131,18 @@ class MainActivityViewModel @Inject constructor(
     fun getPosition(): Long = controller?.contentPosition ?: 0
 }
 
-private fun Music.toMediaItem() =
+@OptIn(UnstableApi::class)
+private fun Music.toMediaItem(context: Context) =
     MediaItem
         .Builder()
         .setUri(songUri)
         .setMediaMetadata(
             MediaMetadata
                 .Builder()
+                .setArtworkData(MediaMetadataRetriever().let {
+                    it.setDataSource(context, albumArtUri)
+                    it.embeddedPicture
+                }, PICTURE_TYPE_FRONT_COVER)
                 .setArtworkUri(albumArtUri)
                 .build()
         ).build()
