@@ -15,10 +15,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EmptyScreen(
+    modifier: Modifier = Modifier,
     text: String,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
     ) {

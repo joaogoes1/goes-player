@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.goesplayer.R
+import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.components.ErrorScreen
 import com.goesplayer.presentation.components.LoadingScreen
 import com.goesplayer.presentation.components.SingleTextList
@@ -38,6 +39,7 @@ sealed class PlaylistTabDialogState {
 fun PlaylistTab(
     deletePlaylistAction: (Long) -> Boolean,
     createPlaylistAction: (String) -> Unit,
+    showPlaylistDetailsAction: (Playlist) -> Unit,
     showDeletePlaylistDialog: (Long, String) -> Unit,
     onDismissRequest: () -> Unit,
     retryAction: () -> Unit,
@@ -88,7 +90,7 @@ fun PlaylistTab(
         is PlaylistTabViewState.Success -> {
             SingleTextList(
                 onClick = { item ->
-                    // TODO: Implement this
+                    showPlaylistDetailsAction(currentState.playlists[item])
                 },
                 onLongClick = { index ->
                     val playlist = currentState.playlists[index]

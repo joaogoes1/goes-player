@@ -4,14 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.model.Playlist
+import com.goesplayer.data.model.PlaylistWithMusics
 import com.goesplayer.data.repository.PlaylistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -23,7 +22,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _playlistTabViewState =
         MutableLiveData<PlaylistTabViewState>(PlaylistTabViewState.Loading)
-    val playlistTabViewState: LiveData<PlaylistTabViewState> = _playlistTabViewState.distinctUntilChanged()
+    val playlistTabViewState: LiveData<PlaylistTabViewState> =
+        _playlistTabViewState.distinctUntilChanged()
 
     fun deletePlaylist(playlistId: Long): Boolean {
         try {
@@ -44,7 +44,7 @@ class HomeViewModel @Inject constructor(
             try {
                 val results = playlistRepository.loadPlaylists()
                 _playlistTabViewState.postValue(PlaylistTabViewState.Success(results))
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 _playlistTabViewState.postValue(PlaylistTabViewState.Error)
             }
         }
@@ -78,6 +78,10 @@ class HomeViewModel @Inject constructor(
         } catch (e: Exception) {
             emit(SearchPlaylistsState.Error)
         }
+    }
+
+    fun getPlaylistDetails(): Flow<PlaylistWithMusics> = flow {
+
     }
 }
 

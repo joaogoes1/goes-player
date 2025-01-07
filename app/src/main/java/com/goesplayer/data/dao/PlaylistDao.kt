@@ -27,7 +27,7 @@ interface PlaylistDao {
     suspend fun insert(playlist: PlaylistEntity)
 
     @Transaction
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT) // TODO: Ask for the user before add repeated musics in a Playlist
     suspend fun insertMusic(ref: PlaylistSongCrossRef)
 
     @Query("DELETE FROM playlist WHERE playlistId = :id")

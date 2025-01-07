@@ -4,13 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.goesplayer.data.model.Playlist
 import com.goesplayer.presentation.MainActivityViewModel
 import com.goesplayer.presentation.MusicListRouteConfig
+import com.goesplayer.presentation.musiclist.MusicListScreen
 
 @Composable
 fun HomeRoute(
     navigateToPlayer: () -> Unit,
     navigateToMusicList: (MusicListRouteConfig) -> Unit,
+    navigateToPlaylistDetails: (Long, String) -> Unit,
     activityViewModel: MainActivityViewModel,
     homeViewModel: HomeViewModel,
 ) {
@@ -26,6 +29,9 @@ fun HomeRoute(
         },
         deletePlaylistAction = homeViewModel::deletePlaylist,
         createPlaylistAction = homeViewModel::createPlaylist,
+        showPlaylistDetailsAction = { playlist ->
+            navigateToPlaylistDetails(playlist.id, playlist.name)
+        },
         loadPlaylistsRetryAction = homeViewModel::loadPlaylists,
         navigateToMusicList = navigateToMusicList,
         songList = activityViewModel.songList,

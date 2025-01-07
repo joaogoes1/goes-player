@@ -18,5 +18,8 @@ class PlaylistRepository @Inject constructor(
         dataSource.createPlaylist(playlistName)
 
     suspend fun addToPlaylist(music: Music, playlist: Playlist) =
-        dataSource.addToPlaylist(music.id, playlist.id)
+        dataSource.addToPlaylist(playlist.id, music.id)
+
+    suspend fun loadPlaylistMusics(playlistId: Long): List<Music> =
+        dataSource.loadPlaylistMusics(playlistId)
 }

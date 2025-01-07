@@ -52,4 +52,5 @@
     <string name="music_tab_add_to_playlist_dialog_empty_state_description">Crie uma playlist antes.</string>
     <string name="music_tab_empty_state_message">Nenhuma música foi encontrada no seu dispostivo</string>
     <string name="back_button_content_description">Voltar</string>
+    <string name="playlist_details_screen_empty_state_message">Você não tem músicas adicionadas a essa playlist</string>
 </resources>

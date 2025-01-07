@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -12,6 +13,8 @@ import androidx.media3.session.MediaController
 import com.goesplayer.data.model.Music
 import com.goesplayer.data.repository.MusicRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class PlayerViewState {
@@ -46,7 +49,9 @@ class MainActivityViewModel @Inject constructor(
         get() = _playerProgress.distinctUntilChanged()
 
     fun loadSongs() {
-        songList.postValue(musicRepository.loadSongs())
+        viewModelScope.launch(Dispatchers.IO) {
+            songList.postValue(musicRepository.loadSongs())
+        }
     }
 
     fun playSong(music: Music) {

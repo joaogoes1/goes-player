@@ -11,6 +11,8 @@ import androidx.navigation.toRoute
 import com.goesplayer.presentation.home.HomeRoute
 import com.goesplayer.presentation.musiclist.MusicListRoute
 import com.goesplayer.presentation.player.PlayerRoute
+import com.goesplayer.presentation.playlistdetails.PlaylistDetailsRoute
+import com.goesplayer.presentation.playlistdetails.PlaylistDetailsRouteConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -23,6 +25,7 @@ data class MusicListRouteConfig(
 )
 
 object GoesPlayerDestinations {
+    const val PLAYLIST_DETAILS_ROUTE = "playlist_details/\$playlistId"
     const val PLAYER_ROUTE = "player"
     const val HOME_ROUTE = "home"
 }
@@ -45,6 +48,9 @@ fun GoesPlayerNavGraph(
             HomeRoute(
                 navigateToPlayer = { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
                 navigateToMusicList = { navController.navigate(it) },
+                navigateToPlaylistDetails = { id, name ->
+                    navController.navigate(PlaylistDetailsRouteConfig(id, name))
+                },
                 activityViewModel = activityViewModel,
                 homeViewModel = hiltViewModel(),
             )
@@ -65,6 +71,14 @@ fun GoesPlayerNavGraph(
                 title = params.pageTitle,
                 musicList = activityViewModel.songList.value ?: emptyList(),
                 searchProperties = params,
+            )
+        }
+        composable<PlaylistDetailsRouteConfig> {
+            PlaylistDetailsRoute(
+                navigateToPlayer = { navController.navigate(GoesPlayerDestinations.PLAYER_ROUTE) },
+                activityViewModel = activityViewModel,
+                viewModel = hiltViewModel(),
+                arguments = it.toRoute(),
             )
         }
     }

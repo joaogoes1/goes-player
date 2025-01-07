@@ -70,6 +70,7 @@ fun HomeScreen(
     createPlaylistAction: (String) -> Unit,
     deletePlaylistAction: (Long) -> Boolean,
     loadPlaylistsRetryAction: () -> Unit,
+    showPlaylistDetailsAction: (Playlist) -> Unit,
     addMusicToPlaylistAction: (Music, Playlist) -> Boolean,
     getPlaylistsAction: () -> Flow<SearchPlaylistsState>,
     navigateToMusicList: (MusicListRouteConfig) -> Unit,
@@ -145,6 +146,7 @@ fun HomeScreen(
                             playlistTabDialogState.value =
                                 PlaylistTabDialogState.DeletePlaylist(id, name)
                         },
+                        showPlaylistDetailsAction = showPlaylistDetailsAction,
                         onDismissRequest = {
                             playlistTabDialogState.value = PlaylistTabDialogState.None
                         },

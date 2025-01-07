@@ -80,7 +80,7 @@ fun PlayerScreen(
 ) {
     when (val currentState = playerViewState.value) {
         is PlayerViewState.None, PlayerViewState.Error -> { // T
-            ErrorScreen { }
+            ErrorScreen {}
         }
 
         is PlayerViewState.Loading -> {
