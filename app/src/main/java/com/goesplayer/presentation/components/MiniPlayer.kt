@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.goesplayer.R
@@ -43,6 +44,7 @@ fun MiniPlayer(
     if (currentState is PlayerViewState.Success) {
         Box(
             modifier = Modifier
+                .testTag("mini_player")
                 .clip(shape = RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp))
                 .fillMaxWidth()
                 .background(Color(0xFF101010))

@@ -17,9 +17,9 @@ Goals:
 4. Move to MVVM architecture ✅
 5. Migrate layout to Jetpack Compose ✅
 6. Fix Files Access permission
-7. Fix Service Player ⏳
+7. Fix Service Player ✅
 8. Modularize
-9. Change all icons from png to svg
+9. Change all icons from png to svg ✅
 
 Steps:
 1. Upgrade to latest version of AGP, Android SDK and use gradle kts ✅
@@ -36,5 +36,5 @@ Steps:
    2. Move layout from MainActivity ✅
    3. Isolate player layout and remove repeated code from fragments ✅
    4. Migrate others activities to fragments ✅
-4. Migrate all icons and images to .svg
+4. Migrate all icons and images to .svg ✅
 5. Create unit and layout tests for the app
